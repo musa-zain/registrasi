@@ -253,32 +253,18 @@
 document.getElementById("registerForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const data = {
-    nama_lengkap: this.nama_lengkap.value,
-    email: this.email.value,
-    domisili: this.domisili.value,
-    no_hp: this.no_hp.value,
-    usia: this.usia.value,
-    jk: this.jk.value
-  };
+  const formData = new FormData(this);
 
   fetch("https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
+    body: formData
   })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === "success") {
-      window.location.href = "success.html";
-    } else {
-      alert("Gagal menyimpan data");
-    }
+  .then(res => res.text())
+  .then(() => {
+    window.location.href = "success.html";
   })
   .catch(err => {
-    alert("Error koneksi");
+    alert("Gagal mengirim data");
     console.error(err);
   });
 });
