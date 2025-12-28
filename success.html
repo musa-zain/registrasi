@@ -6,7 +6,103 @@
 <title>Pendaftaran Berhasil</title>
 
 <style>
-/* ... CSS Anda tetap sama ... */
+* { box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #ffffff;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+}
+
+.card {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px 20px;
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.info {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.info p {
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.qr {
+    margin: 20px 0;
+}
+
+.qr img {
+    width: 180px;
+    max-width: 100%;
+}
+
+.download-btn {
+    display: block;
+    margin: 16px 0 6px;
+    padding: 12px;
+    background-color: #111827;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.note {
+    font-size: 13px;
+    color: #374151;
+    margin-top: 12px;
+}
+
+footer {
+    text-align: center;
+    padding: 14px 10px;
+    font-size: 12px;
+    color: #6b7280;
+}
 </style>
 </head>
 
@@ -48,9 +144,7 @@
 © 2025 — Yayasan Ibadurrahman Islamic Center
 </footer>
 
-<!-- HANYA SATU SCRIPT TAG! -->
 <script>
-// ==================== MULTI LANGUAGE ====================
 (function () {
     const lang = navigator.language || navigator.userLanguage;
 
@@ -108,40 +202,7 @@
     document.getElementById("downloadBtn").innerHTML = current.download;
     document.getElementById("note").innerHTML = current.note;
 })();
-
-// ==================== LOAD DATA DAN GENERATE QR ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // Ambil data dari localStorage
-    const registrationData = JSON.parse(localStorage.getItem('registration_data') || '{}');
-    
-    // Cek URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const registrationId = urlParams.get('id');
-    
-    // Jika ada data, tampilkan
-    if (registrationData.nama_lengkap) {
-        // Ganti semua placeholder dengan data riil
-        replacePlaceholders(registrationData);
-        
-        // Generate QR Code
-        generateQRCode(registrationId || registrationData.registration_id);
-        
-        // Setup download link
-        setupDownloadLink(registrationId || registrationData.registration_id);
-        
-        // Hapus data setelah 10 menit (opsional)
-        setTimeout(() => {
-            localStorage.removeItem('registration_data');
-        }, 10 * 60 * 1000);
-    } else {
-        // Jika tidak ada data, tampilkan pesan default
-        showDefaultMessage();
-    }
-});
-
-// ==================== FUNGSI UTAMA ====================
-// ... (fungsi-fungsi lainnya tetap sama)
 </script>
-    
+
 </body>
 </html>
