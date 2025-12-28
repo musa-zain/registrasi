@@ -251,7 +251,7 @@
 // ==================== KONFIGURASI ====================
 const CONFIG = {
     // 🔴 PASTIKAN URL SUDAH BENAR DAN TER-DEPLOY SEBAGAI 'ANYONE'
-    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec",
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbx_DhDT9ilNYXpGRfW579VX96eHygft7bZT18JI9VW3Q--EreoGnueO2LY2Q7j8RR79/exec",
     REDIRECT_DELAY: 1500
 };
 
