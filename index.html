@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Pendaftaran Sholat Idul Fitri Masjid Central Okayama">
     <title>Pendaftaran Sholat Idul Fitri</title>
-
+    
+    <!-- reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <!-- Google Fonts untuk arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         * { box-sizing: border-box; }
 
@@ -24,7 +31,7 @@
             font-size: 15px;
             line-height: 1.6;
             color: #1f2937;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #f0fff4 0%, #f8fafc 100%);
         }
 
         main {
@@ -33,138 +40,283 @@
         }
 
         .container {
-            max-width: 460px;
+            max-width: 480px;
             margin: 0 auto;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
             position: relative;
-            padding-top: 12px;
-        }
-
-        .header::after {
-            content: "";
-            display: block;
-            width: 80px;
-            height: 2px;
-            margin: 10px auto 0;
-            background: linear-gradient(to right, transparent, #047857, transparent);
-            opacity: 0.35;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(6, 95, 70, 0.1);
         }
 
         .header h1 {
-            font-size: 22px;
-            margin-bottom: 2px;
-            color: #065f46;
+            font-size: 24px;
+            margin-bottom: 8px;
             font-weight: 700;
+            color: white;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            margin: 10px 0;
+            color: #d1fae5;
         }
 
         .masjid-name {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 600;
-            color: #065f46;
-            margin-top: 2px;
-            letter-spacing: 0.6px;
+            color: #d1fae5;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
         }
 
         .card {
             background-color: #ffffff;
-            border-radius: 14px;
-            padding: 24px 20px;
+            border-radius: 16px;
+            padding: 28px 24px;
             border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             position: relative;
+            overflow: hidden;
         }
 
         .card::before {
             content: "";
             position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle at 1px 1px, #047857 1px, transparent 1px);
-            background-size: 18px 18px;
-            opacity: 0.03;
-            pointer-events: none;
-            border-radius: 14px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #065f46, #10b981, #065f46);
+            opacity: 0.8;
         }
 
-        .field { margin-bottom: 18px; }
+        .field { 
+            margin-bottom: 22px; 
+        }
 
         label {
             display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
+            font-weight: 600;
+            margin-bottom: 8px;
             color: #374151;
+            font-size: 14px;
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc2626;
         }
 
         input[type="text"],
         input[type="email"],
         input[type="number"],
         input[type="tel"],
-        textarea {
+        textarea,
+        select {
             width: 100%;
-            padding: 11px 12px;
-            height: 44px;
+            padding: 12px 14px;
+            height: 46px;
             font-size: 15px;
             font-family: inherit;
             border: 1px solid #d1d5db;
-            border-radius: 8px;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            border-radius: 10px;
+            transition: all 0.2s ease;
             background-color: #ffffff;
         }
 
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 90px;
             height: auto;
+            line-height: 1.5;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23047857'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+            appearance: none;
         }
 
         input:focus,
-        textarea:focus {
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: #047857;
-            box-shadow: 0 0 0 3px #d1fae5;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .input-error {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 8px;
         }
 
         .radio-group label,
         .checkbox label {
-            font-weight: 400;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
+            gap: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .radio-group label:hover,
+        .checkbox label:hover {
+            background: rgba(5, 150, 105, 0.05);
         }
 
         input[type="radio"],
         input[type="checkbox"] {
-            transform: scale(1.1);
+            width: 18px;
+            height: 18px;
             accent-color: #047857;
+        }
+
+        .g-recaptcha {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
         }
 
         button {
             width: 100%;
-            padding: 13px;
-            font-size: 15px;
-            font-weight: 500;
-            background-color: #047857;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             color: #ffffff;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         footer {
             text-align: center;
-            padding: 18px 10px;
-            font-size: 12px;
+            padding: 24px 10px;
+            font-size: 13px;
             color: #6b7280;
             background-color: #ecfdf5;
+            border-top: 1px solid #d1fae5;
+            margin-top: 40px;
         }
 
-        @media (min-width: 768px) {
-            .header h1 { font-size: 24px; }
-            .masjid-name { font-size: 19px; }
+        .success-message {
+            display: none;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .arabic-text {
+                font-size: 24px;
+            }
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #065f46;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -175,10 +327,18 @@
 <div class="container">
 
 <div class="header">
-    <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="id">ID</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ja">JA</button>
+    </div>
+    
+    <h1 data-id="Pendaftaran Sholat Idul Fitri"
         data-ja="イドゥル・フィトリ礼拝 参加登録フォーム"
-        data-en="Eid al-Fitr Prayer Registration Form"></h1>
-
+        data-en="Eid al-Fitr Prayer Registration"></h1>
+    
+    <div class="arabic-text">صلاة عيد الفطر</div>
+    
     <div class="masjid-name"
          data-id="Masjid Central Okayama"
          data-ja="岡山セントラルモスク"
@@ -188,108 +348,439 @@
 <div class="card">
 <form id="registerForm">
 
-<div class="field">
-<label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
-<input type="text" name="nama_lengkap" required>
+<!-- CSRF Token (Hidden) -->
+<input type="hidden" name="csrf_token" id="csrfToken">
+
+<div class="success-message" id="successMessage">
+    <span data-id="Data berhasil dikirim! Mengarahkan..." 
+          data-ja="データ送信成功！リダイレクト中..." 
+          data-en="Data submitted successfully! Redirecting..."></span>
 </div>
 
 <div class="field">
-<label data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
-<input type="email" name="email" required>
+<label class="required" data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
+<input type="text" name="nama_lengkap" id="namaLengkap" required maxlength="100">
+<div class="error-message" id="namaError"></div>
 </div>
 
 <div class="field">
-<label data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
-<textarea name="domisili" required></textarea>
+<label class="required" data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
+<input type="email" name="email" id="email" required>
+<div class="error-message" id="emailError"></div>
 </div>
 
 <div class="field">
-<label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone Number"></label>
+<label class="required" data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
+<textarea name="domisili" id="domisili" required maxlength="200"></textarea>
+<div class="error-message" id="domisiliError"></div>
+</div>
+
+<div class="field">
+<label class="required" data-id="Nomor WhatsApp" data-ja="電話番号" data-en="Phone Number"></label>
 <input type="tel"
        name="no_hp"
+       id="noHp"
        inputmode="numeric"
        pattern="[0-9]{10,13}"
        minlength="10"
        maxlength="13"
-       oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+       placeholder="081234567890"
        required>
+<div class="error-message" id="phoneError"></div>
 </div>
 
 <div class="field">
-<label data-id="Usia" data-ja="年齢" data-en="Age"></label>
-<input type="number" name="usia" required>
+<label class="required" data-id="Usia" data-ja="年齢" data-en="Age"></label>
+<input type="number" 
+       name="usia" 
+       id="usia" 
+       min="1" 
+       max="120" 
+       required>
+<div class="error-message" id="ageError"></div>
 </div>
 
-<div class="field radio-group">
-<label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
-
+<div class="field">
+<label class="required" data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
+<div class="radio-group">
 <label>
 <input type="radio" name="jk" value="Laki-laki" required>
 <span data-id="Laki-laki" data-ja="男性" data-en="Male"></span>
 </label>
-
 <label>
 <input type="radio" name="jk" value="Perempuan">
 <span data-id="Perempuan" data-ja="女性" data-en="Female"></span>
 </label>
 </div>
+<div class="error-message" id="genderError"></div>
+</div>
 
-<div class="field checkbox">
+<div class="field">
+<label class="required" data-id="Jumlah Orang" data-ja="人数" data-en="Number of People"></label>
+<select name="jumlah_orang" id="jumlahOrang" required>
+    <option value="" data-id="Pilih jumlah" data-ja="人数を選択" data-en="Select number"></option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+</select>
+<div class="error-message" id="jumlahError"></div>
+</div>
+
+<div class="field">
+<div class="checkbox-group">
 <label>
-<input type="checkbox" name="setuju" value="Ya" required>
+<input type="checkbox" name="setuju" id="setuju" value="Ya" required>
 <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
       data-ja="本イベントの目的で個人情報を使用することに同意します"
       data-en="I agree that my data may be used for this event"></span>
 </label>
 </div>
+<div class="error-message" id="agreeError"></div>
+</div>
 
-<button type="submit"
-        data-id="Daftar"
-        data-ja="登録"
-        data-en="Register"></button>
+<!-- reCAPTCHA -->
+<div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+<div class="error-message" id="captchaError"></div>
+
+<button type="submit" id="submitBtn">
+    <span data-id="Daftar Sekarang" data-ja="登録する" data-en="Register Now"></span>
+</button>
 
 </form>
-    <script>
-document.getElementById("registerForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-
-  fetch("https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.text())
-  .then(() => {
-    window.location.href = "success.html";
-  })
-  .catch(err => {
-    alert("Gagal mengirim data");
-    console.error(err);
-  });
-});
-</script>
-
 </div>
 
 </div>
 </main>
 
 <footer>
-© 2025 — Yayasan Ibadurrahman Islamic Center
+© 2025 — <span data-id="Yayasan Ibadurrahman Islamic Center" 
+                data-ja="イバドゥラフマン イスラミック センター財団" 
+                data-en="Ibadurrahman Islamic Center Foundation"></span>
 </footer>
 
 <script>
-(function () {
-  const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
-  let current = "id";
-  if (lang.startsWith("ja")) current = "ja";
-  else if (lang.startsWith("en")) current = "en";
+// ==================== KONFIGURASI ====================
+const CONFIG = {
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec",
+    SUCCESS_REDIRECT_DELAY: 2000, // 2 detik
+    MAX_SUBMISSIONS_PER_HOUR: 3
+};
 
-  document.querySelectorAll("[data-id]").forEach(el => {
-    el.textContent = el.dataset[current] || el.dataset.id;
-  });
-})();
+// ==================== MULTI LANGUAGE ====================
+let currentLang = 'id';
+
+// Deteksi bahasa browser
+function detectLanguage() {
+    const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
+    if (lang.startsWith("ja")) return "ja";
+    if (lang.startsWith("en")) return "en";
+    return "id";
+}
+
+function updateLanguage(lang) {
+    currentLang = lang;
+    
+    // Update semua elemen dengan data attributes
+    document.querySelectorAll("[data-id]").forEach(el => {
+        const text = el.dataset[lang] || el.dataset.id;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = text;
+        } else {
+            el.textContent = text;
+        }
+    });
+    
+    // Update active button
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    
+    // Simpan preference
+    localStorage.setItem('preferred_lang', lang);
+}
+
+// ==================== VALIDASI ====================
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function validatePhone(phone) {
+    return /^[0-9]{10,13}$/.test(phone);
+}
+
+function validateAge(age) {
+    return age >= 1 && age <= 120;
+}
+
+function showError(elementId, message) {
+    const errorEl = document.getElementById(elementId);
+    const inputEl = document.getElementById(elementId.replace('Error', ''));
+    
+    if (errorEl && inputEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        inputEl.classList.add('input-error');
+        return false;
+    }
+    return true;
+}
+
+function clearError(elementId) {
+    const errorEl = document.getElementById(elementId);
+    const inputEl = document.getElementById(elementId.replace('Error', ''));
+    
+    if (errorEl && inputEl) {
+        errorEl.style.display = 'none';
+        inputEl.classList.remove('input-error');
+    }
+}
+
+function validateForm() {
+    let isValid = true;
+    
+    // Clear all errors
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll('.input-error').forEach(el => {
+        el.classList.remove('input-error');
+    });
+    
+    // Validasi Nama
+    const nama = document.getElementById('namaLengkap').value.trim();
+    if (!nama || nama.length < 2) {
+        showError('namaError', currentLang === 'id' ? 'Nama minimal 2 karakter' : 
+                  currentLang === 'ja' ? '名前は2文字以上必要です' : 
+                  'Name must be at least 2 characters');
+        isValid = false;
+    }
+    
+    // Validasi Email
+    const email = document.getElementById('email').value.trim();
+    if (!email || !validateEmail(email)) {
+        showError('emailError', currentLang === 'id' ? 'Email tidak valid' : 
+                  currentLang === 'ja' ? 'メールアドレスが無効です' : 
+                  'Invalid email address');
+        isValid = false;
+    }
+    
+    // Validasi Domisili
+    const domisili = document.getElementById('domisili').value.trim();
+    if (!domisili || domisili.length < 3) {
+        showError('domisiliError', currentLang === 'id' ? 'Domisili minimal 3 karakter' : 
+                  currentLang === 'ja' ? '居住地は3文字以上必要です' : 
+                  'City must be at least 3 characters');
+        isValid = false;
+    }
+    
+    // Validasi Nomor HP
+    const phone = document.getElementById('noHp').value.trim();
+    if (!phone || !validatePhone(phone)) {
+        showError('phoneError', currentLang === 'id' ? 'Nomor HP 10-13 digit angka' : 
+                  currentLang === 'ja' ? '電話番号は10〜13桁の数字です' : 
+                  'Phone number must be 10-13 digits');
+        isValid = false;
+    }
+    
+    // Validasi Usia
+    const age = parseInt(document.getElementById('usia').value);
+    if (!age || !validateAge(age)) {
+        showError('ageError', currentLang === 'id' ? 'Usia antara 1-120 tahun' : 
+                  currentLang === 'ja' ? '年齢は1〜120歳です' : 
+                  'Age must be between 1-120');
+        isValid = false;
+    }
+    
+    // Validasi Jenis Kelamin
+    const gender = document.querySelector('input[name="jk"]:checked');
+    if (!gender) {
+        showError('genderError', currentLang === 'id' ? 'Pilih jenis kelamin' : 
+                  currentLang === 'ja' ? '性別を選択してください' : 
+                  'Please select gender');
+        isValid = false;
+    }
+    
+    // Validasi Jumlah Orang
+    const jumlah = document.getElementById('jumlahOrang').value;
+    if (!jumlah) {
+        showError('jumlahError', currentLang === 'id' ? 'Pilih jumlah orang' : 
+                  currentLang === 'ja' ? '人数を選択してください' : 
+                  'Please select number of people');
+        isValid = false;
+    }
+    
+    // Validasi Checkbox Setuju
+    const agree = document.getElementById('setuju').checked;
+    if (!agree) {
+        showError('agreeError', currentLang === 'id' ? 'Anda harus menyetujui' : 
+                  currentLang === 'ja' ? '同意が必要です' : 
+                  'You must agree to continue');
+        isValid = false;
+    }
+    
+    // Validasi reCAPTCHA
+    const captchaResponse = grecaptcha.getResponse();
+    if (!captchaResponse) {
+        showError('captchaError', currentLang === 'id' ? 'Harap verifikasi reCAPTCHA' : 
+                  currentLang === 'ja' ? 'reCAPTCHAを確認してください' : 
+                  'Please verify reCAPTCHA');
+        isValid = false;
+    }
+    
+    return isValid;
+}
+
+// ==================== FORM SUBMISSION ====================
+async function submitForm(formData) {
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerHTML;
+    
+    try {
+        // Tampilkan loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="loading-spinner"></span>${currentLang === 'id' ? 'Mengirim...' : currentLang === 'ja' ? '送信中...' : 'Sending...'}`;
+        
+        // Tambahkan timestamp dan user agent
+        formData.append('timestamp', new Date().toISOString());
+        formData.append('user_agent', navigator.userAgent);
+        formData.append('language', currentLang);
+        
+        // Kirim ke Google Apps Script
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Important for Google Apps Script
+            body: formData
+        });
+        
+        // Karena no-cors, kita tidak bisa membaca response
+        // Tapi kita anggap berhasil jika tidak error
+        
+        // Simpan submission di localStorage untuk rate limiting
+        const submissions = JSON.parse(localStorage.getItem('submissions') || '[]');
+        submissions.push(Date.now());
+        
+        // Hapus submission yang lebih dari 1 jam
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        const recentSubmissions = submissions.filter(time => time > oneHourAgo);
+        localStorage.setItem('submissions', JSON.stringify(recentSubmissions));
+        
+        // Reset reCAPTCHA
+        grecaptcha.reset();
+        
+        // Tampilkan pesan sukses
+        document.getElementById('successMessage').style.display = 'block';
+        
+        // Redirect setelah delay
+        setTimeout(() => {
+            window.location.href = "success.html";
+        }, CONFIG.SUCCESS_REDIRECT_DELAY);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        
+        // Tampilkan error
+        alert(currentLang === 'id' ? 'Gagal mengirim data. Coba lagi.' : 
+              currentLang === 'ja' ? 'データ送信に失敗しました。もう一度お試しください。' : 
+              'Failed to send data. Please try again.');
+    }
+}
+
+// ==================== RATE LIMITING ====================
+function checkRateLimit() {
+    const submissions = JSON.parse(localStorage.getItem('submissions') || '[]');
+    const oneHourAgo = Date.now() - (60 * 60 * 1000);
+    const recentSubmissions = submissions.filter(time => time > oneHourAgo);
+    
+    if (recentSubmissions.length >= CONFIG.MAX_SUBMISSIONS_PER_HOUR) {
+        const nextSubmit = new Date(recentSubmissions[0] + (60 * 60 * 1000));
+        alert(currentLang === 'id' ? `Terlalu banyak submission. Coba lagi setelah ${nextSubmit.toLocaleTimeString()}` : 
+              currentLang === 'ja' ? `送信が多すぎます。${nextSubmit.toLocaleTimeString()} 以降にお試しください` : 
+              `Too many submissions. Try again after ${nextSubmit.toLocaleTimeString()}`);
+        return false;
+    }
+    return true;
+}
+
+// ==================== EVENT LISTENERS ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup language
+    const savedLang = localStorage.getItem('preferred_lang') || detectLanguage();
+    updateLanguage(savedLang);
+    
+    // Setup language switcher
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            updateLanguage(btn.dataset.lang);
+        });
+    });
+    
+    // Setup real-time validation
+    document.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('input', () => {
+            const errorId = input.id + 'Error';
+            if (document.getElementById(errorId)) {
+                clearError(errorId);
+            }
+        });
+        
+        input.addEventListener('change', () => {
+            const errorId = input.id + 'Error';
+            if (document.getElementById(errorId)) {
+                clearError(errorId);
+            }
+        });
+    });
+    
+    // Setup form submission
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Validasi rate limit
+        if (!checkRateLimit()) return;
+        
+        // Validasi form
+        if (!validateForm()) return;
+        
+        // Create FormData
+        const formData = new FormData(this);
+        
+        // Generate CSRF token jika belum ada
+        if (!formData.get('csrf_token')) {
+            const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+            document.getElementById('csrfToken').value = token;
+            formData.append('csrf_token', token);
+        }
+        
+        // Submit form
+        await submitForm(formData);
+    });
+    
+    // Auto-format phone number
+    document.getElementById('noHp').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+});
+
+// ==================== OFFLINE DETECTION ====================
+window.addEventListener('online', function() {
+    if (document.getElementById('submitBtn').disabled) {
+        // Try to resubmit if was offline
+        console.log('Back online');
+    }
+});
+
+window.addEventListener('offline', function() {
+    alert(currentLang === 'id' ? 'Anda sedang offline. Periksa koneksi internet.' : 
+          currentLang === 'ja' ? 'オフラインです。インターネット接続を確認してください。' : 
+          'You are offline. Please check your internet connection.');
+});
 </script>
 
 </body>
