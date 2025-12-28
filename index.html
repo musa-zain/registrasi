@@ -152,6 +152,12 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
         }
 
         footer {
@@ -249,6 +255,133 @@
         data-en="Register"></button>
 
 </form>
+
+<script>
+// ==================== KONFIGURASI ====================
+const CONFIG = {
+    // 🔴 GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
+    // Contoh: "https://script.google.com/macros/s/.../exec"
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec",
+    
+    // ⏱️ Waktu tunggu sebelum redirect (milidetik)
+    REDIRECT_DELAY: 1500
+};
+
+// ==================== HANDLE FORM SUBMIT ====================
+document.querySelector('form').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Mencegah reload halaman
+    
+    const form = this;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
+    
+    try {
+        // Tampilkan loading
+        submitButton.disabled = true;
+        submitButton.textContent = getLoadingText();
+        
+        // Buat FormData dari form
+        const formData = new FormData(form);
+        
+        // Tambahkan timestamp dan referer
+        formData.append('timestamp', new Date().toISOString());
+        formData.append('source', 'website_form');
+        
+        // Kirim ke Google Apps Script
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Penting untuk Google Apps Script
+            body: formData
+        });
+        
+        // Berhasil: Tampilkan pesan sukses
+        submitButton.textContent = getSuccessText();
+        submitButton.style.backgroundColor = '#10b981';
+        
+        // Tunggu sebentar, lalu redirect ke success.html
+        setTimeout(() => {
+            window.location.href = "success.html";
+        }, CONFIG.REDIRECT_DELAY);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        
+        // Reset button ke kondisi awal
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        submitButton.style.backgroundColor = '';
+        
+        // Tampilkan alert error sesuai bahasa
+        alert(getErrorMessage());
+    }
+});
+
+// ==================== HELPER FUNCTIONS ====================
+function getCurrentLanguage() {
+    const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
+    if (lang.startsWith("ja")) return "ja";
+    if (lang.startsWith("en")) return "en";
+    return "id";
+}
+
+function getLoadingText() {
+    const lang = getCurrentLanguage();
+    const texts = {
+        id: "Mengirim...",
+        ja: "送信中...",
+        en: "Sending..."
+    };
+    return texts[lang];
+}
+
+function getSuccessText() {
+    const lang = getCurrentLanguage();
+    const texts = {
+        id: "✓ Berhasil!",
+        ja: "✓ 成功しました！",
+        en: "✓ Success!"
+    };
+    return texts[lang];
+}
+
+function getErrorMessage() {
+    const lang = getCurrentLanguage();
+    const texts = {
+        id: "Gagal mengirim data. Coba lagi.",
+        ja: "データ送信に失敗しました。もう一度お試しください。",
+        en: "Failed to send data. Please try again."
+    };
+    return texts[lang];
+}
+
+// ==================== VALIDASI REAL-TIME NOMOR HP ====================
+const phoneInput = document.querySelector('input[name="no_hp"]');
+if (phoneInput) {
+    phoneInput.addEventListener('input', function(e) {
+        // Hanya izinkan angka
+        this.value = this.value.replace(/[^0-9]/g, '');
+        
+        // Validasi panjang (opsional styling)
+        if (this.value.length > 0 && this.value.length < 10) {
+            this.style.borderColor = '#f87171';
+        } else {
+            this.style.borderColor = '';
+        }
+    });
+}
+
+// ==================== DETEKSI OFFLINE ====================
+window.addEventListener('offline', function() {
+    const messages = {
+        id: "⚠️ Anda sedang offline. Periksa koneksi internet.",
+        ja: "⚠️ オフラインです。インターネット接続を確認してください。",
+        en: "⚠️ You are offline. Please check your internet connection."
+    };
+    
+    alert(messages[getCurrentLanguage()]);
+});
+</script>
+
 </div>
 
 </div>
@@ -259,6 +392,7 @@
 </footer>
 
 <script>
+// ==================== MULTI LANGUAGE ====================
 (function () {
   const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
   let current = "id";
