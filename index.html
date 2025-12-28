@@ -186,7 +186,7 @@
 </div>
 
 <div class="card">
-<form onsubmit="alert('Form demo berhasil dibuka online'); return false;">
+<form id="registerForm">
 
 <div class="field">
 <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
@@ -236,7 +236,7 @@
 
 <div class="field checkbox">
 <label>
-<input type="checkbox" name="setuju" required>
+<input type="checkbox" name="setuju" value="Ya" required>
 <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
       data-ja="本イベントの目的で個人情報を使用することに同意します"
       data-en="I agree that my data may be used for this event"></span>
@@ -249,6 +249,29 @@
         data-en="Register"></button>
 
 </form>
+    <script>
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const btn = this.querySelector("button");
+btn.disabled = true;
+btn.textContent = "Mengirim...";
+
+    const formData = new FormData(this);
+
+    fetch("https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(() => {
+        window.location.href = "success.html";
+    })
+    .catch(() => {
+        alert("Gagal mengirim data. Coba lagi.");
+    });
+});
+</script>
+
 </div>
 
 </div>
