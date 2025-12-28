@@ -13,14 +13,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 15px;
             line-height: 1.6;
             color: #1f2937;
@@ -81,8 +74,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background-image:
-                radial-gradient(circle at 1px 1px, #047857 1px, transparent 1px);
+            background-image: radial-gradient(circle at 1px 1px, #047857 1px, transparent 1px);
             background-size: 18px 18px;
             opacity: 0.03;
             pointer-events: none;
@@ -183,60 +175,59 @@
 <div class="header">
     <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
         data-ja="イドゥル・フィトリ礼拝 参加登録フォーム"
-        data-en="Eid al-Fitr Prayer Registration Form"></h1>
+        data-en="Eid al-Fitr Prayer Registration Form">Pendaftaran Sholat Idul Fitri</h1>
 
     <div class="masjid-name"
          data-id="Masjid Central Okayama"
          data-ja="岡山セントラルモスク"
-         data-en="Okayama Central Mosque"></div>
+         data-en="Okayama Central Mosque">Masjid Central Okayama</div>
 </div>
 
 <div class="card">
-<form method="POST">
+<form id="registrationForm">
 
 <div class="field">
-<label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
+<label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name">Nama Lengkap</label>
 <input type="text" name="nama_lengkap" required>
 </div>
 
 <div class="field">
-<label data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
+<label data-id="Email" data-ja="メールアドレス" data-en="Email">Email</label>
 <input type="email" name="email" required>
 </div>
 
 <div class="field">
-<label data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
-<textarea name="domisili" required></textarea>
+<label data-id="Domisili / Kota" data-ja="居住地" data-en="City">Domisili / Kota</label>
+<textarea name="domisili" required placeholder="Contoh: Okayama City, Kita-ku"></textarea>
 </div>
 
 <div class="field">
-<label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone Number"></label>
+<label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone Number">Nomor HP / WhatsApp</label>
 <input type="tel"
        name="no_hp"
        inputmode="numeric"
        pattern="[0-9]{10,13}"
        minlength="10"
        maxlength="13"
-       oninput="this.value=this.value.replace(/[^0-9]/g,'')"
        required>
 </div>
 
 <div class="field">
-<label data-id="Usia" data-ja="年齢" data-en="Age"></label>
+<label data-id="Usia" data-ja="年齢" data-en="Age">Usia</label>
 <input type="number" name="usia" required>
 </div>
 
 <div class="field radio-group">
-<label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
+<label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender">Jenis Kelamin</label>
 
 <label>
 <input type="radio" name="jk" value="Laki-laki" required>
-<span data-id="Laki-laki" data-ja="男性" data-en="Male"></span>
+<span data-id="Laki-laki" data-ja="男性" data-en="Male">Laki-laki</span>
 </label>
 
 <label>
 <input type="radio" name="jk" value="Perempuan">
-<span data-id="Perempuan" data-ja="女性" data-en="Female"></span>
+<span data-id="Perempuan" data-ja="女性" data-en="Female">Perempuan</span>
 </label>
 </div>
 
@@ -245,75 +236,66 @@
 <input type="checkbox" name="setuju" required>
 <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
       data-ja="本イベントの目的で個人情報を使用することに同意します"
-      data-en="I agree that my data may be used for this event"></span>
+      data-en="I agree that my data may be used for this event">Saya menyetujui data digunakan untuk keperluan acara ini</span>
 </label>
 </div>
 
 <button type="submit"
         data-id="Daftar"
         data-ja="登録"
-        data-en="Register"></button>
+        data-en="Register">Daftar</button>
 
 </form>
 
 <script>
 // ==================== KONFIGURASI ====================
 const CONFIG = {
-    // 🔴 GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
-    // Contoh: "https://script.google.com/macros/s/.../exec"
+    // 🔴 PASTIKAN URL SUDAH BENAR DAN TER-DEPLOY SEBAGAI 'ANYONE'
     GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec",
-    
-    // ⏱️ Waktu tunggu sebelum redirect (milidetik)
     REDIRECT_DELAY: 1500
 };
 
 // ==================== HANDLE FORM SUBMIT ====================
-document.querySelector('form').addEventListener('submit', async function(e) {
-    e.preventDefault(); // Mencegah reload halaman
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     
     const form = this;
     const submitButton = form.querySelector('button[type="submit"]');
     const originalText = submitButton.innerHTML;
     
-    try {
-        // Tampilkan loading
-        submitButton.disabled = true;
-        submitButton.textContent = getLoadingText();
-        
-        // Buat FormData dari form
-        const formData = new FormData(form);
-        
-        // Tambahkan timestamp dan referer
-        formData.append('timestamp', new Date().toISOString());
-        formData.append('source', 'website_form');
-        
-        // Kirim ke Google Apps Script
-        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Penting untuk Google Apps Script
-            body: formData
-        });
-        
-        // Berhasil: Tampilkan pesan sukses
+    // Tampilkan loading
+    submitButton.disabled = true;
+    submitButton.textContent = getLoadingText();
+    
+    const formData = new FormData(form);
+    
+    // Kirim menggunakan fetch dengan format URLSearchParams untuk menghindari isu CORS pada GAS
+    fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: new URLSearchParams(formData),
+        mode: 'no-cors' // Tetap gunakan no-cors untuk GAS jika tidak ingin menangani preflight
+    })
+    .then(() => {
+        // Karena no-cors, kita tidak bisa baca response body, 
+        // tapi jika sampai sini artinya request sudah dikirim.
         submitButton.textContent = getSuccessText();
         submitButton.style.backgroundColor = '#10b981';
         
-        // Tunggu sebentar, lalu redirect ke success.html
         setTimeout(() => {
-            window.location.href = "success.html";
+            // Jika Anda belum punya success.html, bisa ganti ke alert atau reset form
+            alert(getSuccessText());
+            form.reset();
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+            submitButton.style.backgroundColor = '';
         }, CONFIG.REDIRECT_DELAY);
-        
-    } catch (error) {
+    })
+    .catch(error => {
         console.error('Error:', error);
-        
-        // Reset button ke kondisi awal
         submitButton.disabled = false;
         submitButton.innerHTML = originalText;
-        submitButton.style.backgroundColor = '';
-        
-        // Tampilkan alert error sesuai bahasa
         alert(getErrorMessage());
-    }
+    });
 });
 
 // ==================== HELPER FUNCTIONS ====================
@@ -325,85 +307,43 @@ function getCurrentLanguage() {
 }
 
 function getLoadingText() {
-    const lang = getCurrentLanguage();
-    const texts = {
-        id: "Mengirim...",
-        ja: "送信中...",
-        en: "Sending..."
-    };
-    return texts[lang];
+    const texts = { id: "Mengirim...", ja: "送信中...", en: "Sending..." };
+    return texts[getCurrentLanguage()];
 }
 
 function getSuccessText() {
-    const lang = getCurrentLanguage();
-    const texts = {
-        id: "✓ Berhasil!",
-        ja: "✓ 成功しました！",
-        en: "✓ Success!"
-    };
-    return texts[lang];
+    const texts = { id: "✓ Berhasil Terdaftar!", ja: "✓ 登録完了！", en: "✓ Registered Successfully!" };
+    return texts[getCurrentLanguage()];
 }
 
 function getErrorMessage() {
+    const texts = { id: "Gagal mengirim data. Coba lagi.", ja: "エラーが発生しました。", en: "Submission failed." };
+    return texts[getCurrentLanguage()];
+}
+
+// ==================== MULTI LANGUAGE & PHONE VALIDATION ====================
+(function init() {
     const lang = getCurrentLanguage();
-    const texts = {
-        id: "Gagal mengirim data. Coba lagi.",
-        ja: "データ送信に失敗しました。もう一度お試しください。",
-        en: "Failed to send data. Please try again."
-    };
-    return texts[lang];
-}
-
-// ==================== VALIDASI REAL-TIME NOMOR HP ====================
-const phoneInput = document.querySelector('input[name="no_hp"]');
-if (phoneInput) {
-    phoneInput.addEventListener('input', function(e) {
-        // Hanya izinkan angka
-        this.value = this.value.replace(/[^0-9]/g, '');
-        
-        // Validasi panjang (opsional styling)
-        if (this.value.length > 0 && this.value.length < 10) {
-            this.style.borderColor = '#f87171';
-        } else {
-            this.style.borderColor = '';
-        }
+    document.querySelectorAll("[data-id]").forEach(el => {
+        el.textContent = el.dataset[lang] || el.dataset.id;
     });
-}
 
-// ==================== DETEKSI OFFLINE ====================
-window.addEventListener('offline', function() {
-    const messages = {
-        id: "⚠️ Anda sedang offline. Periksa koneksi internet.",
-        ja: "⚠️ オフラインです。インターネット接続を確認してください。",
-        en: "⚠️ You are offline. Please check your internet connection."
-    };
-    
-    alert(messages[getCurrentLanguage()]);
-});
+    const phoneInput = document.querySelector('input[name="no_hp"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+})();
 </script>
 
 </div>
-
 </div>
 </main>
 
 <footer>
 © 2025 — Yayasan Ibadurrahman Islamic Center
 </footer>
-
-<script>
-// ==================== MULTI LANGUAGE ====================
-(function () {
-  const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
-  let current = "id";
-  if (lang.startsWith("ja")) current = "ja";
-  else if (lang.startsWith("en")) current = "en";
-
-  document.querySelectorAll("[data-id]").forEach(el => {
-    el.textContent = el.dataset[current] || el.dataset.id;
-  });
-})();
-</script>
 
 </body>
 </html>
