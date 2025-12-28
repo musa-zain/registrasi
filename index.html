@@ -251,24 +251,36 @@
 </form>
     <script>
 document.getElementById("registerForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const btn = this.querySelector("button");
-btn.disabled = true;
-btn.textContent = "Mengirim...";
+  e.preventDefault();
 
-    const formData = new FormData(this);
+  const data = {
+    nama_lengkap: this.nama_lengkap.value,
+    email: this.email.value,
+    domisili: this.domisili.value,
+    no_hp: this.no_hp.value,
+    usia: this.usia.value,
+    jk: this.jk.value
+  };
 
-    fetch("https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.text())
-    .then(() => {
-        window.location.href = "success.html";
-    })
-    .catch(() => {
-        alert("Gagal mengirim data. Coba lagi.");
-    });
+  fetch("https://script.google.com/macros/s/AKfycbw5PaHfUA6KDv7dDhVhWlfv5CakUK_-06_iYLP5LXHeqZhNVDgBYqFqJi-cR1EwMJXtvQ/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (res.status === "success") {
+      window.location.href = "success.html";
+    } else {
+      alert("Gagal menyimpan data");
+    }
+  })
+  .catch(err => {
+    alert("Error koneksi");
+    console.error(err);
+  });
 });
 </script>
 
