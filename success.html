@@ -40,105 +40,68 @@ main {
     width: 100%;
     text-align: center;
     border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 32px 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 28px 20px;
 }
 
 .icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    color: #10b981;
+    font-size: 40px;
+    margin-bottom: 12px;
 }
 
 h1 {
-    font-size: 22px;
-    margin-bottom: 8px;
-    color: #065f46;
+    font-size: 20px;
+    margin-bottom: 6px;
 }
 
 .subtitle {
     color: #6b7280;
-    font-size: 15px;
-    margin-bottom: 28px;
-    line-height: 1.5;
+    font-size: 14px;
+    margin-bottom: 24px;
 }
 
-.info-box {
-    background-color: #f9fafb;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 24px 0;
+.info {
     text-align: left;
+    margin-bottom: 20px;
 }
 
-.info-box p {
-    margin: 8px 0;
+.info p {
+    margin: 6px 0;
     font-size: 14px;
 }
 
-.info-box strong {
-    color: #374151;
-    display: inline-block;
-    min-width: 100px;
-}
-
-.note {
-    background-color: #f0fdf4;
-    border: 1px solid #d1fae5;
-    border-radius: 10px;
-    padding: 16px;
+.qr {
     margin: 20px 0;
-    text-align: left;
-    font-size: 14px;
 }
 
-.note strong {
-    color: #065f46;
+.qr img {
+    width: 180px;
+    max-width: 100%;
 }
 
-.actions {
-    margin-top: 24px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 24px;
-    margin: 8px;
+.download-btn {
+    display: block;
+    margin: 16px 0 6px;
+    padding: 12px;
     background-color: #111827;
     color: #ffffff;
     text-decoration: none;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
-    transition: all 0.2s;
 }
 
-.btn:hover {
-    background-color: #1f2937;
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    background-color: #f3f4f6;
+.note {
+    font-size: 13px;
     color: #374151;
-    border: 1px solid #e5e7eb;
-}
-
-.btn-secondary:hover {
-    background-color: #e5e7eb;
+    margin-top: 12px;
 }
 
 footer {
     text-align: center;
-    padding: 16px 10px;
+    padding: 14px 10px;
     font-size: 12px;
     color: #6b7280;
-    background-color: #ecfdf5;
-}
-
-.hidden {
-    display: none;
 }
 </style>
 </head>
@@ -151,31 +114,28 @@ footer {
 
     <h1 id="title">Pendaftaran Berhasil</h1>
     <div class="subtitle" id="subtitle">
-        Terima kasih telah mendaftar sholat Idul Fitri di Masjid Central Okayama.
-        Data Anda telah tercatat di sistem kami.
+        Terima kasih telah melakukan pendaftaran
     </div>
 
-    <!-- Data akan diisi oleh JavaScript jika ada -->
-    <div class="info-box hidden" id="dataContainer">
-        <p><strong id="lblName">Nama Lengkap:</strong> <span id="dataName">-</span></p>
-        <p><strong id="lblEmail">Email:</strong> <span id="dataEmail">-</span></p>
-        <p><strong id="lblCity">Domisili:</strong> <span id="dataCity">-</span></p>
-        <p><strong id="lblPhone">No HP:</strong> <span id="dataPhone">-</span></p>
-        <p><strong id="lblAge">Usia:</strong> <span id="dataAge">-</span></p>
-        <p><strong id="lblGender">Jenis Kelamin:</strong> <span id="dataGender">-</span></p>
+    <div class="info">
+        <p><strong id="lblName">Nama Lengkap:</strong> {{ nama_lengkap }}</p>
+        <p><strong id="lblEmail">Email:</strong> {{ email }}</p>
+        <p><strong id="lblCity">Domisili:</strong> {{ domisili }}</p>
+        <p><strong id="lblPhone">No HP / WhatsApp:</strong> {{ no_hp }}</p>
+        <p><strong id="lblAge">Usia:</strong> {{ usia }}</p>
+        <p><strong id="lblGender">Jenis Kelamin:</strong> {{ jk }}</p>
     </div>
+
+    <div class="qr">
+        <img src="/{{ qr_path }}" alt="QR Code">
+    </div>
+
+    <a href="/download/{{ kode }}" class="download-btn" id="downloadBtn">
+        ⬇️ Download QR Code
+    </a>
 
     <div class="note" id="note">
-        <strong>Informasi Penting:</strong><br>
-        1. Sholat Idul Fitri dilaksanakan pada <strong>10 April 2025 pukul 07:00</strong><br>
-        2. Datang 30 menit sebelum waktu sholat<br>
-        3. Bawa bukti pendaftaran ini (screenshot halaman ini)<br>
-        4. Lokasi: Masjid Central Okayama
-    </div>
-
-    <div class="actions">
-        <a href="index.html" class="btn" id="backBtn">← Kembali ke Form</a>
-        <a href="javascript:window.print()" class="btn btn-secondary" id="printBtn">🖨️ Cetak Halaman</a>
+        Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara.
     </div>
 </div>
 </main>
@@ -185,114 +145,63 @@ footer {
 </footer>
 
 <script>
-// ==================== MULTI LANGUAGE ====================
 (function () {
     const lang = navigator.language || navigator.userLanguage;
-    const savedData = JSON.parse(localStorage.getItem('last_registration') || '{}');
 
-    const translations = {
+    const t = {
         id: {
             title: "Pendaftaran Berhasil",
-            subtitle: "Terima kasih telah mendaftar sholat Idul Fitri di Masjid Central Okayama. Data Anda telah tercatat di sistem kami.",
+            subtitle: "Terima kasih telah melakukan pendaftaran",
             name: "Nama Lengkap:",
             email: "Email:",
             city: "Domisili:",
             phone: "No HP / WhatsApp:",
             age: "Usia:",
             gender: "Jenis Kelamin:",
-            back: "← Kembali ke Form",
-            print: "🖨️ Cetak Halaman",
-            note: `<strong>Informasi Penting:</strong><br>
-                   1. Sholat Idul Fitri dilaksanakan pada <strong>10 April 2025 pukul 07:00</strong><br>
-                   2. Datang 30 menit sebelum waktu sholat<br>
-                   3. Bawa bukti pendaftaran ini (screenshot halaman ini)<br>
-                   4. Lokasi: Masjid Central Okayama`
+            download: "⬇️ Download QR Code",
+            note: "Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara."
         },
         ja: {
             title: "登録が完了しました",
-            subtitle: "岡山セントラルモスクでのイドゥル・フィトリ礼拝へのお申し込みありがとうございます。データはシステムに記録されました。",
+            subtitle: "お申し込みありがとうございます",
             name: "氏名:",
             email: "メールアドレス:",
             city: "居住地:",
             phone: "電話番号:",
             age: "年齢:",
             gender: "性別:",
-            back: "← フォームに戻る",
-            print: "🖨️ ページを印刷",
-            note: `<strong>重要な情報:</strong><br>
-                   1. イドゥル・フィトリ礼拝は<strong>2025年4月10日 07:00</strong>に開催されます<br>
-                   2. 礼拝時間の30分前にお越しください<br>
-                   3. このページのスクリーンショットを証明としてお持ちください<br>
-                   4. 場所: 岡山セントラルモスク`
+            download: "⬇️ QRコードをダウンロード",
+            note: "当日は<strong>受付（チェックイン）</strong>の際にこのQRコードをご提示ください。"
         },
         en: {
             title: "Registration Successful",
-            subtitle: "Thank you for registering for Eid al-Fitr prayer at Okayama Central Mosque. Your data has been recorded in our system.",
+            subtitle: "Thank you for your registration",
             name: "Full Name:",
             email: "Email:",
             city: "City:",
             phone: "Phone Number:",
             age: "Age:",
             gender: "Gender:",
-            back: "← Back to Form",
-            print: "🖨️ Print Page",
-            note: `<strong>Important Information:</strong><br>
-                   1. Eid al-Fitr prayer will be held on <strong>April 10, 2025 at 07:00</strong><br>
-                   2. Please arrive 30 minutes before prayer time<br>
-                   3. Bring proof of registration (screenshot of this page)<br>
-                   4. Location: Okayama Central Mosque`
+            download: "⬇️ Download QR Code",
+            note: "Please save this QR code for <strong>check-in</strong> on the event day."
         }
     };
 
-    // Pilih bahasa
-    let current = translations.id;
-    if (lang.startsWith("ja")) current = translations.ja;
-    else if (lang.startsWith("en")) current = translations.en;
+    let current = t.id;
+    if (lang.startsWith("ja")) current = t.ja;
+    else if (lang.startsWith("en")) current = t.en;
 
-    // Terapkan terjemahan
-    document.getElementById("title").textContent = current.title;
+    document.getElementById("title").innerHTML = current.title;
     document.getElementById("subtitle").innerHTML = current.subtitle;
-    document.getElementById("lblName").textContent = current.name;
-    document.getElementById("lblEmail").textContent = current.email;
-    document.getElementById("lblCity").textContent = current.city;
-    document.getElementById("lblPhone").textContent = current.phone;
-    document.getElementById("lblAge").textContent = current.age;
-    document.getElementById("lblGender").textContent = current.gender;
-    document.getElementById("backBtn").textContent = current.back;
-    document.getElementById("printBtn").textContent = current.print;
+    document.getElementById("lblName").innerHTML = current.name;
+    document.getElementById("lblEmail").innerHTML = current.email;
+    document.getElementById("lblCity").innerHTML = current.city;
+    document.getElementById("lblPhone").innerHTML = current.phone;
+    document.getElementById("lblAge").innerHTML = current.age;
+    document.getElementById("lblGender").innerHTML = current.gender;
+    document.getElementById("downloadBtn").innerHTML = current.download;
     document.getElementById("note").innerHTML = current.note;
-
-    // Tampilkan data jika ada di localStorage
-    if (savedData.nama_lengkap) {
-        document.getElementById('dataContainer').classList.remove('hidden');
-        document.getElementById('dataName').textContent = savedData.nama_lengkap || '-';
-        document.getElementById('dataEmail').textContent = savedData.email || '-';
-        document.getElementById('dataCity').textContent = savedData.domisili || '-';
-        document.getElementById('dataPhone').textContent = savedData.no_hp || '-';
-        document.getElementById('dataAge').textContent = savedData.usia || '-';
-        document.getElementById('dataGender').textContent = savedData.jk || '-';
-    }
-
-    // Auto scroll ke atas
-    window.scrollTo(0, 0);
-
-    // Clear data setelah 5 menit (opsional)
-    setTimeout(() => {
-        localStorage.removeItem('last_registration');
-    }, 5 * 60 * 1000);
-
 })();
-
-// Cetak styling khusus
-window.addEventListener('beforeprint', () => {
-    document.querySelector('.card').style.boxShadow = 'none';
-    document.querySelector('.card').style.border = '1px solid #ddd';
-});
-
-window.addEventListener('afterprint', () => {
-    document.querySelector('.card').style.boxShadow = '';
-    document.querySelector('.card').style.border = '';
-});
 </script>
 
 </body>
