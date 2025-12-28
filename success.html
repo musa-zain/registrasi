@@ -6,203 +6,37 @@
 <title>Pendaftaran Berhasil</title>
 
 <style>
-* { box-sizing: border-box; }
-
 body {
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #1f2937;
-    background-color: #ffffff;
-}
-
-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 16px;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f0fdf4;
+  color: #065f46;
 }
 
 .card {
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 28px 20px;
+  background: white;
+  padding: 28px 24px;
+  border-radius: 14px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid #d1fae5;
 }
 
-.icon {
-    font-size: 40px;
-    margin-bottom: 12px;
-}
-
-h1 {
-    font-size: 20px;
-    margin-bottom: 6px;
-}
-
-.subtitle {
-    color: #6b7280;
-    font-size: 14px;
-    margin-bottom: 24px;
-}
-
-.info {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.info p {
-    margin: 6px 0;
-    font-size: 14px;
-}
-
-.qr {
-    margin: 20px 0;
-}
-
-.qr img {
-    width: 180px;
-    max-width: 100%;
-}
-
-.download-btn {
-    display: block;
-    margin: 16px 0 6px;
-    padding: 12px;
-    background-color: #111827;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.note {
-    font-size: 13px;
-    color: #374151;
-    margin-top: 12px;
-}
-
-footer {
-    text-align: center;
-    padding: 14px 10px;
-    font-size: 12px;
-    color: #6b7280;
-}
+h1 { margin-bottom: 6px; }
+p { color: #374151; font-size: 14px; }
 </style>
 </head>
 
 <body>
-
-<main>
-<div class="card">
-    <div class="icon">✅</div>
-
-    <h1 id="title">Pendaftaran Berhasil</h1>
-    <div class="subtitle" id="subtitle">
-        Terima kasih telah melakukan pendaftaran
-    </div>
-
-    <div class="info">
-        <p><strong id="lblName">Nama Lengkap:</strong> {{ nama_lengkap }}</p>
-        <p><strong id="lblEmail">Email:</strong> {{ email }}</p>
-        <p><strong id="lblCity">Domisili:</strong> {{ domisili }}</p>
-        <p><strong id="lblPhone">No HP / WhatsApp:</strong> {{ no_hp }}</p>
-        <p><strong id="lblAge">Usia:</strong> {{ usia }}</p>
-        <p><strong id="lblGender">Jenis Kelamin:</strong> {{ jk }}</p>
-    </div>
-
-    <div class="qr">
-        <img src="/{{ qr_path }}" alt="QR Code">
-    </div>
-
-    <a href="/download/{{ kode }}" class="download-btn" id="downloadBtn">
-        ⬇️ Download QR Code
-    </a>
-
-    <div class="note" id="note">
-        Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara.
-    </div>
-</div>
-</main>
-
-<footer>
-© 2025 — Yayasan Ibadurrahman Islamic Center
-</footer>
-
-<script>
-(function () {
-    const lang = navigator.language || navigator.userLanguage;
-
-    const t = {
-        id: {
-            title: "Pendaftaran Berhasil",
-            subtitle: "Terima kasih telah melakukan pendaftaran",
-            name: "Nama Lengkap:",
-            email: "Email:",
-            city: "Domisili:",
-            phone: "No HP / WhatsApp:",
-            age: "Usia:",
-            gender: "Jenis Kelamin:",
-            download: "⬇️ Download QR Code",
-            note: "Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara."
-        },
-        ja: {
-            title: "登録が完了しました",
-            subtitle: "お申し込みありがとうございます",
-            name: "氏名:",
-            email: "メールアドレス:",
-            city: "居住地:",
-            phone: "電話番号:",
-            age: "年齢:",
-            gender: "性別:",
-            download: "⬇️ QRコードをダウンロード",
-            note: "当日は<strong>受付（チェックイン）</strong>の際にこのQRコードをご提示ください。"
-        },
-        en: {
-            title: "Registration Successful",
-            subtitle: "Thank you for your registration",
-            name: "Full Name:",
-            email: "Email:",
-            city: "City:",
-            phone: "Phone Number:",
-            age: "Age:",
-            gender: "Gender:",
-            download: "⬇️ Download QR Code",
-            note: "Please save this QR code for <strong>check-in</strong> on the event day."
-        }
-    };
-
-    let current = t.id;
-    if (lang.startsWith("ja")) current = t.ja;
-    else if (lang.startsWith("en")) current = t.en;
-
-    document.getElementById("title").innerHTML = current.title;
-    document.getElementById("subtitle").innerHTML = current.subtitle;
-    document.getElementById("lblName").innerHTML = current.name;
-    document.getElementById("lblEmail").innerHTML = current.email;
-    document.getElementById("lblCity").innerHTML = current.city;
-    document.getElementById("lblPhone").innerHTML = current.phone;
-    document.getElementById("lblAge").innerHTML = current.age;
-    document.getElementById("lblGender").innerHTML = current.gender;
-    document.getElementById("downloadBtn").innerHTML = current.download;
-    document.getElementById("note").innerHTML = current.note;
-})();
-</script>
-
+  <div class="card">
+    <h1>✅ Pendaftaran Berhasil</h1>
+    <p>Terima kasih, data Anda telah kami terima.</p>
+    <p>Silakan simpan informasi ini untuk keperluan check-in.</p>
+  </div>
 </body>
 </html>
