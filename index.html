@@ -105,7 +105,8 @@
 
 <script>
 // --- KONFIGURASI ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtqAVN55wb48GGg5EZFI-T23FB6_0vILvmS6PXA2sv0kWearUbgK4HZrZwhtF-DWOH5w/exec";
+// Masukkan URL Web App dari Google Apps Script yang sudah di-deploy
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRLXjI2gQS55U3oiyR_6znbhLyptaVG5QmL-VjjqJUKVyvSsP5M6iyJhkSfM9FoaS3/exec";
 
 // --- LOGIKA BAHASA ---
 (function () {
@@ -119,7 +120,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtqAVN55wb48GGg5EZF
     });
 })();
 
-// --- LOGIKA PENGIRIMAN DATA (PERBAIKAN CORS) ---
+// --- LOGIKA PENGIRIMAN DATA ---
 document.getElementById('registrationForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -127,43 +128,29 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     submitBtn.disabled = true;
     submitBtn.innerText = "Processing...";
 
-    // Gunakan URLSearchParams untuk menghindari error CORS
     const formData = new FormData(this);
-    const params = new URLSearchParams();
-    
-    // Masukkan semua field form ke params
-    for (const pair of formData) {
-        params.append(pair[0], pair[1]);
-    }
-    params.append("action", "register"); // Tambahkan action untuk backend
+    // Tambahkan parameter action agar script backend tahu ini proses registrasi
+    formData.append("action", "register");
 
     fetch(SCRIPT_URL, {
         method: 'POST',
-        body: params.toString(), // Kirim sebagai string URL Encoded
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        body: formData
     })
-    .then(response => {
-        // Jika response statusnya 200 tetapi tetap kena CORS di catch, 
-        // setidaknya data sudah masuk ke Google Sheets.
-        return response.json();
-    })
+    .then(response => response.json())
     .then(result => {
         if (result.status === 'success') {
-            // Pindah ke halaman sukses dengan ID peserta
-            window.location.href = `success.html?id=${result.id}`;
+            // Arahkan ke success.html dengan membawa ID dan data input
+            const queryParams = new URLSearchParams(result.data).toString();
+            window.location.href = `success.html?id=${result.id}&${queryParams}`;
         } else {
-            alert("Terjadi kesalahan: " + (result.message || "Gagal mendaftar"));
+            alert("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
             submitBtn.disabled = false;
             submitBtn.innerText = "Daftar";
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        // Jika data masuk ke Sheet tapi tetap muncul error CORS, 
-        // informasikan user untuk cek email konfirmasi.
-        alert("Pendaftaran gagal diproses oleh browser, namun silakan cek email Anda untuk konfirmasi atau coba beberapa saat lagi.");
+        alert("Gagal terhubung ke server.");
         submitBtn.disabled = false;
         submitBtn.innerText = "Daftar";
     });
