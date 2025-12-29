@@ -141,7 +141,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         if (result.status === 'success') {
             // Arahkan ke success.html dengan membawa ID dan data input
             const queryParams = new URLSearchParams(result.data).toString();
-            window.location.href = `success.html?id=${result.id}&${queryParams}`;
+            window.location.href = `success.html?id=${result.id}`;
         } else {
             alert("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
             submitBtn.disabled = false;
