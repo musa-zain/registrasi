@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Scan QR Check-in</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #reader {
+            width: 300px;
+            margin: auto;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Scan QR Peserta</h2>
+<div id="reader"></div>
+<div id="result"></div>
+
+<script>
+function onScanSuccess(decodedText) {
+    // hentikan scan setelah dapat QR
+    html5QrcodeScanner.clear();
+
+    fetch(`/checkin/${decodedText}`)
+        .then(res => res.json())
+        .then(data => {
+            const result = document.getElementById("result");
+
+            if (data.status === "success") {
+                result.style.color = "green";
+                result.innerText = "✅ Check-in berhasil";
+            } else if (data.status === "used") {
+                result.style.color = "orange";
+                result.innerText = "⚠️ QR sudah digunakan";
+            } else {
+                result.style.color = "red";
+                result.innerText = "❌ QR tidak valid";
+            }
+
+            // scan ulang setelah 2 detik
+            setTimeout(() => location.reload(), 2000);
+        });
+}
+
+const html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: 250 }
+);
+
+html5QrcodeScanner.render(onScanSuccess);
+</script>
+
+</body>
+</html>

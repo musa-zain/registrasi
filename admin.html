@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Panitia</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #eee; }
+        .ok { color: green; font-weight: bold; }
+        .no { color: red; font-weight: bold; }
+        .box { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<h2>📊 Dashboard Panitia</h2>
+
+<div class="box">
+    <strong>Total Peserta:</strong> {{ total }} |
+    <strong>Hadir:</strong> {{ hadir }} |
+    <strong>Belum Hadir:</strong> {{ belum }}
+</div>
+
+<a href="/export">⬇️ Download Excel</a>
+
+<table>
+<tr>
+    <th>Nama</th>
+    <th>Email</th>
+    <th>Alamat</th>
+    <th>JK</th>
+    <th>Status</th>
+</tr>
+
+{% for p in peserta %}
+<tr>
+    <td>{{ p[0] }}</td>
+    <td>{{ p[1] }}</td>
+    <td>{{ p[2] }}</td>
+    <td>{{ p[3] }}</td>
+    <td>
+        {% if p[4] == 1 %}
+            <span class="ok">Hadir</span>
+        {% else %}
+            <span class="no">Belum</span>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
