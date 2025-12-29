@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan QR Check-in</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body { font-family: -apple-system, sans-serif; text-align: center; padding: 20px; background-color: #f3f4f6; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 18px; display: none; }
+        .status-success { background: #d1fae5; color: #065f46; display: block !important; }
+        .status-error { background: #fee2e2; color: #991b1b; display: block !important; }
+        .status-warning { background: #ffedd5; color: #9a3412; display: block !important; }
+        h2 { color: #111827; }
+        .loading { display: none; color: #6b7280; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Scanner Absensi Panitia</h2>
+    <p>Arahkan kamera ke QR Code peserta</p>
+    
+    <div id="reader"></div>
+    <div id="loading" class="loading">Memproses data...</div>
+    <div id="result"></div>
+</div>
+
+<script>
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT KAMU DISINI
+    const SCRIPT_URL = "GANTI_DENGAN_URL_WEB_APP_KAMU";
+
+    function onScanSuccess(decodedText) {
+        // Hentikan scan sementara agar tidak duplikat kirim
+        html5QrcodeScanner.clear();
+        
+        const resultDiv = document.getElementById("result");
+        const loadingDiv = document.getElementById("loading");
+        
+        resultDiv.style.display = "none";
+        loadingDiv.style.display = "block";
+
+        // Kirim data ke Google Apps Script dengan metode POST
+        // Kita gunakan mode 'no-cors' atau kirim via URL param untuk GAS
+        fetch(`${SCRIPT_URL}?action=scan&id=${decodedText}`, { method: 'POST' })
+        .then(res => res.text())
+        .then(status => {
+            loadingDiv.style.display = "none";
+            
+            if (status === "success") {
+                resultDiv.className = "status-success";
+                resultDiv.innerText = "✅ BERHASIL: Kehadiran tercatat!";
+            } else if (status === "used") {
+                resultDiv.className = "status-warning";
+                resultDiv.innerText = "⚠️ PERINGATAN: Sudah check-in sebelumnya!";
+            } else {
+                resultDiv.className = "status-error";
+                resultDiv.innerText = "❌ GAGAL: ID tidak ditemukan!";
+            }
+
+            // Mulai scan lagi setelah 3 detik
+            setTimeout(() => {
+                location.reload();
+            }, 3000);
+        })
+        .catch(err => {
+            loadingDiv.style.display = "none";
+            alert("Kesalahan koneksi: " + err);
+            location.reload();
+        });
+    }
+
+    function onScanFailure(error) {
+        // Abaikan error scan (biasanya karena kamera tidak fokus)
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: {width: 250, height: 250} }
+    );
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+</script>
+
+</body>
+</html>
