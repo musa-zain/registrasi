@@ -23,7 +23,8 @@
         .header { text-align: center; margin-bottom: 18px; position: relative; padding-top: 12px; }
         .header::after {
             content: ""; display: block; width: 80px; height: 2px; margin: 10px auto 0;
-            background: linear-gradient(to right, transparent, #047857, transparent); opacity: 0.35;
+            background: linear-gradient(to right, transparent, #047857, transparent);
+            opacity: 0.35;
         }
         .header h1 { font-size: 22px; margin-bottom: 2px; color: #065f46; font-weight: 700; }
         .masjid-name { font-size: 17px; font-weight: 600; color: #065f46; margin-top: 2px; letter-spacing: 0.6px; }
@@ -32,155 +33,128 @@
         label { display: block; font-weight: 500; margin-bottom: 6px; color: #374151; }
         input[type="text"], input[type="email"], input[type="number"], input[type="tel"], textarea {
             width: 100%; padding: 11px 12px; height: 44px; font-size: 15px; font-family: inherit;
-            border: 1px solid #d1d5db; border-radius: 8px; transition: border-color 0.15s, box-shadow 0.15s; background-color: #ffffff;
+            border: 1px solid #d1d5db; border-radius: 8px; transition: border-color 0.15s, box-shadow 0.15s;
         }
-        textarea { resize: vertical; min-height: 80px; height: auto; }
         input:focus, textarea:focus { outline: none; border-color: #047857; box-shadow: 0 0 0 3px #d1fae5; }
         .radio-group label, .checkbox label { font-weight: 400; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        input[type="radio"], input[type="checkbox"] { transform: scale(1.1); accent-color: #047857; }
-        button { width: 100%; padding: 13px; font-size: 15px; font-weight: 500; background-color: #047857; color: #ffffff; border: none; border-radius: 10px; cursor: pointer; transition: background-color 0.2s; }
+        button {
+            width: 100%; padding: 13px; font-size: 15px; font-weight: 500;
+            background-color: #047857; color: #ffffff; border: none; border-radius: 10px; cursor: pointer;
+        }
         button:disabled { background-color: #9ca3af; cursor: not-allowed; }
         footer { text-align: center; padding: 18px 10px; font-size: 12px; color: #6b7280; background-color: #ecfdf5; }
     </style>
 </head>
+
 <body>
 
 <main>
-    <div class="container">
-        <div class="header">
-            <h1 data-id="Form Pendaftaran Sholat Idul Fitri" data-ja="イドゥル・フィトリ礼拝 参加登録フォーム" data-en="Eid al-Fitr Prayer Registration Form">Pendaftaran Sholat Idul Fitri</h1>
-            <div class="masjid-name" data-id="Masjid Central Okayama" data-ja="岡山セントラルモスク" data-en="Okayama Central Mosque">Masjid Central Okayama</div>
-        </div>
-
-        <div class="card">
-            <form id="registrationForm">
-                <div class="field">
-                    <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" required>
-                </div>
-
-                <div class="field">
-                    <label data-id="Email" data-ja="メールアドレス" data-en="Email">Email</label>
-                    <input type="email" name="email" required>
-                </div>
-
-                <div class="field">
-                    <label data-id="Domisili / Kota" data-ja="居住地" data-en="City">Domisili / Kota</label>
-                    <textarea name="domisili" required placeholder="Contoh: Okayama City, Kita-ku"></textarea>
-                </div>
-
-                <div class="field">
-                    <label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone Number">Nomor HP / WhatsApp</label>
-                    <input type="tel" name="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" minlength="10" maxlength="13" required>
-                </div>
-
-                <div class="field">
-                    <label data-id="Usia" data-ja="年齢" data-en="Age">Usia</label>
-                    <input type="number" name="usia" required>
-                </div>
-
-                <div class="field radio-group">
-                    <label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender">Jenis Kelamin</label>
-                    <label><input type="radio" name="jk" value="Laki-laki" required> <span data-id="Laki-laki" data-ja="男性" data-en="Male">Laki-laki</span></label>
-                    <label><input type="radio" name="jk" value="Perempuan"> <span data-id="Perempuan" data-ja="女性" data-en="Female">Perempuan</span></label>
-                </div>
-
-                <div class="field checkbox">
-                    <label>
-                        <input type="checkbox" name="setuju" required>
-                        <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini" data-ja="本イベントの目的で個人情報を使用することに同意します" data-en="I agree that my data may be used for this event">Saya menyetujui data digunakan untuk keperluan acara ini</span>
-                    </label>
-                </div>
-
-                <button type="submit" data-id="Daftar" data-ja="登録" data-en="Register">Daftar</button>
-            </form>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1 data-id="Form Pendaftaran Sholat Idul Fitri" data-ja="イドゥル・フィトリ礼拝 参加登録フォーム" data-en="Eid al-Fitr Prayer Registration Form"></h1>
+        <div class="masjid-name" data-id="Masjid Central Okayama" data-ja="岡山セントラルモスク" data-en="Okayama Central Mosque"></div>
     </div>
+
+    <div class="card">
+        <form id="registrationForm">
+            <div class="field">
+                <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
+                <input type="text" name="nama_lengkap" required>
+            </div>
+
+            <div class="field">
+                <label data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="field">
+                <label data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
+                <textarea name="domisili" required></textarea>
+            </div>
+
+            <div class="field">
+                <label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone Number"></label>
+                <input type="tel" name="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" required>
+            </div>
+
+            <div class="field">
+                <label data-id="Usia" data-ja="年齢" data-en="Age"></label>
+                <input type="number" name="usia" required>
+            </div>
+
+            <div class="field radio-group">
+                <label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
+                <label><input type="radio" name="jk" value="Laki-laki" required><span data-id="Laki-laki" data-ja="男性" data-en="Male"></span></label>
+                <label><input type="radio" name="jk" value="Perempuan"><span data-id="Perempuan" data-ja="女性" data-en="Female"></span></label>
+            </div>
+
+            <div class="field checkbox">
+                <label>
+                    <input type="checkbox" name="setuju" required>
+                    <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini" data-ja="本イベントの目的で個人情報を使用することに同意します" data-en="I agree that my data may be used for this event"></span>
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn" data-id="Daftar" data-ja="登録" data-en="Register"></button>
+        </form>
+    </div>
+</div>
 </main>
 
 <footer>© 2025 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-const CONFIG = {
-    // PASTI-KAN URL INI ADALAH URL "WEB APP" DARI GOOGLE APPS SCRIPT
-    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbx_DhDT9ilNYXpGRfW579VX96eHygft7bZT18JI9VW3Q--EreoGnueO2LY2Q7j8RR79/exec",
-    REDIRECT_DELAY: 1000
-};
+// --- KONFIGURASI ---
+// Masukkan URL Web App dari Google Apps Script yang sudah di-deploy
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwI2yw6JZ1Tx_1jkiur-COv_4ILlvzPS7tZarvkcIngC6LUrBIGDEygWOAnUApTNeGI/exec";
 
+// --- LOGIKA BAHASA ---
+(function () {
+    const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
+    let current = "id";
+    if (lang.startsWith("ja")) current = "ja";
+    else if (lang.startsWith("en")) current = "en";
+
+    document.querySelectorAll("[data-id]").forEach(el => {
+        el.textContent = el.dataset[current] || el.dataset.id;
+    });
+})();
+
+// --- LOGIKA PENGIRIMAN DATA ---
 document.getElementById('registrationForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const form = this;
-    const submitButton = form.querySelector('button[type="submit"]');
-    const originalText = submitButton.innerHTML;
-    
-    submitButton.disabled = true;
-    submitButton.textContent = getLoadingText();
-    
-    const formData = new FormData(form);
-    const dataObj = Object.fromEntries(formData.entries());
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Processing...";
 
-    // Menggunakan URLSearchParams agar data terkirim sebagai parameter POST yang dikenali GAS
-    fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+    const formData = new FormData(this);
+    // Tambahkan parameter action agar script backend tahu ini proses registrasi
+    formData.append("action", "register");
+
+    fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'cors', // Kita ubah ke cors, pastikan di GAS sudah pakai return JSON
-        body: new URLSearchParams(formData)
+        body: formData
     })
     .then(response => response.json())
     .then(result => {
-        if(result.result === "success") {
-            submitButton.textContent = getSuccessText();
-            submitButton.style.backgroundColor = '#10b981';
-            
-            // Arahkan ke success.html dengan membawa parameter Nama dan ID Barcode
-            const params = new URLSearchParams({
-                nama: dataObj.nama_lengkap,
-                id: result.id
-            });
-            
-            setTimeout(() => {
-                window.location.href = "success.html?" + params.toString();
-            }, CONFIG.REDIRECT_DELAY);
+        if (result.status === 'success') {
+            // Arahkan ke success.html dengan membawa ID dan data input
+            const queryParams = new URLSearchParams(result.data).toString();
+            window.location.href = `success.html?id=${result.id}&${queryParams}`;
         } else {
-            throw new Error(result.error);
+            alert("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Daftar";
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalText;
-        alert(getErrorMessage() + "\nDetail: " + error.message);
+        alert("Gagal terhubung ke server.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Daftar";
     });
 });
-
-function getCurrentLanguage() {
-    const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "id";
-    if (lang.startsWith("ja")) return "ja";
-    if (lang.startsWith("en")) return "en";
-    return "id";
-}
-
-function getLoadingText() {
-    const texts = { id: "Mengirim...", ja: "送信中...", en: "Sending..." };
-    return texts[getCurrentLanguage()];
-}
-
-function getSuccessText() {
-    const texts = { id: "✓ Berhasil!", ja: "✓ 完了！", en: "✓ Success!" };
-    return texts[getCurrentLanguage()];
-}
-
-function getErrorMessage() {
-    const texts = { id: "Gagal mengirim. Periksa koneksi/setting GAS.", ja: "送信エラー。", en: "Submission failed." };
-    return texts[getCurrentLanguage()];
-}
-
-(function init() {
-    const lang = getCurrentLanguage();
-    document.querySelectorAll("[data-id]").forEach(el => {
-        el.textContent = el.dataset[lang] || el.dataset.id;
-    });
-})();
 </script>
 
 </body>
