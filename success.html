@@ -18,41 +18,29 @@
             background-color: #ffffff;
         }
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
-        .card { max-width: 420px; width: 100%; text-align: center; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card { max-width: 420px; width: 100%; text-align: center; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px 20px; }
         .icon { font-size: 40px; margin-bottom: 12px; }
-        h1 { font-size: 20px; margin-bottom: 6px; color: #065f46; }
+        h1 { font-size: 20px; margin-bottom: 6px; }
         .subtitle { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
-        
-        /* Loading state */
-        #loadingOverlay { font-style: italic; color: #6b7280; margin: 20px 0; }
-        #dataContent { display: none; }
-
-        .info { text-align: left; margin-bottom: 20px; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #f3f4f6; }
-        .info p { margin: 6px 0; font-size: 14px; border-bottom: 1px solid #edf2f7; padding-bottom: 4px; }
-        .info p:last-child { border-bottom: none; }
-        .info strong { color: #374151; width: 110px; display: inline-block; }
-
+        .info { text-align: left; margin-bottom: 20px; background: #f9fafb; padding: 15px; border-radius: 8px; }
+        .info p { margin: 4px 0; font-size: 14px; }
         .qr { margin: 20px 0; }
-        .qr img { width: 180px; max-width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; background: white; }
-
-        .btn {
+        .qr img { width: 180px; max-width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+        .download-btn {
             display: block;
-            width: 100%;
+            margin: 16px 0 6px;
             padding: 12px;
+            background-color: #111827;
+            color: #ffffff;
+            text-decoration: none;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.2s;
             border: none;
-            margin-bottom: 10px;
+            width: 100%;
         }
-        .btn-download { background-color: #111827; color: #ffffff; }
-        .btn-back { background-color: #ffffff; color: #047857; border: 1px solid #047857; }
-        .btn:hover { opacity: 0.8; }
-
-        .note { font-size: 12px; color: #6b7280; margin-top: 12px; line-height: 1.4; }
+        .note { font-size: 13px; color: #374151; margin-top: 12px; }
         footer { text-align: center; padding: 14px 10px; font-size: 12px; color: #6b7280; }
     </style>
 </head>
@@ -62,34 +50,23 @@
     <div class="card">
         <div class="icon">✅</div>
         <h1 id="title">Pendaftaran Berhasil</h1>
-        <div class="subtitle" id="subtitle">Memvalidasi data pendaftaran anda...</div>
+        <div class="subtitle" id="subtitle">Terima kasih telah melakukan pendaftaran</div>
 
-        <div id="loadingOverlay">Sedang mengambil data dari server...</div>
+        <div class="info">
+            <p><strong>Nama:</strong> <span id="resNama">-</span></p>
+            <p><strong>ID Peserta:</strong> <span id="resID">-</span></p>
+            <p><strong>Email:</strong> <span id="resEmail">-</span></p>
+        </div>
 
-        <div id="dataContent">
-            <div class="info">
-                <p><strong>ID:</strong> <span id="resID"></span></p>
-                <p><strong>Nama:</strong> <span id="resNama"></span></p>
-                <p><strong>Email:</strong> <span id="resEmail"></span></p>
-                <p><strong>Domisili:</strong> <span id="resDomisili"></span></p>
-                <p><strong>No. HP:</strong> <span id="resHP"></span></p>
-                <p><strong>Usia:</strong> <span id="resUsia"></span></p>
-                <p><strong>Gender:</strong> <span id="resJK"></span></p>
+        <div class="qr" id="qrContainer">
             </div>
 
-            <div class="qr" id="qrContainer"></div>
+        <button onclick="downloadQR()" class="download-btn" id="downloadBtn">
+            ⬇️ Download QR Code
+        </button>
 
-            <button onclick="downloadQR()" class="btn btn-download" id="downloadBtn">
-                ⬇️ Download QR Code
-            </button>
-            
-            <a href="index.html" class="btn btn-back" id="backBtn">
-                ⬅️ Kembali ke Pendaftaran
-            </a>
-
-            <div class="note" id="note">
-                Simpan QR Code ini (Screenshot atau Download). Tunjukkan kepada panitia saat tiba di lokasi untuk <strong>check-in</strong>.
-            </div>
+        <div class="note" id="note">
+            Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara.
         </div>
     </div>
 </main>
@@ -97,80 +74,48 @@
 <footer>© 2025 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-    // --- KONFIGURASI ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtqAVN55wb48GGg5EZFI-T23FB6_0vILvmS6PXA2sv0kWearUbgK4HZrZwhtF-DWOH5w/exec";
-    
-    // 1. Ambil ID dari URL
+    // Ambil data dari URL
     const urlParams = new URLSearchParams(window.location.search);
-    const idParam = urlParams.get('id');
+    const id = urlParams.get('id');
+    const nama = urlParams.get('nama_lengkap');
+    const email = urlParams.get('email');
 
-    if (!idParam) {
-        document.getElementById('loadingOverlay').innerHTML = "<span style='color:red'>Error: ID tidak ditemukan dalam URL.</span>";
-    } else {
-        // 2. Tarik Data Lengkap dari Google Sheets
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            body: new URLSearchParams({ action: "getData", id: idParam })
-        })
-        .then(res => res.json())
-        .then(response => {
-            if (response.status === "success") {
-                const d = response.data;
-                
-                // Isi data ke elemen
-                document.getElementById('resID').innerText = idParam;
-                document.getElementById('resNama').innerText = d.nama_lengkap;
-                document.getElementById('resEmail').innerText = d.email;
-                document.getElementById('resDomisili').innerText = d.domisili;
-                document.getElementById('resHP').innerText = d.no_hp;
-                document.getElementById('resUsia').innerText = d.usia;
-                document.getElementById('resJK').innerText = d.jk;
+    // Tampilkan data ke halaman
+    document.getElementById('resNama').innerText = nama || "-";
+    document.getElementById('resID').innerText = id || "-";
+    document.getElementById('resEmail').innerText = email || "-";
 
-                // Tampilkan konten, sembunyikan loading
-                document.getElementById('loadingOverlay').style.display = "none";
-                document.getElementById('dataContent').style.display = "block";
-                document.getElementById('subtitle').innerText = "Terima kasih telah mendaftar";
-
-                // Generate QR Code
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${idParam}`;
-                document.getElementById('qrContainer').innerHTML = `<img src="${qrUrl}" alt="QR Code" id="qrImage">`;
-                
-                // Simpan URL QR untuk fungsi download
-                window.generatedQrUrl = qrUrl;
-                window.namaFile = d.nama_lengkap.replace(/\s+/g, '_');
-            } else {
-                document.getElementById('loadingOverlay').innerHTML = "<span style='color:red'>Data tidak ditemukan di database.</span>";
-            }
-        })
-        .catch(err => {
-            document.getElementById('loadingOverlay').innerHTML = "<span style='color:red'>Gagal terhubung ke server.</span>";
-            console.error(err);
-        });
+    // Buat QR Code URL menggunakan API GoQR.me
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${id}`;
+    if (id) {
+        document.getElementById('qrContainer').innerHTML = `<img src="${qrUrl}" alt="QR Code" id="qrImage">`;
     }
 
-    // 3. Fungsi Download
+    // Fungsi Download QR Code
     async function downloadQR() {
         try {
-            const response = await fetch(window.generatedQrUrl);
+            const response = await fetch(qrUrl);
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `QR_IdulFitri_${window.namaFile}.png`;
+            a.download = `QR_IdulFitri_${nama.replace(/\s+/g, '_')}.png`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
         } catch (err) {
-            alert("Gagal download otomatis. Silakan screenshot halaman ini.");
+            alert("Gagal mendownload gambar. Silakan screenshot halaman ini.");
         }
     }
 
-    // 4. Logika Bahasa Sederhana
+    // Logika Multi-bahasa sederhana
     const lang = navigator.language || "id";
     if (lang.startsWith("ja")) {
         document.getElementById("title").innerText = "登録が完了しました";
         document.getElementById("downloadBtn").innerText = "⬇️ QRコードをダウンロード";
-        document.getElementById("backBtn").innerText = "⬅️ 登録画面に戻る";
+    } else if (lang.startsWith("en")) {
+        document.getElementById("title").innerText = "Registration Successful";
+        document.getElementById("downloadBtn").innerText = "⬇️ Download QR Code";
     }
 </script>
 </body>
