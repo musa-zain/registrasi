@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pendaftaran Berhasil</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #ffffff;
+        }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+        .card { max-width: 420px; width: 100%; text-align: center; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px 20px; }
+        .icon { font-size: 40px; margin-bottom: 12px; }
+        h1 { font-size: 20px; margin-bottom: 6px; }
+        .subtitle { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+        .info { text-align: left; margin-bottom: 20px; background: #f9fafb; padding: 15px; border-radius: 8px; }
+        .info p { margin: 4px 0; font-size: 14px; }
+        .qr { margin: 20px 0; }
+        .qr img { width: 180px; max-width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+        .download-btn {
+            display: block;
+            margin: 16px 0 6px;
+            padding: 12px;
+            background-color: #111827;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+        .note { font-size: 13px; color: #374151; margin-top: 12px; }
+        footer { text-align: center; padding: 14px 10px; font-size: 12px; color: #6b7280; }
+    </style>
+</head>
+<body>
+
+<main>
+    <div class="card">
+        <div class="icon">✅</div>
+        <h1 id="title">Pendaftaran Berhasil</h1>
+        <div class="subtitle" id="subtitle">Terima kasih telah melakukan pendaftaran</div>
+
+        <div class="info">
+            <p><strong>Nama:</strong> <span id="resNama">-</span></p>
+            <p><strong>ID Peserta:</strong> <span id="resID">-</span></p>
+            <p><strong>Email:</strong> <span id="resEmail">-</span></p>
+        </div>
+
+        <div class="qr" id="qrContainer">
+            </div>
+
+        <button onclick="downloadQR()" class="download-btn" id="downloadBtn">
+            ⬇️ Download QR Code
+        </button>
+
+        <div class="note" id="note">
+            Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara.
+        </div>
+    </div>
+</main>
+
+<footer>© 2025 — Yayasan Ibadurrahman Islamic Center</footer>
+
+<script>
+    // Ambil data dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    const nama = urlParams.get('nama_lengkap');
+    const email = urlParams.get('email');
+
+    // Tampilkan data ke halaman
+    document.getElementById('resNama').innerText = nama || "-";
+    document.getElementById('resID').innerText = id || "-";
+    document.getElementById('resEmail').innerText = email || "-";
+
+    // Buat QR Code URL menggunakan API GoQR.me
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${id}`;
+    if (id) {
+        document.getElementById('qrContainer').innerHTML = `<img src="${qrUrl}" alt="QR Code" id="qrImage">`;
+    }
+
+    // Fungsi Download QR Code
+    async function downloadQR() {
+        try {
+            const response = await fetch(qrUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `QR_IdulFitri_${nama.replace(/\s+/g, '_')}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (err) {
+            alert("Gagal mendownload gambar. Silakan screenshot halaman ini.");
+        }
+    }
+
+    // Logika Multi-bahasa sederhana
+    const lang = navigator.language || "id";
+    if (lang.startsWith("ja")) {
+        document.getElementById("title").innerText = "登録が完了しました";
+        document.getElementById("downloadBtn").innerText = "⬇️ QRコードをダウンロード";
+    } else if (lang.startsWith("en")) {
+        document.getElementById("title").innerText = "Registration Successful";
+        document.getElementById("downloadBtn").innerText = "⬇️ Download QR Code";
+    }
+</script>
+</body>
+</html>
