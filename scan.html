@@ -7,62 +7,44 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
-body {
-    font-family: system-ui, sans-serif;
-    background: #f8fafc;
-    margin: 0;
-    display: flex;
-    justify-content: center;
+body{
+  font-family:system-ui,sans-serif;
+  background:#f8fafc;
+  margin:0;
+  display:flex;
+  justify-content:center;
 }
-.container {
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
+.container{max-width:500px;width:100%;padding:20px}
+.header{text-align:center;color:#065f46;margin-bottom:20px}
+#reader{width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1)}
+.result-card{
+  background:#fff;
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  display:none;
 }
-.header {
-    text-align: center;
-    color: #065f46;
-    margin-bottom: 20px;
+.status-badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:20px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
-#reader {
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.result-card {
-    background: #fff;
-    margin-top: 20px;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    display: none;
-}
-.status-badge {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-.success {
-    background: #d1fae5;
-    color: #065f46;
-}
-.error {
-    background: #fee2e2;
-    color: #991b1b;
-}
-.btn-reset {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 8px;
-    background: #047857;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+.success{background:#d1fae5;color:#065f46}
+.warning{background:#fef3c7;color:#92400e}
+.error{background:#fee2e2;color:#991b1b}
+.btn-reset{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:8px;
+  background:#047857;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -70,107 +52,106 @@ body {
 <body>
 
 <div class="container">
-    <div class="header">
-        <h2>📷 Scanner Absensi Panitia</h2>
-        <p>Arahkan kamera ke QR Code peserta</p>
-    </div>
+  <div class="header">
+    <h2>📷 Scanner Absensi Panitia</h2>
+    <p>Arahkan kamera ke QR Code peserta</p>
+  </div>
 
-    <div id="reader"></div>
+  <div id="reader"></div>
 
-    <div id="resultCard" class="result-card">
-        <div id="statusBadge" class="status-badge"></div>
-
-        <p><strong>Nama:</strong> <span id="viewNama">-</span></p>
-        <p><strong>ID:</strong> <span id="viewID">-</span></p>
-        <p><strong>Jumlah:</strong> <span id="viewJumlah">-</span> Pax</p>
-
-        <button class="btn-reset" onclick="resetScanner()">Scan Lagi</button>
-    </div>
+  <div id="resultCard" class="result-card">
+    <div id="statusBadge" class="status-badge"></div>
+    <p><strong>Nama:</strong> <span id="viewNama">-</span></p>
+    <p><strong>ID:</strong> <span id="viewID">-</span></p>
+    <p><strong>Jumlah:</strong> <span id="viewJumlah">-</span> Pax</p>
+    <button class="btn-reset" onclick="resetScanner()">Scan Lagi</button>
+  </div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec"; // GANTI URL ANDA
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
 let html5QrCode;
 
-// ================= QR SUCCESS =================
-function onScanSuccess(decodedText) {
-    html5QrCode.pause(true);
-    processCheckIn(decodedText);
+/* ========= AUDIO ========= */
+const beepSuccess = new Audio("https://www.soundjay.com/buttons/beep-07a.mp3"); // sukses
+const beepDuplicate = new Audio("https://www.soundjay.com/buttons/beep-09.mp3"); // warning
+const beepInvalid = new Audio("https://www.soundjay.com/buttons/beep-10.mp3"); // error
+
+/* ========= SCAN ========= */
+function onScanSuccess(text){
+  html5QrCode.pause(true);
+  processCheckIn(text);
 }
 
-// ================= CHECK-IN PROCESS =================
-async function processCheckIn(qrData) {
-    const card = document.getElementById("resultCard");
-    const badge = document.getElementById("statusBadge");
+async function processCheckIn(qr){
+  resultCard.style.display="block";
+  statusBadge.className="status-badge";
+  statusBadge.textContent="⏳ Memproses...";
 
-    card.style.display = "block";
-    badge.className = "status-badge";
-    badge.innerText = "⏳ Memproses...";
+  viewNama.textContent="-";
+  viewID.textContent="-";
+  viewJumlah.textContent="-";
 
-    // Reset tampilan
-    viewNama.innerText = "-";
-    viewID.innerText = "-";
-    viewJumlah.innerText = "-";
+  try{
+    const r = await fetch(
+      `${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(qr)}`
+    );
+    const res = await r.json();
 
-    try {
-        const res = await fetch(
-            `${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(qrData)}`
-        ).then(r => r.json());
+    /* ✅ BERHASIL */
+    if(res.status==="success"){
+      statusBadge.classList.add("success");
+      statusBadge.textContent="✅ Berhasil Check-in";
 
-        // ✅ BERHASIL CHECK-IN
-        if (res.status === "success") {
-            badge.classList.add("success");
-            badge.innerText = "✅ Berhasil Check-in";
+      viewNama.textContent=res.data.nama;
+      viewID.textContent=res.data.id;
+      viewJumlah.textContent=res.data.pax;
 
-            viewNama.innerText = res.data.nama;
-            viewID.innerText = res.data.id;
-            viewJumlah.innerText = res.data.pax;
-
-            new Audio("https://www.soundjay.com/buttons/beep-07a.mp3").play();
-        }
-
-        // ⚠️ SUDAH CHECK-IN
-        else if (res.status === "duplicate") {
-            badge.classList.add("error");
-            badge.innerText = "⚠️ Sudah Check-in Sebelumnya";
-
-            viewNama.innerText = res.data?.nama || "-";
-            viewID.innerText = res.data?.id || "-";
-            viewJumlah.innerText = res.data?.pax || "-";
-        }
-
-        // ❌ QR RANDOM / TIDAK TERDAFTAR
-        else if (res.status === "not_found") {
-            badge.classList.add("error");
-            badge.innerText = "❌ Peserta Tidak Terdaftar";
-        }
-
-        // ❌ ERROR LAIN
-        else {
-            badge.classList.add("error");
-            badge.innerText = "❌ QR Tidak Valid";
-        }
-
-    } catch (err) {
-        badge.classList.add("error");
-        badge.innerText = "❌ Gangguan Koneksi";
+      beepSuccess.play();
     }
+
+    /* ⚠️ DUPLICATE */
+    else if(res.status==="duplicate"){
+      statusBadge.classList.add("warning");
+      statusBadge.textContent="⚠️ Sudah Check-in Sebelumnya";
+
+      viewNama.textContent=res.data?.nama||"-";
+      viewID.textContent=res.data?.id||"-";
+      viewJumlah.textContent=res.data?.pax||"-";
+
+      // bunyi ganda
+      beepDuplicate.play();
+      setTimeout(()=>beepDuplicate.play(),180);
+    }
+
+    /* ❌ TIDAK TERDAFTAR */
+    else{
+      statusBadge.classList.add("error");
+      statusBadge.textContent="❌ Peserta Tidak Terdaftar";
+      beepInvalid.play();
+    }
+
+  }catch(e){
+    statusBadge.classList.add("error");
+    statusBadge.textContent="❌ Gangguan Koneksi";
+    beepInvalid.play();
+  }
 }
 
-// ================= RESET =================
-function resetScanner() {
-    document.getElementById("resultCard").style.display = "none";
-    html5QrCode.resume();
+/* ========= RESET ========= */
+function resetScanner(){
+  resultCard.style.display="none";
+  html5QrCode.resume();
 }
 
-// ================= CAMERA =================
-function startCamera() {
-    html5QrCode = new Html5Qrcode("reader");
-    html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        onScanSuccess
-    ).catch(err => alert("Kamera error: " + err));
+/* ========= CAMERA ========= */
+function startCamera(){
+  html5QrCode = new Html5Qrcode("reader");
+  html5QrCode.start(
+    {facingMode:"environment"},
+    {fps:10, qrbox:250},
+    onScanSuccess
+  ).catch(err=>alert("Kamera error: "+err));
 }
 
 window.onload = startCamera;
