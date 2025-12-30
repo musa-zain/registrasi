@@ -1,159 +1,235 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Panitia Sholat Idul Fitri</title>
-    <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; padding: 20px; color: #1f2937; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 25px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        h2 { color: #065f46; margin-top: 0; display: flex; align-items: center; gap: 10px; }
-        
-        /* Stats Styling */
-        .stats { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-        .stat-card { background: #f0fdf4; padding: 20px; border-radius: 12px; flex: 1; min-width: 180px; border: 1px solid #d1fae5; text-align: center; transition: transform 0.2s; }
-        .stat-card:hover { transform: translateY(-2px); }
-        .stat-card span { display: block; font-size: 28px; font-weight: 800; color: #047857; line-height: 1.2; }
-        .stat-card label { font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Table Styling */
-        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #eee; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; background: white; }
-        th { background: #f9fafb; color: #4b5563; text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; padding: 14px; text-align: left; border-bottom: 2px solid #edf2f7; }
-        td { padding: 14px; border-bottom: 1px solid #f3f4f6; }
-        tr:hover { background: #f8fafc; }
-        
-        /* Components */
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
-        .hadir { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-        .belum { background: #fff1f2; color: #991b1b; border: 1px solid #fecaca; }
-        
-        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { padding: 11px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
-        .btn-refresh { background: #047857; color: #fff; }
-        .btn-refresh:hover { background: #065f46; }
-        .btn-csv { background: #1f2937; color: #fff; }
-        .btn-csv:hover { background: #111827; }
-        
-        #loading { text-align: center; padding: 40px; color: #6b7280; font-style: italic; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Panitia - Idul Fitri</title>
+
+<style>
+:root{
+  --green:#047857;
+  --green-soft:#d1fae5;
+  --red:#991b1b;
+  --red-soft:#fee2e2;
+  --gray:#6b7280;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#f8fafc;
+  color:#1f2937;
+  padding:24px;
+}
+.container{
+  max-width:1200px;
+  margin:auto;
+  background:#fff;
+  padding:24px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 10px 20px rgba(0,0,0,.05);
+}
+
+h1{
+  margin:0 0 20px;
+  color:var(--green);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* ===== STATS ===== */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+  margin-bottom:25px;
+}
+.stat{
+  background:#f9fafb;
+  padding:18px;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  text-align:center;
+}
+.stat span{
+  font-size:32px;
+  font-weight:800;
+  color:var(--green);
+}
+.stat label{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  color:var(--gray);
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+
+/* ===== BUTTON ===== */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+button{
+  padding:10px 16px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn-refresh{background:var(--green);color:#fff}
+.btn-export{background:#111827;color:#fff}
+
+/* ===== TABLE ===== */
+.table-wrap{
+  overflow:auto;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:12px;
+  border-bottom:1px solid #f3f4f6;
+  white-space:nowrap;
+}
+th{
+  background:#f9fafb;
+  text-transform:uppercase;
+  font-size:11px;
+  letter-spacing:.5px;
+}
+tr:hover{background:#f8fafc}
+
+/* ===== BADGE ===== */
+.badge{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+}
+.hadir{background:var(--green-soft);color:var(--green)}
+.belum{background:var(--red-soft);color:var(--red)}
+
+.loading{
+  padding:40px;
+  text-align:center;
+  color:var(--gray);
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <h2>📊 Dashboard Panitia 2026</h2>
-    
-    <div class="stats">
-        <div class="stat-card"><span id="totalPeserta">0</span><label>Total Registrasi</label></div>
-        <div class="stat-card"><span id="totalJamaah">0</span><label>Total Jamaah (Pax)</label></div>
-        <div class="stat-card"><span id="totalHadir">0</span><label>Sudah Check-in</label></div>
-    </div>
+  <h1>📊 Dashboard Panitia</h1>
 
-    <div class="btn-group">
-        <button onclick="loadData()" class="btn btn-refresh">🔄 Refresh Data</button>
-        <button onclick="downloadCSV()" class="btn btn-csv">⬇️ Ekspor CSV</button>
-    </div>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><span id="totalReg">0</span><label>Total Registrasi</label></div>
+    <div class="stat"><span id="totalPax">0</span><label>Total Jamaah</label></div>
+    <div class="stat"><span id="totalHadir">0</span><label>Sudah Check-in</label></div>
+    <div class="stat"><span id="totalBelum">0</span><label>Belum Check-in</label></div>
+  </div>
 
-    <div id="loading">Memuat database peserta...</div>
-    
-    <div class="table-container">
-        <table id="dataTable" style="display:none;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama Lengkap</th>
-                    <th>Email</th>
-                    <th>No. HP</th>
-                    <th>Pax</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
+  <!-- ACTION -->
+  <div class="actions">
+    <button class="btn-refresh" onclick="loadData()">🔄 Refresh</button>
+    <button class="btn-export" onclick="exportCSV()">⬇️ Export CSV</button>
+  </div>
+
+  <div id="loading" class="loading">Memuat data peserta…</div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="table" style="display:none">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>No HP</th>
+          <th>Domisili</th>
+          <th>JK</th>
+          <th>Pax</th>
+          <th>Status</th>
+          <th>Waktu</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec"; // GANTI DENGAN URL ASLI ANDA
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
+let allData=[];
 
-    let allData = [];
+async function loadData(){
+  loading.style.display="block";
+  table.style.display="none";
 
-    async function loadData() {
-        const loading = document.getElementById('loading');
-        const table = document.getElementById('dataTable');
-        loading.style.display = "block";
-        table.style.display = "none";
-        
-        try {
-            // Memastikan memanggil action getList yang sesuai backend
-            const response = await fetch(`${SCRIPT_URL}?action=getList`);
-            const result = await response.json();
-            
-            if (result.status === "success") {
-                allData = result.data;
-                renderTable(allData);
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Gagal terhubung ke database. Pastikan SCRIPT_URL sudah benar dan izin akses sudah 'Anyone'.");
-        } finally {
-            loading.style.display = "none";
-        }
-    }
+  const r=await fetch(`${SCRIPT_URL}?action=getList`);
+  const j=await r.json();
+  allData=j.data||[];
+  render(allData);
 
-    function renderTable(data) {
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = "";
-        
-        let hadirCount = 0;
-        let jamaahTotal = 0;
-        
-        data.forEach(p => {
-            // Penyesuaian mapping kolom berdasarkan Code.gs terbaru:
-            // p[0]=ID, p[2]=Nama, p[3]=Email, p[5]=NoHP, p[8]=JumlahOrang, p[9]=Status
-            const isHadir = p[9] === "Sudah Check-in";
-            if (isHadir) hadirCount++;
-            
-            const pax = parseInt(p[8]) || 1;
-            jamaahTotal += pax;
-            
-            const row = `<tr>
-                <td><strong>${p[0]}</strong></td>
-                <td>${p[2]}</td>
-                <td><small>${p[3]}</small></td>
-                <td>${p[5]}</td>
-                <td>${pax}</td>
-                <td><span class="badge ${isHadir ? 'hadir' : 'belum'}">${p[9]}</span></td>
-            </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
-        });
+  loading.style.display="none";
+  table.style.display="table";
+}
 
-        document.getElementById('totalPeserta').innerText = data.length;
-        document.getElementById('totalJamaah').innerText = jamaahTotal;
-        document.getElementById('totalHadir').innerText = hadirCount;
-        document.getElementById('dataTable').style.display = "table";
-    }
+function render(data){
+  tbody.innerHTML="";
+  let pax=0, hadir=0;
 
-    function downloadCSV() {
-        if (allData.length === 0) return alert("Tidak ada data untuk diunduh");
-        
-        let csv = "ID,Nama Lengkap,Email,No HP,Jumlah Orang,Status,Waktu Check-in\n";
-        allData.forEach(p => {
-            // Mapping kolom: p[0]=ID, p[2]=Nama, p[3]=Email, p[5]=NoHP, p[8]=Jumlah, p[9]=Status, p[10]=Waktu
-            csv += `"${p[0]}","${p[2]}","${p[3]}","${p[5]}","${p[8]}","${p[9]}","${p[10]}"\n`;
-        });
-        
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Data_Jamaah_IdulFitri_2026_${new Date().getTime()}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
+  data.forEach(d=>{
+    const isHadir=d[9]==="Sudah Hadir";
+    if(isHadir) hadir++;
+    pax+=Number(d[8]||1);
 
-    window.onload = loadData;
+    tbody.innerHTML+=`
+      <tr>
+        <td><b>${d[0]}</b></td>
+        <td>${d[2]}</td>
+        <td>${d[3]}</td>
+        <td>${d[5]}</td>
+        <td>${d[4]}</td>
+        <td>${d[7]}</td>
+        <td>${d[8]}</td>
+        <td><span class="badge ${isHadir?'hadir':'belum'}">${d[9]}</span></td>
+        <td>${d[10]||'-'}</td>
+      </tr>`;
+  });
+
+  totalReg.textContent=data.length;
+  totalPax.textContent=pax;
+  totalHadir.textContent=hadir;
+  totalBelum.textContent=data.length-hadir;
+}
+
+function exportCSV(){
+  if(!allData.length) return alert("Data kosong");
+
+  let csv="ID,Nama,Email,HP,Domisili,JK,Pax,Status,Waktu\n";
+  allData.forEach(d=>{
+    csv+=`"${d[0]}","${d[2]}","${d[3]}","${d[5]}","${d[4]}","${d[7]}","${d[8]}","${d[9]}","${d[10]}"\n`;
+  });
+
+  const b=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(b);
+  a.download=`Dashboard_IdulFitri_${Date.now()}.csv`;
+  a.click();
+}
+
+loadData();
 </script>
 
 </body>
