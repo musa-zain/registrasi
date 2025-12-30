@@ -1,122 +1,152 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pendaftaran Berhasil</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #1f2937;
-            background-color: #ffffff;
-        }
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
-        .card { max-width: 420px; width: 100%; text-align: center; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px 20px; }
-        .icon { font-size: 40px; margin-bottom: 12px; }
-        h1 { font-size: 20px; margin-bottom: 6px; }
-        .subtitle { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
-        .info { text-align: left; margin-bottom: 20px; background: #f9fafb; padding: 15px; border-radius: 8px; }
-        .info p { margin: 4px 0; font-size: 14px; }
-        .qr { margin: 20px 0; }
-        .qr img { width: 180px; max-width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
-        .download-btn {
-            display: block;
-            margin: 16px 0 6px;
-            padding: 12px;
-            background-color: #111827;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-        .note { font-size: 13px; color: #374151; margin-top: 12px; }
-        footer { text-align: center; padding: 14px 10px; font-size: 12px; color: #6b7280; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-id="Pendaftaran Berhasil" data-ja="登録完了" data-en="Registration Successful"></title>
+
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #ffffff;
+    color: #1f2937;
+}
+main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.card {
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 26px 22px;
+    text-align: center;
+}
+.icon { font-size: 42px; margin-bottom: 10px; }
+h1 { margin: 0; font-size: 20px; }
+.subtitle { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+.info {
+    background: #f9fafb;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+.info p { margin: 5px 0; }
+.qr img {
+    width: 180px;
+    margin: 18px auto;
+    display: block;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.note { font-size: 13px; margin-top: 10px; color: #374151; }
+footer { text-align: center; font-size: 12px; color: #6b7280; padding: 12px; }
+</style>
 </head>
+
 <body>
 
 <main>
-    <div class="card">
-        <div class="icon">✅</div>
-        <h1 id="title">Pendaftaran Berhasil</h1>
-        <div class="subtitle" id="subtitle">Terima kasih telah melakukan pendaftaran</div>
+<div class="card">
+    <div class="icon">✅</div>
+    <h1 data-id="Pendaftaran Berhasil" data-ja="登録が完了しました" data-en="Registration Successful"></h1>
+    <div class="subtitle"
+         data-id="Terima kasih telah melakukan pendaftaran"
+         data-ja="お申し込みありがとうございます"
+         data-en="Thank you for your registration"></div>
 
-        <div class="info">
-            <p><strong>Nama:</strong> <span id="resNama">-</span></p>
-            <p><strong>ID Peserta:</strong> <span id="resID">-</span></p>
-            <p><strong>Email:</strong> <span id="resEmail">-</span></p>
-        </div>
-
-        <div class="qr" id="qrContainer">
-            </div>
-
-        <button onclick="downloadQR()" class="download-btn" id="downloadBtn">
-            ⬇️ Download QR Code
-        </button>
-
-        <div class="note" id="note">
-            Simpan QR Code ini untuk keperluan <strong>check-in</strong> saat acara.
-        </div>
+    <div class="info">
+        <p><strong data-id="Nama" data-ja="氏名" data-en="Name"></strong>: <span id="resNama">-</span></p>
+        <p><strong data-id="ID Peserta" data-ja="参加ID" data-en="Participant ID"></strong>: <span id="resID">-</span></p>
+        <p><strong data-id="Email"></strong>: <span id="resEmail">-</span></p>
+        <p><strong data-id="Domisili" data-ja="居住地" data-en="City"></strong>: <span id="resDomisili">-</span></p>
+        <p><strong data-id="No. HP / WhatsApp" data-ja="電話番号" data-en="Phone"></strong>: <span id="resHP">-</span></p>
+        <p><strong data-id="Usia" data-ja="年齢" data-en="Age"></strong>: <span id="resUsia">-</span></p>
+        <p><strong data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></strong>: <span id="resJK">-</span></p>
     </div>
+
+    <div class="qr" id="qrContainer"></div>
+
+    <button onclick="downloadQR()"
+            data-id="Download QR Code"
+            data-ja="QRコードをダウンロード"
+            data-en="Download QR Code"></button>
+
+    <div class="note"
+         data-id="Simpan QR Code ini untuk check-in saat acara"
+         data-ja="当日のチェックイン時にこのQRコードをご提示ください"
+         data-en="Please save this QR code for event check-in"></div>
+</div>
 </main>
 
-<footer>© 2025 — Yayasan Ibadurrahman Islamic Center</footer>
+<footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-    // Ambil data dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    const nama = urlParams.get('nama_lengkap');
-    const email = urlParams.get('email');
+// =================== BACA DATA URL ===================
+const params = new URLSearchParams(window.location.search);
 
-    // Tampilkan data ke halaman
-    document.getElementById('resNama').innerText = nama || "-";
-    document.getElementById('resID').innerText = id || "-";
-    document.getElementById('resEmail').innerText = email || "-";
+const fields = {
+    resNama: "nama_lengkap",
+    resID: "id",
+    resEmail: "email",
+    resDomisili: "domisili",
+    resHP: "no_hp",
+    resUsia: "usia",
+    resJK: "jk"
+};
 
-    // Buat QR Code URL menggunakan API GoQR.me
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${id}`;
-    if (id) {
-        document.getElementById('qrContainer').innerHTML = `<img src="${qrUrl}" alt="QR Code" id="qrImage">`;
-    }
+Object.keys(fields).forEach(id => {
+    document.getElementById(id).innerText = params.get(fields[id]) || "-";
+});
 
-    // Fungsi Download QR Code
-    async function downloadQR() {
-        try {
-            const response = await fetch(qrUrl);
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `QR_IdulFitri_${nama.replace(/\s+/g, '_')}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } catch (err) {
-            alert("Gagal mendownload gambar. Silakan screenshot halaman ini.");
-        }
-    }
+// =================== QR CODE ===================
+const participantID = params.get("id");
+if (participantID) {
+    const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${participantID}`;
+    document.getElementById("qrContainer").innerHTML =
+        `<img src="${qrURL}" id="qrImage" alt="QR Code">`;
+}
 
-    // Logika Multi-bahasa sederhana
+// =================== DOWNLOAD QR ===================
+async function downloadQR() {
+    const img = document.getElementById("qrImage");
+    if (!img) return;
+
+    const res = await fetch(img.src);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "QR_Pendaftaran.png";
+    a.click();
+}
+
+// =================== AUTO TRANSLATE ===================
+(function () {
     const lang = navigator.language || "id";
-    if (lang.startsWith("ja")) {
-        document.getElementById("title").innerText = "登録が完了しました";
-        document.getElementById("downloadBtn").innerText = "⬇️ QRコードをダウンロード";
-    } else if (lang.startsWith("en")) {
-        document.getElementById("title").innerText = "Registration Successful";
-        document.getElementById("downloadBtn").innerText = "⬇️ Download QR Code";
-    }
+    let current = "id";
+    if (lang.startsWith("ja")) current = "ja";
+    else if (lang.startsWith("en")) current = "en";
+
+    document.querySelectorAll("[data-id]").forEach(el => {
+        el.textContent = el.dataset[current] || el.dataset.id;
+    });
+})();
 </script>
+
 </body>
 </html>
