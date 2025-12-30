@@ -1,92 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registration Successful</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: system-ui, sans-serif; background: #ffffff; color: #1f2937; text-align: center; }
-        main { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-        .card { width: 100%; max-width: 420px; border: 1px solid #e5e7eb; border-radius: 16px; padding: 26px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .icon { font-size: 48px; margin-bottom: 10px; }
-        h1 { font-size: 21px; margin: 0 0 8px; color: #047857; }
-        .subtitle { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
-        .info { background: #f9fafb; padding: 16px; border-radius: 12px; text-align: left; font-size: 14px; border: 1px solid #eef2f7; }
-        .info p { margin: 6px 0; }
-        .qr-box { margin: 20px auto; width: 210px; height: 210px; border: 1px solid #e5e7eb; padding: 10px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; }
-        .qr-box img { width: 100%; height: auto; }
-        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
-        .btn { flex: 1; padding: 13px; border-radius: 10px; font-weight: 600; text-decoration: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
-        .btn-dl { background: #047857; color: #fff; border: none; }
-        .btn-back { background: #f0fdf4; color: #047857; border: 1px solid #a7f3d0; }
-        footer { padding: 15px; font-size: 12px; color: #6b7280; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendaftaran Berhasil</title>
+
+<style>
+body{margin:0;font-family:system-ui;background:#fff;color:#1f2937;text-align:center}
+main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{max-width:460px;width:100%;border:1px solid #e5e7eb;border-radius:16px;padding:26px}
+.info{background:#f9fafb;padding:16px;border-radius:12px;text-align:left}
+.qr{margin:20px auto;width:200px}
+button,a{padding:12px;border-radius:10px;font-weight:600}
+button{background:#047857;color:#fff;border:none}
+a{text-decoration:none;border:1px solid #a7f3d0;color:#047857}
+</style>
 </head>
+
 <body>
-
 <main>
-    <div class="card">
-        <div class="icon">✅</div>
-        <h1 data-id="Pendaftaran Berhasil" data-ja="登録完了" data-en="Registration Successful"></h1>
-        <div class="subtitle" data-id="Terima kasih atas pendaftaran Anda" data-ja="お申し込みありがとうございます" data-en="Thank you for your registration"></div>
+<div class="card">
+  <h2>✅ Registration Successful</h2>
 
-        <div class="info">
-            <p><strong>ID:</strong> <span id="resID"></span></p>
-            <p><strong>Name:</strong> <span id="resNama"></span></p>
-            <p><strong>Email:</strong> <span id="resEmail"></span></p>
-        </div>
+  <div class="info">
+    <p><b>ID:</b> <span id="id"></span></p>
+    <p><b>Nama:</b> <span id="nama"></span></p>
+    <p><b>Email:</b> <span id="email"></span></p>
+    <p><b>No HP:</b> <span id="hp"></span></p>
+    <p><b>Domisili:</b> <span id="dom"></span></p>
+    <p><b>Usia:</b> <span id="usia"></span></p>
+    <p><b>Jenis Kelamin:</b> <span id="jk"></span></p>
+    <p><b>Jumlah:</b> <span id="jml"></span></p>
+  </div>
 
-        <div class="qr-box" id="qrContainer">
-            </div>
+  <div class="qr" id="qrBox"></div>
 
-        <div class="btn-group">
-            <button onclick="downloadQR()" class="btn btn-dl" id="dlBtn">⬇️ Download QR</button>
-            <a href="index.html" class="btn btn-back" data-id="Kembali" data-ja="戻る" data-en="Back"></a>
-        </div>
-        
-        <p style="font-size: 12px; color: #6b7280; margin-top: 15px;" data-id="Simpan QR ini untuk check-in" data-ja="チェックイン用に保存してください" data-en="Save this QR for check-in"></p>
-    </div>
+  <button onclick="downloadQR()" id="btn">⬇️ Download QR</button><br><br>
+  <a href="index.html">Kembali</a>
+</div>
 </main>
 
-<footer>© 2026 — Okayama Central Mosque</footer>
-
 <script>
-const params = new URLSearchParams(window.location.search);
-const pID = params.get("id") || "N/A";
+const p = new URLSearchParams(location.search);
+const g = k=>p.get(k)||"-";
 
-// Display Info
-document.getElementById("resID").innerText = pID;
-document.getElementById("resNama").innerText = params.get("nama_lengkap") || "-";
-document.getElementById("resEmail").innerText = params.get("email") || "-";
+id.textContent=g("id");
+nama.textContent=g("nama_lengkap");
+email.textContent=g("email");
+hp.textContent=g("no_hp");
+dom.textContent=g("domisili");
+usia.textContent=g("usia");
+jk.textContent=g("jk");
+jml.textContent=g("jumlah_orang");
 
-// Language Logic
-const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
-document.querySelectorAll("[data-id]").forEach(el => { el.textContent = el.dataset[lang] || el.dataset.id; });
+const qrURL=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(g("id"))}`;
+qrBox.innerHTML=`<img src="${qrURL}" id="qrImg">`;
 
-// Generate QR (Hanya ID agar aman)
-const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${pID}&margin=10&color=047857`;
-document.getElementById("qrContainer").innerHTML = `<img src="${qrSrc}" id="qrImg" crossorigin="anonymous">`;
+function safe(n){return n.replace(/[^a-z0-9]/gi,"_").toLowerCase();}
 
-// Fix Download Function (CORS Safe)
-async function downloadQR() {
-    const btn = document.getElementById("dlBtn");
-    btn.innerText = "...";
-    try {
-        const response = await fetch(qrSrc);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `QR_EID_${pID}.png`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        btn.innerText = "✅ Saved";
-    } catch (e) {
-        alert("Gagal mengunduh otomatis. Silakan screenshot layar Anda.");
-        btn.innerText = "Download QR";
-    }
+async function downloadQR(){
+  btn.textContent="...";
+  const b=await fetch(qrURL).then(r=>r.blob());
+  const u=URL.createObjectURL(b);
+  const a=document.createElement("a");
+  a.href=u;
+  a.download=`QR_${safe(g("nama_lengkap"))}_${g("id")}.png`;
+  a.click();
+  URL.revokeObjectURL(u);
+  btn.textContent="✅ Tersimpan";
 }
 </script>
 </body>
