@@ -2,85 +2,101 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan QR Check-in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Check-in Panitia - Sholat Idul Fitri</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        body { font-family: -apple-system, sans-serif; text-align: center; padding: 20px; background-color: #f3f4f6; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        #reader { width: 100%; border-radius: 10px; overflow: hidden; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 18px; display: none; }
-        .status-success { background: #d1fae5; color: #065f46; display: block !important; }
-        .status-error { background: #fee2e2; color: #991b1b; display: block !important; }
-        .status-warning { background: #ffedd5; color: #9a3412; display: block !important; }
-        h2 { color: #111827; }
-        .loading { display: none; color: #6b7280; margin-top: 10px; }
+        body { font-family: system-ui, sans-serif; background: #f8fafc; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
+        .header { text-align: center; margin-bottom: 20px; color: #065f46; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .result-card { background: white; margin-top: 20px; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; display: none; }
+        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-weight: bold; margin-bottom: 10px; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .btn-reset { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; background: #047857; color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Scanner Absensi Panitia</h2>
-    <p>Arahkan kamera ke QR Code peserta</p>
-    
+    <div class="header">
+        <h2>📷 Scanner Absensi Panitia/h2>
+        <p>Arahkan kamera ke QR Code peserta</p>
+    </div>
+
     <div id="reader"></div>
-    <div id="loading" class="loading">Memproses data...</div>
-    <div id="result"></div>
+
+    <div id="resultCard" class="result-card">
+        <div id="statusBadge" class="status-badge"></div>
+        <div id="participantInfo">
+            <p><strong>Nama:</strong> <span id="viewNama">-</span></p>
+            <p><strong>ID:</strong> <span id="viewID">-</span></p>
+            <p><strong>Jumlah:</strong> <span id="viewJumlah">-</span> Pax</p>
+        </div>
+        <button class="btn-reset" onclick="resetScanner()">Scan Lagi</button>
+    </div>
 </div>
 
 <script>
-    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT KAMU DISINI
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXcIMtAc05tpXHUoRKmGmXU74AHmO0NkjVB4PMallH5CRjI1n7AJq1pfNXJt7KhfvxLA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXcIMtAc05tpXHUoRKmGmXU74AHmO0NkjVB4PMallH5CRjI1n7AJq1pfNXJt7KhfvxLA/exec"; // GANTI DENGAN URL ANDA
+    let html5QrCode;
 
-    function onScanSuccess(decodedText) {
-        // Hentikan scan sementara agar tidak duplikat kirim
-        html5QrcodeScanner.clear();
-        
-        const resultDiv = document.getElementById("result");
-        const loadingDiv = document.getElementById("loading");
-        
-        resultDiv.style.display = "none";
-        loadingDiv.style.display = "block";
+    function onScanSuccess(decodedText, decodedResult) {
+        // Berhenti scan sementara untuk memproses
+        html5QrCode.pause(true);
+        processCheckIn(decodedText);
+    }
 
-        // Kirim data ke Google Apps Script dengan metode POST
-        // Kita gunakan mode 'no-cors' atau kirim via URL param untuk GAS
-        fetch(`${SCRIPT_URL}?action=scan&id=${decodedText}`, { method: 'POST' })
-        .then(res => res.text())
-        .then(status => {
-            loadingDiv.style.display = "none";
-            
-            if (status === "success") {
-                resultDiv.className = "status-success";
-                resultDiv.innerText = "✅ BERHASIL: Kehadiran tercatat!";
-            } else if (status === "used") {
-                resultDiv.className = "status-warning";
-                resultDiv.innerText = "⚠️ PERINGATAN: Sudah check-in sebelumnya!";
+    async function processCheckIn(qrData) {
+        const resultCard = document.getElementById('resultCard');
+        const statusBadge = document.getElementById('statusBadge');
+        resultCard.style.display = "block";
+        statusBadge.className = "status-badge";
+        statusBadge.innerText = "⏳ Memproses...";
+
+        try {
+            // Kirim ID ke backend untuk verifikasi dan update status
+            const response = await fetch(`${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(qrData)}`);
+            const res = await response.json();
+
+            if (res.status === "success") {
+                statusBadge.classList.add("success");
+                statusBadge.innerText = "✅ Berhasil Hadir";
+                document.getElementById('viewNama').innerText = res.data.nama;
+                document.getElementById('viewID').innerText = res.data.id;
+                document.getElementById('viewJumlah').innerText = res.data.pax;
+                
+                // Suara beep sukses (opsional)
+                const audio = new Audio('https://www.soundjay.com/buttons/beep-07a.mp3');
+                audio.play();
             } else {
-                resultDiv.className = "status-error";
-                resultDiv.innerText = "❌ GAGAL: ID tidak ditemukan!";
+                statusBadge.classList.add("error");
+                statusBadge.innerText = "❌ " + (res.message || "ID Tidak Valid");
             }
-
-            // Mulai scan lagi setelah 3 detik
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        })
-        .catch(err => {
-            loadingDiv.style.display = "none";
-            alert("Kesalahan koneksi: " + err);
-            location.reload();
-        });
+        } catch (error) {
+            statusBadge.classList.add("error");
+            statusBadge.innerText = "❌ Gangguan Koneksi";
+        }
     }
 
-    function onScanFailure(error) {
-        // Abaikan error scan (biasanya karena kamera tidak fokus)
+    function resetScanner() {
+        document.getElementById('resultCard').style.display = "none";
+        html5QrCode.resume();
     }
 
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", { fps: 10, qrbox: {width: 250, height: 250} }
-    );
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    // Inisialisasi Kamera
+    function startCamera() {
+        html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+            .catch(err => {
+                alert("Gagal mengakses kamera: " + err);
+            });
+    }
+
+    window.onload = startCamera;
 </script>
-
 </body>
 </html>
