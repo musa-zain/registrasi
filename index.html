@@ -170,6 +170,25 @@ footer {
     background-color: #ecfdf5;
     border-top: 1px solid #d1fae5;
 }
+
+/* === NOTIFIKASI === */
+.alert {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+}
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
 </style>
 </head>
 
@@ -177,6 +196,10 @@ footer {
 
 <main>
 <div class="container">
+
+    <div class="alert alert-error" id="duplicateAlert" style="display: none;">
+        ⚠️ Data sudah terdaftar sebelumnya! Email dan nomor HP harus unik.
+    </div>
 
     <div class="header">
         <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
@@ -195,12 +218,12 @@ footer {
 
             <div class="field">
                 <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
-                <input type="text" name="nama_lengkap" required>
+                <input type="text" name="nama_lengkap" id="nama_lengkap" required>
             </div>
 
             <div class="field">
                 <label data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
-                <input type="email" name="email" required>
+                <input type="email" name="email" id="email" required>
                 <span class="hint"
                       data-id="Email tidak akan dibagikan"
                       data-ja="メールアドレスは共有されません"
@@ -209,14 +232,14 @@ footer {
 
             <div class="field">
                 <label data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
-                <textarea name="domisili" required></textarea>
+                <textarea name="domisili" id="domisili" required></textarea>
             </div>
 
             <div class="field">
                 <label data-id="Nomor HP / WhatsApp"
                        data-ja="電話番号"
                        data-en="Phone Number"></label>
-                <input type="tel" name="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" required>
+                <input type="tel" name="no_hp" id="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" required>
                 <span class="hint"
                       data-id="Contoh: 08123456789"
                       data-ja="例：09012345678"
@@ -225,7 +248,16 @@ footer {
 
             <div class="field">
                 <label data-id="Usia" data-ja="年齢" data-en="Age"></label>
-                <input type="number" name="usia" required>
+                <input type="number" name="usia" id="usia" required>
+            </div>
+
+            <div class="field">
+                <label data-id="Jumlah Orang" data-ja="人数" data-en="Number of People"></label>
+                <input type="number" name="jumlah_orang" id="jumlah_orang" min="1" max="10" value="1" required>
+                <span class="hint"
+                      data-id="Termasuk diri sendiri"
+                      data-ja="本人を含む"
+                      data-en="Including yourself"></span>
             </div>
 
             <div class="field radio-group">
@@ -263,8 +295,7 @@ footer {
 
 <script>
 // --- KONFIGURASI ---
-// Ganti "URL" dengan URL Google Apps Script Anda yang asli
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRLXjI2gQS55U3oiyR_6znbhLyptaVG5QmL-VjjqJUKVyvSsP5M6iyJhkSfM9FoaS3/exec";
+const SCRIPT_URL = "COPY_URL_APPS_SCRIPT_DISINI";
 
 // --- LOGIKA BAHASA ---
 (function () {
@@ -275,39 +306,136 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRLXjI2gQS55U3oiyR_
     });
 })();
 
-// --- SUBMIT ---
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// --- VALIDASI DUPLIKASI REAL-TIME ---
+let duplicateCheckTimer;
+document.getElementById('email').addEventListener('input', checkDuplicate);
+document.getElementById('no_hp').addEventListener('input', checkDuplicate);
 
+async function checkDuplicate() {
+    const email = document.getElementById('email').value.trim();
+    const noHP = document.getElementById('no_hp').value.trim();
+    const alertDiv = document.getElementById('duplicateAlert');
+    
+    // Clear previous timer
+    clearTimeout(duplicateCheckTimer);
+    
+    // Wait for user to stop typing
+    duplicateCheckTimer = setTimeout(async () => {
+        if (email && noHP && noHP.length >= 10) {
+            try {
+                const formData = new FormData();
+                formData.append("action", "check_duplicate");
+                formData.append("email", email);
+                formData.append("no_hp", noHP);
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.isDuplicate) {
+                    alertDiv.style.display = 'block';
+                    document.getElementById('submitBtn').disabled = true;
+                } else {
+                    alertDiv.style.display = 'none';
+                    document.getElementById('submitBtn').disabled = false;
+                }
+            } catch (error) {
+                console.error("Error checking duplicate:", error);
+            }
+        }
+    }, 800); // 800ms delay
+}
+
+// --- GENERATE DATA UNIK UNTUK QR ---
+function generateQRData(formData) {
+    const qrObject = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+        nama: formData.get('nama_lengkap'),
+        email: formData.get('email'),
+        no_hp: formData.get('no_hp'),
+        domisili: formData.get('domisili'),
+        usia: formData.get('usia'),
+        jk: formData.get('jk'),
+        jumlah_orang: formData.get('jumlah_orang'),
+        timestamp: new Date().toISOString(),
+        hash: btoa(formData.get('email') + formData.get('no_hp') + Date.now())
+    };
+    
+    return btoa(JSON.stringify(qrObject));
+}
+
+// --- SUBMIT FORM ---
+document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
     const submitBtn = document.getElementById('submitBtn');
     const originalText = submitBtn.innerText;
     
+    // Final duplicate check before submitting
+    const email = document.getElementById('email').value.trim();
+    const noHP = document.getElementById('no_hp').value.trim();
+    
+    if (!email || !noHP) {
+        alert("Harap lengkapi email dan nomor HP!");
+        return;
+    }
+    
     submitBtn.disabled = true;
-    submitBtn.innerText = "Processing…";
+    submitBtn.innerText = "Memproses...";
     submitBtn.style.opacity = "0.85";
-
+    
     const formData = new FormData(this);
+    
+    // Generate unique ID and QR data
+    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    const qrData = generateQRData(formData);
+    
     formData.append("action", "register");
-
-    fetch(SCRIPT_URL, { method: 'POST', body: formData })
-        .then(r => r.json())
-        .then(result => {
-            if (result.status === 'success') {
-                // Perbaikan: Teruskan semua data form ke success.html melalui URL
-                const params = new URLSearchParams(formData);
-                params.append("id", result.id); // Tambahkan ID dari server
-                
-                window.location.href = `success.html?${params.toString()}`;
-            } else {
-                throw new Error();
-            }
-        })
-        .catch(() => {
-            alert("Terjadi kesalahan. Silakan coba lagi.");
+    formData.append("id", uniqueId);
+    formData.append("qr_data", qrData);
+    formData.append("timestamp", new Date().toISOString());
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            body: formData 
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            // Kirim semua data + QR data ke success.html
+            const params = new URLSearchParams();
+            params.append("id", uniqueId);
+            params.append("nama_lengkap", formData.get('nama_lengkap'));
+            params.append("email", formData.get('email'));
+            params.append("domisili", formData.get('domisili'));
+            params.append("no_hp", formData.get('no_hp'));
+            params.append("usia", formData.get('usia'));
+            params.append("jk", formData.get('jk'));
+            params.append("jumlah_orang", formData.get('jumlah_orang'));
+            params.append("qr_data", qrData);
+            
+            window.location.href = `success.html?${params.toString()}`;
+        } else if (result.status === 'duplicate') {
+            alert("❌ Data sudah terdaftar sebelumnya! Email atau nomor HP sudah digunakan.");
+            document.getElementById('duplicateAlert').style.display = 'block';
             submitBtn.disabled = false;
             submitBtn.innerText = originalText;
             submitBtn.style.opacity = "1";
-        });
+        } else {
+            throw new Error(result.message || "Terjadi kesalahan");
+        }
+    } catch (error) {
+        alert("❌ Gagal mendaftar. Silakan coba lagi atau hubungi panitia.");
+        console.error("Submit error:", error);
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+        submitBtn.style.opacity = "1";
+    }
 });
 </script>
 
