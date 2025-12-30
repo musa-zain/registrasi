@@ -1,55 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Panitia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard Panitia Sholat Idul Fitri</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
-        th { background: #eee; }
-        .ok { color: green; font-weight: bold; }
-        .no { color: red; font-weight: bold; }
-        .box { margin-bottom: 15px; }
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+        .container { max-width: 1000px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #047857; margin-top: 0; }
+        .stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { background: #ecfdf5; padding: 15px; border-radius: 8px; flex: 1; min-width: 150px; border: 1px solid #d1fae5; text-align: center; }
+        .stat-card span { display: block; font-size: 24px; font-weight: bold; color: #047857; }
+        .stat-card label { font-size: 14px; color: #666; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9fafb; color: #4b5563; text-transform: uppercase; font-size: 12px; }
+        tr:hover { background: #f1f5f9; }
+        
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .hadir { background: #d1fae5; color: #065f46; }
+        .belum { background: #fee2e2; color: #991b1b; }
+        
+        .btn { padding: 10px 15px; background: #047857; color: #fff; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 10px; }
+        .btn:hover { background: #065f46; }
+        #loading { text-align: center; padding: 20px; color: #666; }
     </style>
 </head>
 <body>
 
-<h2>📊 Dashboard Panitia</h2>
+<div class="container">
+    <h2>📊 Dashboard Panitia</h2>
+    
+    <div class="stats" id="statsArea">
+        <div class="stat-card"><span id="totalPeserta">-</span><label>Total Peserta</label></div>
+        <div class="stat-card"><span id="totalHadir">-</span><label>Hadir</label></div>
+        <div class="stat-card"><span id="totalBelum">-</span><label>Belum Hadir</label></div>
+    </div>
 
-<div class="box">
-    <strong>Total Peserta:</strong> {{ total }} |
-    <strong>Hadir:</strong> {{ hadir }} |
-    <strong>Belum Hadir:</strong> {{ belum }}
+    <button onclick="loadData()" class="btn">🔄 Refresh Data</button>
+    <button onclick="downloadCSV()" class="btn" style="background: #111827;">⬇️ Download CSV</button>
+
+    <div id="loading">Memuat data peserta...</div>
+    
+    <div style="overflow-x: auto;">
+        <table id="dataTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Kota</th>
+                    <th>No HP</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 </div>
 
-<a href="/export">⬇️ Download Excel</a>
+<script>
+    const SCRIPT_URL = "URL_WEB_APP_KAMU"; // Ganti dengan URL Web App Kamu
 
-<table>
-<tr>
-    <th>Nama</th>
-    <th>Email</th>
-    <th>Alamat</th>
-    <th>JK</th>
-    <th>Status</th>
-</tr>
+    let allData = [];
 
-{% for p in peserta %}
-<tr>
-    <td>{{ p[0] }}</td>
-    <td>{{ p[1] }}</td>
-    <td>{{ p[2] }}</td>
-    <td>{{ p[3] }}</td>
-    <td>
-        {% if p[4] == 1 %}
-            <span class="ok">Hadir</span>
-        {% else %}
-            <span class="no">Belum</span>
-        {% endif %}
-    </td>
-</tr>
-{% endfor %}
-</table>
+    async function loadData() {
+        document.getElementById('loading').style.display = "block";
+        document.getElementById('dataTable').style.display = "none";
+        
+        try {
+            const response = await fetch(SCRIPT_URL + "?action=getList");
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                allData = result.data;
+                renderTable(allData);
+            }
+        } catch (err) {
+            alert("Gagal mengambil data. Pastikan URL Web App sudah benar.");
+        } finally {
+            document.getElementById('loading').style.display = "none";
+        }
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        
+        let hadir = 0;
+        
+        data.forEach(p => {
+            const isHadir = p.status === "Hadir";
+            if (isHadir) hadir++;
+            
+            const row = `<tr>
+                <td><strong>${p.id}</strong></td>
+                <td>${p.nama}</td>
+                <td>${p.email}</td>
+                <td>${p.domisili}</td>
+                <td>${p.hp}</td>
+                <td><span class="badge ${isHadir ? 'hadir' : 'belum'}">${p.status}</span></td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+        });
+
+        document.getElementById('totalPeserta').innerText = data.length;
+        document.getElementById('totalHadir').innerText = hadir;
+        document.getElementById('totalBelum').innerText = data.length - hadir;
+        document.getElementById('dataTable').style.display = "table";
+    }
+
+    function downloadCSV() {
+        let csv = "ID,Nama,Email,Domisili,No HP,Status\n";
+        allData.forEach(p => {
+            csv += `${p.id},${p.nama},${p.email},"${p.domisili}",${p.hp},${p.status}\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'Data_Peserta_IdulFitri.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    window.onload = loadData;
+</script>
 
 </body>
 </html>
