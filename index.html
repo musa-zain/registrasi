@@ -1,443 +1,141 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pendaftaran Sholat Idul Fitri</title>
-
-<style>
-* { box-sizing: border-box; }
-
-body {
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #1f2937;
-    background-color: #f8fafc;
-}
-
-main { flex: 1; padding: 32px 16px; }
-.container { max-width: 460px; margin: 0 auto; }
-
-/* === HEADER === */
-.header {
-    text-align: center;
-    margin-bottom: 18px;
-    position: relative;
-    padding-top: 12px;
-}
-.header::after {
-    content: "";
-    display: block;
-    width: 80px;
-    height: 2px;
-    margin: 10px auto 0;
-    background: linear-gradient(to right, transparent, #047857, transparent);
-    opacity: 0.35;
-}
-.header h1 {
-    font-size: 22px;
-    margin-bottom: 2px;
-    color: #065f46;
-    font-weight: 700;
-}
-.masjid-name {
-    font-size: 17px;
-    font-weight: 600;
-    color: #065f46;
-    margin-top: 2px;
-    letter-spacing: 0.6px;
-}
-
-/* === CARD === */
-.card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 26px 22px;
-    border: 1px solid #e5e7eb;
-}
-
-/* === PROGRESS === */
-.progress {
-    height: 4px;
-    background: #d1fae5;
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 18px;
-}
-.progress::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: #047857;
-}
-
-/* === FORM === */
-.field { margin-bottom: 20px; }
-
-label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: #374151;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="number"],
-input[type="tel"],
-textarea {
-    width: 100%;
-    padding: 11px 12px;
-    font-size: 15px;
-    font-family: inherit;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    transition: border-color .15s, box-shadow .15s;
-}
-
-textarea {
-    min-height: 72px;
-    resize: vertical;
-}
-
-input:focus,
-textarea:focus {
-    outline: none;
-    border-color: #047857;
-    box-shadow: 0 0 0 3px #d1fae5;
-}
-
-input:invalid {
-    border-color: #f87171;
-}
-
-.hint {
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 4px;
-    display: block;
-}
-
-.radio-group label,
-.checkbox label {
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-}
-
-.field.checkbox { margin-top: 10px; }
-
-/* === BUTTON === */
-button {
-    width: 100%;
-    padding: 13px;
-    font-size: 15px;
-    font-weight: 600;
-    background-color: #047857;
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,.05);
-    transition: transform .1s ease, box-shadow .1s ease;
-}
-
-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(4,120,87,.25);
-}
-
-button:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* === FOOTER === */
-footer {
-    text-align: center;
-    padding: 18px 10px;
-    font-size: 12px;
-    color: #6b7280;
-    background-color: #ecfdf5;
-    border-top: 1px solid #d1fae5;
-}
-
-/* === NOTIFIKASI === */
-.alert {
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    display: none;
-}
-.alert-error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-}
-.alert-success {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pendaftaran Sholat Idul Fitri</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; margin: 0; display: flex; flex-direction: column; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.6; color: #1f2937; background-color: #f8fafc; }
+        main { flex: 1; padding: 32px 16px; }
+        .container { max-width: 460px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 18px; padding-top: 12px; }
+        .header h1 { font-size: 22px; margin: 0; color: #065f46; font-weight: 700; }
+        .masjid-name { font-size: 17px; font-weight: 600; color: #065f46; margin-top: 2px; }
+        .card { background: #fff; border-radius: 16px; padding: 26px 22px; border: 1px solid #e5e7eb; }
+        .field { margin-bottom: 20px; }
+        label { display: block; font-weight: 500; margin-bottom: 6px; color: #374151; }
+        input, textarea { width: 100%; padding: 11px 12px; font-size: 15px; border: 1px solid #d1d5db; border-radius: 8px; }
+        input:focus { outline: none; border-color: #047857; box-shadow: 0 0 0 3px #d1fae5; }
+        button { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; background-color: #047857; color: #fff; border: none; border-radius: 10px; cursor: pointer; transition: all .2s; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; display: none; background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        footer { text-align: center; padding: 18px; font-size: 12px; color: #6b7280; }
+    </style>
 </head>
-
 <body>
 
 <main>
-<div class="container">
+    <div class="container">
+        <div class="alert" id="duplicateAlert">⚠️ Data (Email/HP) sudah terdaftar sebelumnya!</div>
+        
+        <div class="header">
+            <h1 data-id="Form Pendaftaran Sholat Idul Fitri" data-ja="参加登録フォーム" data-en="Registration Form"></h1>
+            <div class="masjid-name">Okayama Central Mosque</div>
+        </div>
 
-    <div class="alert alert-error" id="duplicateAlert" style="display: none;">
-        ⚠️ Data sudah terdaftar sebelumnya! Email dan nomor HP harus unik.
+        <div class="card">
+            <form id="registrationForm">
+                <div class="field">
+                    <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
+                    <input type="text" name="nama_lengkap" required>
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="field">
+                    <label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone"></label>
+                    <input type="tel" name="no_hp" id="no_hp" inputmode="numeric" pattern="[0-9]{9,15}" required>
+                </div>
+                <div class="field">
+                    <label data-id="Domisili" data-ja="居住地" data-en="City"></label>
+                    <input type="text" name="domisili" required>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="field" style="flex: 1;">
+                        <label data-id="Usia" data-ja="年齢" data-en="Age"></label>
+                        <input type="number" name="usia" required>
+                    </div>
+                    <div class="field" style="flex: 1;">
+                        <label data-id="Jumlah Orang" data-ja="人数" data-en="People"></label>
+                        <input type="number" name="jumlah_orang" min="1" value="1" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
+                    <select name="jk" style="width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #d1d5db;">
+                        <option value="Laki-laki">Laki-laki / Male</option>
+                        <option value="Perempuan">Perempuan / Female</option>
+                    </select>
+                </div>
+                <button type="submit" id="submitBtn" data-id="Daftar" data-ja="登録" data-en="Register"></button>
+            </form>
+        </div>
     </div>
-
-    <div class="header">
-        <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
-            data-ja="イドゥル・フィトリ礼拝 参加登録フォーム"
-            data-en="Eid al-Fitr Prayer Registration Form"></h1>
-        <div class="masjid-name"
-            data-id="Masjid Central Okayama"
-            data-ja="岡山セントラルモスク"
-            data-en="Okayama Central Mosque"></div>
-    </div>
-
-    <div class="card">
-        <div class="progress"></div>
-
-        <form id="registrationForm">
-
-            <div class="field">
-                <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
-                <input type="text" name="nama_lengkap" id="nama_lengkap" required>
-            </div>
-
-            <div class="field">
-                <label data-id="Email" data-ja="メールアドレス" data-en="Email"></label>
-                <input type="email" name="email" id="email" required>
-                <span class="hint"
-                      data-id="Email tidak akan dibagikan"
-                      data-ja="メールアドレスは共有されません"
-                      data-en="Your email will not be shared"></span>
-            </div>
-
-            <div class="field">
-                <label data-id="Domisili / Kota" data-ja="居住地" data-en="City"></label>
-                <textarea name="domisili" id="domisili" required></textarea>
-            </div>
-
-            <div class="field">
-                <label data-id="Nomor HP / WhatsApp"
-                       data-ja="電話番号"
-                       data-en="Phone Number"></label>
-                <input type="tel" name="no_hp" id="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" required>
-                <span class="hint"
-                      data-id="Contoh: 08123456789"
-                      data-ja="例：09012345678"
-                      data-en="Example: 08123456789"></span>
-            </div>
-
-            <div class="field">
-                <label data-id="Usia" data-ja="年齢" data-en="Age"></label>
-                <input type="number" name="usia" id="usia" required>
-            </div>
-
-            <div class="field">
-                <label data-id="Jumlah Orang" data-ja="人数" data-en="Number of People"></label>
-                <input type="number" name="jumlah_orang" id="jumlah_orang" min="1" max="10" value="1" required>
-                <span class="hint"
-                      data-id="Termasuk diri sendiri"
-                      data-ja="本人を含む"
-                      data-en="Including yourself"></span>
-            </div>
-
-            <div class="field radio-group">
-                <label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
-                <label>
-                    <input type="radio" name="jk" value="Laki-laki" required>
-                    <span data-id="Laki-laki" data-ja="男性" data-en="Male"></span>
-                </label>
-                <label>
-                    <input type="radio" name="jk" value="Perempuan">
-                    <span data-id="Perempuan" data-ja="女性" data-en="Female"></span>
-                </label>
-            </div>
-
-            <div class="field checkbox">
-                <label>
-                    <input type="checkbox" name="setuju" required>
-                    <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
-                          data-ja="本イベントの目的で個人情報を使用することに同意します"
-                          data-en="I agree that my data may be used for this event"></span>
-                </label>
-            </div>
-
-            <button type="submit" id="submitBtn"
-                data-id="Daftar"
-                data-ja="登録"
-                data-en="Register"></button>
-
-        </form>
-    </div>
-</div>
 </main>
 
-<footer>© 2025 — Yayasan Ibadurrahman Islamic Center</footer>
+<footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-// --- KONFIGURASI ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-fg8xB9rjqk1WEQP7TFpTP73zsRF3UnfVqsK6hhdVK3OyvDGFrTWYTDq_eAddfv3m/exec";
+const SCRIPT_URL = "URL_GOOGLE_APPS_SCRIPT_ANDA"; // GANTI DENGAN URL ASLI ANDA
 
-// --- LOGIKA BAHASA ---
-(function () {
-    const lang = navigator.language || "id";
-    let current = lang.startsWith("ja") ? "ja" : lang.startsWith("en") ? "en" : "id";
-    document.querySelectorAll("[data-id]").forEach(el => {
-        el.textContent = el.dataset[current] || el.dataset.id;
-    });
-})();
+// Multi-language Logic
+const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
+document.querySelectorAll("[data-id]").forEach(el => { el.textContent = el.dataset[lang] || el.dataset.id; });
 
-// --- VALIDASI DUPLIKASI REAL-TIME ---
-let duplicateCheckTimer;
+// Duplicate Check Logic (mencegah pendaftaran berulang)
+let timer;
+const checkDuplicate = () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+        const email = document.getElementById('email').value;
+        const no_hp = document.getElementById('no_hp').value;
+        if (email.includes('@') && no_hp.length > 8) {
+            try {
+                const res = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${encodeURIComponent(email)}&no_hp=${encodeURIComponent(no_hp)}`);
+                const data = await res.json();
+                document.getElementById('duplicateAlert').style.display = data.isDuplicate ? 'block' : 'none';
+                document.getElementById('submitBtn').disabled = data.isDuplicate;
+            } catch (e) { console.error("Check failed", e); }
+        }
+    }, 1000);
+};
+
 document.getElementById('email').addEventListener('input', checkDuplicate);
 document.getElementById('no_hp').addEventListener('input', checkDuplicate);
 
-async function checkDuplicate() {
-    const email = document.getElementById('email').value.trim();
-    const noHP = document.getElementById('no_hp').value.trim();
-    const alertDiv = document.getElementById('duplicateAlert');
-    
-    // Clear previous timer
-    clearTimeout(duplicateCheckTimer);
-    
-    // Wait for user to stop typing
-    duplicateCheckTimer = setTimeout(async () => {
-        if (email && noHP && noHP.length >= 10) {
-            try {
-                const formData = new FormData();
-                formData.append("action", "check_duplicate");
-                formData.append("email", email);
-                formData.append("no_hp", noHP);
-                
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.isDuplicate) {
-                    alertDiv.style.display = 'block';
-                    document.getElementById('submitBtn').disabled = true;
-                } else {
-                    alertDiv.style.display = 'none';
-                    document.getElementById('submitBtn').disabled = false;
-                }
-            } catch (error) {
-                console.error("Error checking duplicate:", error);
-            }
-        }
-    }, 800); // 800ms delay
-}
-
-// --- GENERATE DATA UNIK UNTUK QR ---
-function generateQRData(formData) {
-    const qrObject = {
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-        nama: formData.get('nama_lengkap'),
-        email: formData.get('email'),
-        no_hp: formData.get('no_hp'),
-        domisili: formData.get('domisili'),
-        usia: formData.get('usia'),
-        jk: formData.get('jk'),
-        jumlah_orang: formData.get('jumlah_orang'),
-        timestamp: new Date().toISOString(),
-        hash: btoa(formData.get('email') + formData.get('no_hp') + Date.now())
-    };
-    
-    return btoa(JSON.stringify(qrObject));
-}
-
-// --- SUBMIT FORM ---
+// Submit Logic
 document.getElementById('registrationForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalText = submitBtn.innerText;
-    
-    // Final duplicate check before submitting
-    const email = document.getElementById('email').value.trim();
-    const noHP = document.getElementById('no_hp').value.trim();
-    
-    if (!email || !noHP) {
-        alert("Harap lengkapi email dan nomor HP!");
-        return;
-    }
-    
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Memproses...";
-    submitBtn.style.opacity = "0.85";
-    
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "...";
+
     const formData = new FormData(this);
-    
-    // Generate unique ID and QR data
-    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-    const qrData = generateQRData(formData);
-    
+    const uniqueId = "EID-" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase();
     formData.append("action", "register");
     formData.append("id", uniqueId);
-    formData.append("qr_data", qrData);
-    formData.append("timestamp", new Date().toISOString());
-    
+
     try {
-        const response = await fetch(SCRIPT_URL, { 
-            method: 'POST', 
-            body: formData 
-        });
-        
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
         const result = await response.json();
         
         if (result.status === 'success') {
-            // Kirim semua data + QR data ke success.html
-            const params = new URLSearchParams();
-            params.append("id", uniqueId);
-            params.append("nama_lengkap", formData.get('nama_lengkap'));
-            params.append("email", formData.get('email'));
-            params.append("domisili", formData.get('domisili'));
-            params.append("no_hp", formData.get('no_hp'));
-            params.append("usia", formData.get('usia'));
-            params.append("jk", formData.get('jk'));
-            params.append("jumlah_orang", formData.get('jumlah_orang'));
-            params.append("qr_data", qrData);
-            
+            const params = new URLSearchParams(formData);
             window.location.href = `success.html?${params.toString()}`;
-        } else if (result.status === 'duplicate') {
-            alert("❌ Data sudah terdaftar sebelumnya! Email atau nomor HP sudah digunakan.");
-            document.getElementById('duplicateAlert').style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.innerText = originalText;
-            submitBtn.style.opacity = "1";
         } else {
-            throw new Error(result.message || "Terjadi kesalahan");
+            alert(result.message || "Pendaftaran gagal.");
+            btn.disabled = false;
+            btn.innerText = originalText;
         }
-    } catch (error) {
-        alert("❌ Gagal mendaftar. Silakan coba lagi atau hubungi panitia.");
-        console.error("Submit error:", error);
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalText;
-        submitBtn.style.opacity = "1";
+    } catch (e) {
+        alert("Terjadi kesalahan koneksi.");
+        btn.disabled = false;
+        btn.innerText = originalText;
     }
 });
 </script>
-
 </body>
 </html>
