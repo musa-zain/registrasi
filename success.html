@@ -78,7 +78,6 @@ h1 {
     background: #ffffff;
 }
 
-/* === BUTTON GROUP (SIDE BY SIDE) === */
 .btn-group {
     display: flex;
     gap: 12px;
@@ -93,9 +92,12 @@ h1 {
     border-radius: 10px;
     cursor: pointer;
     text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Download QR */
 .btn-download {
     background: #047857;
     color: #ffffff;
@@ -106,12 +108,10 @@ h1 {
     background: #065f46;
 }
 
-/* Back Button */
 .btn-back {
     background: #f0fdf4;
     color: #047857;
     border: 1px solid #a7f3d0;
-    text-decoration: none;
 }
 
 .btn-back:hover {
@@ -161,7 +161,6 @@ footer {
 
     <div class="qr" id="qrContainer"></div>
 
-    <!-- BUTTONS SIDE BY SIDE -->
     <div class="btn-group">
         <button onclick="downloadQR()"
             class="btn btn-download"
@@ -192,7 +191,13 @@ footer {
 <footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-// =================== BACA DATA URL ===================
+// =================== AUTO DETECT LANGUAGE ===================
+const userLang = navigator.language || navigator.userLanguage || "id";
+let currentLang = "id";
+if (userLang.startsWith("ja")) currentLang = "ja";
+else if (userLang.startsWith("en")) currentLang = "en";
+
+// =================== BACA DATA URL & TRANSLASI DATA ===================
 const params = new URLSearchParams(window.location.search);
 
 const fields = {
@@ -206,7 +211,20 @@ const fields = {
 };
 
 Object.keys(fields).forEach(id => {
-    document.getElementById(id).innerText = params.get(fields[id]) || "-";
+    let value = params.get(fields[id]) || "-";
+    
+    // Perbaikan Khusus Terjemahan Jenis Kelamin
+    if (id === "resJK") {
+        if (value === "Laki-laki") {
+            if (currentLang === "ja") value = "男性";
+            else if (currentLang === "en") value = "Male";
+        } else if (value === "Perempuan") {
+            if (currentLang === "ja") value = "女性";
+            else if (currentLang === "en") value = "Female";
+        }
+    }
+    
+    document.getElementById(id).innerText = value;
 });
 
 // =================== QR CODE ===================
@@ -242,15 +260,10 @@ async function downloadQR() {
     }
 }
 
-// =================== AUTO TRANSLATE ===================
+// =================== UI TRANSLATION ===================
 (function () {
-    const lang = navigator.language || "id";
-    let current = "id";
-    if (lang.startsWith("ja")) current = "ja";
-    else if (lang.startsWith("en")) current = "en";
-
     document.querySelectorAll("[data-id]").forEach(el => {
-        el.textContent = el.dataset[current] || el.dataset.id;
+        el.textContent = el.dataset[currentLang] || el.dataset.id;
     });
 })();
 </script>
