@@ -78,10 +78,16 @@ h1 {
     background: #ffffff;
 }
 
-/* === BUTTONS === */
+/* === BUTTON GROUP (SIDE BY SIDE) === */
+.btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
 .btn {
-    width: 100%;
-    padding: 13px;
+    flex: 1;
+    padding: 13px 10px;
     font-size: 14px;
     font-weight: 600;
     border-radius: 10px;
@@ -89,28 +95,27 @@ h1 {
     text-align: center;
 }
 
+/* Download QR */
 .btn-download {
     background: #047857;
     color: #ffffff;
     border: none;
-    margin-top: 18px;
 }
 
 .btn-download:hover {
     background: #065f46;
 }
 
+/* Back Button */
 .btn-back {
-    display: block;
-    margin-top: 12px;
-    background: transparent;
+    background: #f0fdf4;
     color: #047857;
+    border: 1px solid #a7f3d0;
     text-decoration: none;
-    font-weight: 500;
 }
 
 .btn-back:hover {
-    text-decoration: underline;
+    background: #dcfce7;
 }
 
 .note {
@@ -156,23 +161,26 @@ footer {
 
     <div class="qr" id="qrContainer"></div>
 
-    <button onclick="downloadQR()"
-        class="btn btn-download"
-        id="downloadBtn"
-        data-id="⬇️ Unduh Kode QR"
-        data-ja="⬇️ QRコードをダウンロード"
-        data-en="⬇️ Download QR Code">
-        ⬇️ Unduh Kode QR
-    </button>
+    <!-- BUTTONS SIDE BY SIDE -->
+    <div class="btn-group">
+        <button onclick="downloadQR()"
+            class="btn btn-download"
+            id="downloadBtn"
+            data-id="⬇️ Unduh QR"
+            data-ja="⬇️ QRダウンロード"
+            data-en="⬇️ Download QR">
+            ⬇️ Unduh QR
+        </button>
 
-    <a href="index.html"
-        class="btn btn-back"
-        id="backBtn"
-        data-id="⬅️ Kembali ke Pendaftaran"
-        data-ja="⬅️ 登録画面に戻る"
-        data-en="⬅️ Back to Registration">
-        ⬅️ Kembali ke Pendaftaran
-    </a>
+        <a href="index.html"
+            class="btn btn-back"
+            id="backBtn"
+            data-id="⬅️ Kembali"
+            data-ja="⬅️ 戻る"
+            data-en="⬅️ Back">
+            ⬅️ Kembali
+        </a>
+    </div>
 
     <div class="note"
         data-id="Simpan QR Code ini untuk check-in saat acara"
