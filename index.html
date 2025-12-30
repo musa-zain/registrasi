@@ -1,141 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pendaftaran Sholat Idul Fitri</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { min-height: 100vh; margin: 0; display: flex; flex-direction: column; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.6; color: #1f2937; background-color: #f8fafc; }
-        main { flex: 1; padding: 32px 16px; }
-        .container { max-width: 460px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 18px; padding-top: 12px; }
-        .header h1 { font-size: 22px; margin: 0; color: #065f46; font-weight: 700; }
-        .masjid-name { font-size: 17px; font-weight: 600; color: #065f46; margin-top: 2px; }
-        .card { background: #fff; border-radius: 16px; padding: 26px 22px; border: 1px solid #e5e7eb; }
-        .field { margin-bottom: 20px; }
-        label { display: block; font-weight: 500; margin-bottom: 6px; color: #374151; }
-        input, textarea { width: 100%; padding: 11px 12px; font-size: 15px; border: 1px solid #d1d5db; border-radius: 8px; }
-        input:focus { outline: none; border-color: #047857; box-shadow: 0 0 0 3px #d1fae5; }
-        button { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; background-color: #047857; color: #fff; border: none; border-radius: 10px; cursor: pointer; transition: all .2s; }
-        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
-        .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; display: none; background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        footer { text-align: center; padding: 18px; font-size: 12px; color: #6b7280; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendaftaran Sholat Idul Fitri</title>
+
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f8fafc;
+  color: #1f2937;
+}
+main { padding: 32px 16px; }
+.container { max-width: 460px; margin: auto; }
+.header { text-align: center; margin-bottom: 16px; }
+.header h1 { margin: 0; font-size: 22px; color: #065f46; }
+.card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+.field { margin-bottom: 18px; }
+label { display: block; margin-bottom: 6px; font-weight: 500; }
+input, select {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+button {
+  width: 100%;
+  padding: 13px;
+  background: #047857;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:disabled { background: #9ca3af; }
+.alert {
+  display: none;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
+</style>
 </head>
+
 <body>
 
 <main>
-    <div class="container">
-        <div class="alert" id="duplicateAlert">⚠️ Data (Email/HP) sudah terdaftar sebelumnya!</div>
-        
-        <div class="header">
-            <h1 data-id="Form Pendaftaran Sholat Idul Fitri" data-ja="参加登録フォーム" data-en="Registration Form"></h1>
-            <div class="masjid-name">Okayama Central Mosque</div>
-        </div>
+<div class="container">
+  <div class="alert" id="duplicateAlert">⚠️ Data sudah terdaftar</div>
 
-        <div class="card">
-            <form id="registrationForm">
-                <div class="field">
-                    <label data-id="Nama Lengkap" data-ja="氏名" data-en="Full Name"></label>
-                    <input type="text" name="nama_lengkap" required>
-                </div>
-                <div class="field">
-                    <label>Email</label>
-                    <input type="email" name="email" id="email" required>
-                </div>
-                <div class="field">
-                    <label data-id="Nomor HP / WhatsApp" data-ja="電話番号" data-en="Phone"></label>
-                    <input type="tel" name="no_hp" id="no_hp" inputmode="numeric" pattern="[0-9]{9,15}" required>
-                </div>
-                <div class="field">
-                    <label data-id="Domisili" data-ja="居住地" data-en="City"></label>
-                    <input type="text" name="domisili" required>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <div class="field" style="flex: 1;">
-                        <label data-id="Usia" data-ja="年齢" data-en="Age"></label>
-                        <input type="number" name="usia" required>
-                    </div>
-                    <div class="field" style="flex: 1;">
-                        <label data-id="Jumlah Orang" data-ja="人数" data-en="People"></label>
-                        <input type="number" name="jumlah_orang" min="1" value="1" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></label>
-                    <select name="jk" style="width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #d1d5db;">
-                        <option value="Laki-laki">Laki-laki / Male</option>
-                        <option value="Perempuan">Perempuan / Female</option>
-                    </select>
-                </div>
-                <button type="submit" id="submitBtn" data-id="Daftar" data-ja="登録" data-en="Register"></button>
-            </form>
+  <div class="header">
+    <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
+        data-en="Registration Form"
+        data-ja="参加登録フォーム"></h1>
+    <div>Okayama Central Mosque</div>
+  </div>
+
+  <div class="card">
+    <form id="registrationForm">
+      <div class="field">
+        <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
+        <input name="nama_lengkap" required>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" id="email" required>
+      </div>
+
+      <div class="field">
+        <label data-id="Nomor HP" data-en="Phone" data-ja="電話番号"></label>
+        <input type="tel" name="no_hp" id="no_hp" required>
+      </div>
+
+      <div class="field">
+        <label data-id="Domisili" data-en="City" data-ja="居住地"></label>
+        <input name="domisili" required>
+      </div>
+
+      <div style="display:flex;gap:10px;">
+        <div class="field" style="flex:1;">
+          <label data-id="Usia" data-en="Age" data-ja="年齢"></label>
+          <input type="number" name="usia" required>
         </div>
-    </div>
+        <div class="field" style="flex:1;">
+          <label data-id="Jumlah Orang" data-en="People" data-ja="人数"></label>
+          <input type="number" name="jumlah_orang" min="1" value="1" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label data-id="Jenis Kelamin" data-en="Gender" data-ja="性別"></label>
+        <select name="jk" required>
+          <option value="" disabled selected>--</option>
+          <option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
+          <option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
+        </select>
+      </div>
+
+      <!-- PERSETUJUAN DATA -->
+      <div class="field">
+        <label style="display:flex;gap:8px;font-size:13px;">
+          <input type="checkbox" required>
+          <span data-id="Saya menyetujui data digunakan untuk keperluan acara"
+                data-en="I agree my data will be used for this event"
+                data-ja="本イベントのために個人情報を使用することに同意します"></span>
+        </label>
+      </div>
+
+      <button id="submitBtn" data-id="Daftar" data-en="Register" data-ja="登録"></button>
+    </form>
+  </div>
+</div>
 </main>
 
-<footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
+<footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec"; // GANTI DENGAN URL ASLI ANDA
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
 
-// Multi-language Logic
-const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
-document.querySelectorAll("[data-id]").forEach(el => { el.textContent = el.dataset[lang] || el.dataset.id; });
+// Language
+const lang = navigator.language.startsWith("ja") ? "ja"
+           : navigator.language.startsWith("en") ? "en" : "id";
+document.querySelectorAll("[data-id]").forEach(el=>{
+  el.textContent = el.dataset[lang] || el.dataset.id;
+});
 
-// Duplicate Check Logic (mencegah pendaftaran berulang)
-let timer;
-const checkDuplicate = () => {
-    clearTimeout(timer);
-    timer = setTimeout(async () => {
-        const email = document.getElementById('email').value;
-        const no_hp = document.getElementById('no_hp').value;
-        if (email.includes('@') && no_hp.length > 8) {
-            try {
-                const res = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${encodeURIComponent(email)}&no_hp=${encodeURIComponent(no_hp)}`);
-                const data = await res.json();
-                document.getElementById('duplicateAlert').style.display = data.isDuplicate ? 'block' : 'none';
-                document.getElementById('submitBtn').disabled = data.isDuplicate;
-            } catch (e) { console.error("Check failed", e); }
-        }
-    }, 1000);
+// Translate option
+document.querySelectorAll("option[data-id]").forEach(o=>{
+  o.textContent = o.dataset[lang] || o.dataset.id;
+});
+
+// Duplicate check
+let t;
+email.oninput = no_hp.oninput = ()=>{
+  clearTimeout(t);
+  t=setTimeout(async()=>{
+    if(email.value && no_hp.value){
+      const r = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
+      const j = await r.json();
+      duplicateAlert.style.display = j.isDuplicate ? "block":"none";
+      submitBtn.disabled = j.isDuplicate;
+    }
+  },800);
 };
 
-document.getElementById('email').addEventListener('input', checkDuplicate);
-document.getElementById('no_hp').addEventListener('input', checkDuplicate);
+// Submit
+registrationForm.onsubmit = async e=>{
+  e.preventDefault();
+  submitBtn.disabled = true;
 
-// Submit Logic
-document.getElementById('registrationForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const originalText = btn.innerText;
-    btn.disabled = true;
-    btn.innerText = "...";
+  const fd = new FormData(registrationForm);
+  fd.append("action","register");
+  fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
 
-    const formData = new FormData(this);
-    const uniqueId = "EID-" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase();
-    formData.append("action", "register");
-    formData.append("id", uniqueId);
+  const r = await fetch(SCRIPT_URL,{method:"POST",body:fd});
+  const j = await r.json();
 
-    try {
-        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            const params = new URLSearchParams(formData);
-            window.location.href = `success.html?${params.toString()}`;
-        } else {
-            alert(result.message || "Pendaftaran gagal.");
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    } catch (e) {
-        alert("Terjadi kesalahan koneksi.");
-        btn.disabled = false;
-        btn.innerText = originalText;
-    }
-});
+  if(j.status==="success"){
+    window.location.href = "success.html?"+new URLSearchParams(fd).toString();
+  }else{
+    alert(j.message||"Gagal");
+    submitBtn.disabled=false;
+  }
+};
 </script>
+
 </body>
 </html>
