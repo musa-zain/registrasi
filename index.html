@@ -217,8 +217,6 @@ footer {
                        data-ja="電話番号"
                        data-en="Phone Number"></label>
                 <input type="tel" name="no_hp" inputmode="numeric" pattern="[0-9]{10,13}" required>
-
-                <!-- ✅ HINT AUTO TRANSLATE -->
                 <span class="hint"
                       data-id="Contoh: 08123456789"
                       data-ja="例：09012345678"
@@ -265,6 +263,7 @@ footer {
 
 <script>
 // --- KONFIGURASI ---
+// Ganti "URL" dengan URL Google Apps Script Anda yang asli
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRLXjI2gQS55U3oiyR_6znbhLyptaVG5QmL-VjjqJUKVyvSsP5M6iyJhkSfM9FoaS3/exec";
 
 // --- LOGIKA BAHASA ---
@@ -281,6 +280,8 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     e.preventDefault();
 
     const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerText;
+    
     submitBtn.disabled = true;
     submitBtn.innerText = "Processing…";
     submitBtn.style.opacity = "0.85";
@@ -292,7 +293,11 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         .then(r => r.json())
         .then(result => {
             if (result.status === 'success') {
-                window.location.href = `success.html?id=${result.id}`;
+                // Perbaikan: Teruskan semua data form ke success.html melalui URL
+                const params = new URLSearchParams(formData);
+                params.append("id", result.id); // Tambahkan ID dari server
+                
+                window.location.href = `success.html?${params.toString()}`;
             } else {
                 throw new Error();
             }
@@ -300,7 +305,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         .catch(() => {
             alert("Terjadi kesalahan. Silakan coba lagi.");
             submitBtn.disabled = false;
-            submitBtn.innerText = "Daftar";
+            submitBtn.innerText = originalText;
             submitBtn.style.opacity = "1";
         });
 });
