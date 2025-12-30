@@ -7,12 +7,14 @@
 
 <style>
 * { box-sizing: border-box; }
+
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     background: #ffffff;
     color: #1f2937;
 }
+
 main {
     min-height: 100vh;
     display: flex;
@@ -20,42 +22,110 @@ main {
     justify-content: center;
     padding: 24px;
 }
+
 .card {
     width: 100%;
     max-width: 420px;
     border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 26px 22px;
+    border-radius: 16px;
+    padding: 26px 24px;
     text-align: center;
+    background: #ffffff;
 }
-.icon { font-size: 42px; margin-bottom: 10px; }
-h1 { margin: 0; font-size: 20px; }
-.subtitle { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+
+.icon {
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 22px;
+}
+
 .info {
     background: #f9fafb;
-    padding: 14px;
-    border-radius: 10px;
+    padding: 16px 14px;
+    border-radius: 12px;
     text-align: left;
     font-size: 14px;
+    border: 1px solid #eef2f7;
 }
-.info p { margin: 5px 0; }
-.qr img {
-    width: 180px;
-    margin: 18px auto;
-    display: block;
+
+.info p {
+    margin: 6px 0;
+    line-height: 1.45;
 }
-button {
-    width: 100%;
-    padding: 12px;
-    background: #111827;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+
+.info strong {
     font-weight: 600;
-    cursor: pointer;
 }
-.note { font-size: 13px; margin-top: 10px; color: #374151; }
-footer { text-align: center; font-size: 12px; color: #6b7280; padding: 12px; }
+
+.qr img {
+    width: 190px;
+    margin: 20px auto 10px;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 8px;
+    background: #ffffff;
+}
+
+/* === BUTTONS === */
+.btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-download {
+    background: #047857;
+    color: #ffffff;
+    border: none;
+    margin-top: 18px;
+}
+
+.btn-download:hover {
+    background: #065f46;
+}
+
+.btn-back {
+    display: block;
+    margin-top: 12px;
+    background: transparent;
+    color: #047857;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-back:hover {
+    text-decoration: underline;
+}
+
+.note {
+    font-size: 13px;
+    margin-top: 14px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 12px;
+}
 </style>
 </head>
 
@@ -64,11 +134,15 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 12px; }
 <main>
 <div class="card">
     <div class="icon">✅</div>
-    <h1 data-id="Pendaftaran Berhasil" data-ja="登録が完了しました" data-en="Registration Successful"></h1>
+
+    <h1 data-id="Pendaftaran Berhasil"
+        data-ja="登録が完了しました"
+        data-en="Registration Successful"></h1>
+
     <div class="subtitle"
-         data-id="Terima kasih telah melakukan pendaftaran"
-         data-ja="お申し込みありがとうございます"
-         data-en="Thank you for your registration"></div>
+        data-id="Terima kasih telah melakukan pendaftaran"
+        data-ja="お申し込みありがとうございます"
+        data-en="Thank you for your registration"></div>
 
     <div class="info">
         <p><strong data-id="Nama" data-ja="氏名" data-en="Name"></strong>: <span id="resNama">-</span></p>
@@ -82,25 +156,28 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 12px; }
 
     <div class="qr" id="qrContainer"></div>
 
-    <button onclick="downloadQR()" class="btn btn-download" id="downloadBtn"
-    data-id="⬇️ Unduh Kode QR"
-    data-ja="⬇️ QRコードをダウンロード"
-    data-en="⬇️ Download QR Code">
-    ⬇️ Unduh Kode QR
-</button>
+    <button onclick="downloadQR()"
+        class="btn btn-download"
+        id="downloadBtn"
+        data-id="⬇️ Unduh Kode QR"
+        data-ja="⬇️ QRコードをダウンロード"
+        data-en="⬇️ Download QR Code">
+        ⬇️ Unduh Kode QR
+    </button>
 
-<a href="index.html" class="btn btn-back" id="backBtn" 
-    style="text-align: center; display: block; text-decoration: none;"
-    data-id="⬅️ Kembali ke Pendaftaran"
-    data-ja="⬅️ 登録画面に戻る"
-    data-en="⬅️ Back to Registration">
-    ⬅️ Kembali ke Pendaftaran
-</a>
+    <a href="index.html"
+        class="btn btn-back"
+        id="backBtn"
+        data-id="⬅️ Kembali ke Pendaftaran"
+        data-ja="⬅️ 登録画面に戻る"
+        data-en="⬅️ Back to Registration">
+        ⬅️ Kembali ke Pendaftaran
+    </a>
 
     <div class="note"
-         data-id="Simpan QR Code ini untuk check-in saat acara"
-         data-ja="当日のチェックイン時にこのQRコードをご提示ください"
-         data-en="Please save this QR code for event check-in"></div>
+        data-id="Simpan QR Code ini untuk check-in saat acara"
+        data-ja="当日のチェックイン時にこのQRコードをご提示ください"
+        data-en="Please save this QR code for event check-in"></div>
 </div>
 </main>
 
@@ -132,17 +209,29 @@ if (participantID) {
         `<img src="${qrURL}" id="qrImage" alt="QR Code">`;
 }
 
-// =================== DOWNLOAD QR ===================
+// =================== DOWNLOAD QR (STABLE) ===================
 async function downloadQR() {
     const img = document.getElementById("qrImage");
-    if (!img) return;
+    if (!img) {
+        alert("QR Code belum tersedia");
+        return;
+    }
 
-    const res = await fetch(img.src);
-    const blob = await res.blob();
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "QR_Pendaftaran.png";
-    a.click();
+    try {
+        const res = await fetch(img.src);
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "QR_Pendaftaran_Idul_Fitri.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch {
+        alert("Gagal mengunduh QR Code. Silakan screenshot halaman ini.");
+    }
 }
 
 // =================== AUTO TRANSLATE ===================
