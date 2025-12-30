@@ -68,14 +68,23 @@ h1 {
     font-weight: 600;
 }
 
-.qr img {
-    width: 190px;
+.qr {
     margin: 20px auto 10px;
-    display: block;
-    border-radius: 12px;
+    width: 190px;
+    height: 190px;
     border: 1px solid #e5e7eb;
+    border-radius: 12px;
     padding: 8px;
     background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
 }
 
 .btn-group {
@@ -157,9 +166,12 @@ footer {
         <p><strong data-id="No. HP / WhatsApp" data-ja="電話番号" data-en="Phone"></strong>: <span id="resHP">-</span></p>
         <p><strong data-id="Usia" data-ja="年齢" data-en="Age"></strong>: <span id="resUsia">-</span></p>
         <p><strong data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></strong>: <span id="resJK">-</span></p>
+        <p><strong data-id="Jumlah Orang" data-ja="人数" data-en="Number of People"></strong>: <span id="resJumlah">-</span></p>
     </div>
 
-    <div class="qr" id="qrContainer"></div>
+    <div class="qr" id="qrContainer">
+        <!-- QR akan di-generate oleh JavaScript -->
+    </div>
 
     <div class="btn-group">
         <button onclick="downloadQR()"
@@ -182,9 +194,9 @@ footer {
     </div>
 
     <div class="note"
-        data-id="Simpan QR Code ini untuk check-in saat acara"
-        data-ja="当日のチェックイン時にこのQRコードをご提示ください"
-        data-en="Please save this QR code for event check-in"></div>
+        data-id="Simpan QR Code ini untuk check-in saat acara. QR mengandung data pribadi Anda."
+        data-ja="当日のチェックイン時にこのQRコードをご提示ください。QRコードには個人情報が含まれています。"
+        data-en="Please save this QR code for event check-in. The QR contains your personal data."></div>
 </div>
 </main>
 
@@ -197,7 +209,7 @@ let currentLang = "id";
 if (userLang.startsWith("ja")) currentLang = "ja";
 else if (userLang.startsWith("en")) currentLang = "en";
 
-// =================== BACA DATA URL & TRANSLASI DATA ===================
+// =================== BACA DATA URL ===================
 const params = new URLSearchParams(window.location.search);
 
 const fields = {
@@ -207,13 +219,14 @@ const fields = {
     resDomisili: "domisili",
     resHP: "no_hp",
     resUsia: "usia",
-    resJK: "jk"
+    resJK: "jk",
+    resJumlah: "jumlah_orang"
 };
 
 Object.keys(fields).forEach(id => {
     let value = params.get(fields[id]) || "-";
     
-    // Perbaikan Khusus Terjemahan Jenis Kelamin
+    // Terjemahan Jenis Kelamin
     if (id === "resJK") {
         if (value === "Laki-laki") {
             if (currentLang === "ja") value = "男性";
@@ -227,15 +240,38 @@ Object.keys(fields).forEach(id => {
     document.getElementById(id).innerText = value;
 });
 
-// =================== QR CODE ===================
-const participantID = params.get("id");
-if (participantID) {
-    const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${participantID}`;
-    document.getElementById("qrContainer").innerHTML =
-        `<img src="${qrURL}" id="qrImage" alt="QR Code">`;
+// =================== GENERATE QR CODE DARI DATA SPESIFIK ===================
+function generateQRFromData() {
+    // Ambil semua data dari URL
+    const qrObject = {
+        id: params.get("id"),
+        nama: params.get("nama_lengkap"),
+        email: params.get("email"),
+        no_hp: params.get("no_hp"),
+        domisili: params.get("domisili"),
+        usia: params.get("usia"),
+        jk: params.get("jk"),
+        jumlah_orang: params.get("jumlah_orang"),
+        timestamp: new Date().toISOString(),
+        event: "Sholat Idul Fitri 2026",
+        mosque: "Okayama Central Mosque"
+    };
+    
+    // Encode ke Base64 untuk QR
+    const qrString = btoa(JSON.stringify(qrObject));
+    
+    // Buat URL QR Code dengan data yang lebih panjang
+    const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=${encodeURIComponent(qrString)}&format=png&margin=10&color=0A5C36&bgcolor=F0FDF4`;
+    
+    return qrURL;
 }
 
-// =================== DOWNLOAD QR (STABLE) ===================
+// =================== TAMPILKAN QR CODE ===================
+const qrURL = generateQRFromData();
+document.getElementById("qrContainer").innerHTML = 
+    `<img src="${qrURL}" id="qrImage" alt="QR Code Pendaftaran" crossorigin="anonymous">`;
+
+// =================== DOWNLOAD QR CODE ===================
 async function downloadQR() {
     const img = document.getElementById("qrImage");
     if (!img) {
@@ -244,19 +280,32 @@ async function downloadQR() {
     }
 
     try {
-        const res = await fetch(img.src);
-        const blob = await res.blob();
+        const response = await fetch(img.src);
+        const blob = await response.blob();
         const url = URL.createObjectURL(blob);
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "QR_Pendaftaran_Idul_Fitri.png";
+        a.download = `QR_${params.get("nama_lengkap").replace(/\s+/g, "_")}_${params.get("id")}.png`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    } catch {
-        alert("Gagal mengunduh QR Code. Silakan screenshot halaman ini.");
+        
+        // Tampilkan notifikasi sukses
+        const btn = document.getElementById("downloadBtn");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✅ Terunduh!";
+        btn.style.backgroundColor = "#065f46";
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.backgroundColor = "";
+        }, 2000);
+        
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Gagal mengunduh QR Code. Silakan screenshot halaman ini atau coba lagi.");
     }
 }
 
@@ -266,6 +315,21 @@ async function downloadQR() {
         el.textContent = el.dataset[currentLang] || el.dataset.id;
     });
 })();
+
+// =================== SIMPAN DATA KE LOCALSTORAGE (Backup) ===================
+const participantData = {
+    id: params.get("id"),
+    nama: params.get("nama_lengkap"),
+    email: params.get("email"),
+    no_hp: params.get("no_hp"),
+    timestamp: new Date().toISOString()
+};
+
+try {
+    localStorage.setItem(`eid_reg_${params.get("id")}`, JSON.stringify(participantData));
+} catch (e) {
+    console.log("LocalStorage tidak tersedia atau penuh");
+}
 </script>
 
 </body>
