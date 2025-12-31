@@ -210,10 +210,43 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <label data-id="Domisili" data-en="City / Residence" data-ja="居住地"></label>
 <div class="input-wrapper">
 <i class="fas fa-map-marker-alt"></i>
-<input name="domisili" required
- data-id-ph="Contoh: Okayama-shi, Kita-ku"
- data-en-ph="Example: Okayama-shi, Kita-ku"
- data-ja-ph="例：岡山市北区">
+<select name="domisili" required>
+  <option value="" disabled selected data-id="Pilih Wilayah" data-en="Select Area" data-ja="地域を選択"></option>
+  
+  <optgroup label="Okayama City">
+    <option value="Okayama-shi, Kita-ku, Kaminakano">Okayama-shi, Kita-ku, Kaminakano</option>
+    <option value="Okayama-shi, Kita-ku (Lainnya)">Okayama-shi, Kita-ku (Other)</option>
+    <option value="Okayama-shi, Naka-ku">Okayama-shi, Naka-ku</option>
+    <option value="Okayama-shi, Higashi-ku">Okayama-shi, Higashi-ku</option>
+    <option value="Okayama-shi, Minami-ku">Okayama-shi, Minami-ku</option>
+  </optgroup>
+
+  <optgroup label="Other Cities">
+    <option value="Kurashiki-shi">Kurashiki-shi</option>
+    <option value="Tsuyama-shi">Tsuyama-shi</option>
+    <option value="Tamano-shi">Tamano-shi</option>
+    <option value="Kasaoka-shi">Kasaoka-shi</option>
+    <option value="Ibara-shi">Ibara-shi</option>
+    <option value="Soja-shi">Soja-shi</option>
+    <option value="Takahashi-shi">Takahashi-shi</option>
+    <option value="Niimi-shi">Niimi-shi</option>
+    <option value="Bizen-shi">Bizen-shi</option>
+    <option value="Setouchi-shi">Setouchi-shi</option>
+    <option value="Akaiwa-shi">Akaiwa-shi</option>
+    <option value="Maniwa-shi">Maniwa-shi</option>
+    <option value="Mimasaka-shi">Mimasaka-shi</option>
+    <option value="Asakuchi-shi">Asakuchi-shi</option>
+  </optgroup>
+
+  <optgroup label="Districts">
+    <option value="Wake-cho">Wake-cho</option>
+    <option value="Hayashima-cho">Hayashima-cho</option>
+    <option value="Satosho-cho">Satosho-cho</option>
+    <option value="Yage-cho">Yakage-cho</option>
+    <option value="Kibichuo-cho">Kibichuo-cho</option>
+    <option value="Luar Okayama">Luar Okayama / Outside Okayama</option>
+  </optgroup>
+</select>
 </div>
 </div>
 
