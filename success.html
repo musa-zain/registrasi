@@ -207,38 +207,74 @@ footer{
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const params=new URLSearchParams(location.search);
-const lang=navigator.language.startsWith("ja")?"ja":
-           navigator.language.startsWith("en")?"en":"id";
+// =================== DETEKSI BAHASA ===================
+const params = new URLSearchParams(window.location.search);
+const lang = navigator.language.startsWith("ja") ? "ja"
+           : navigator.language.startsWith("en") ? "en" : "id";
 
-document.querySelectorAll("[data-id]").forEach(el=>{
-  el.textContent=el.dataset[lang]||el.dataset.id;
+// =================== TERJEMAHKAN TEKS ===================
+document.querySelectorAll("[data-id]").forEach(el => {
+  el.textContent = el.dataset[lang] || el.dataset.id;
 });
 
-const map={
- resNama:"nama_lengkap",resID:"id",resEmail:"email",
- resDomisili:"domisili",resHP:"no_hp",resUsia:"usia",
- resJK:"jk",resJumlah:"jumlah_orang"
+// =================== ISI DATA PESERTA ===================
+const map = {
+  resNama: "nama_lengkap",
+  resID: "id",
+  resEmail: "email",
+  resDomisili: "domisili",
+  resHP: "no_hp",
+  resUsia: "usia",
+  resJK: "jk",
+  resJumlah: "jumlah_orang"
 };
 
-for(const k in map){
- let v=params.get(map[k])||"-";
- if(k==="resJK"){
-  if(v==="Laki-laki") v=lang==="ja"?"男性":lang==="en"?"Male":v;
-  if(v==="Perempuan") v=lang==="ja"?"女性":lang==="en"?"Female":v;
- }
- document.getElementById(k).textContent=v;
+for (const id in map) {
+  let val = params.get(map[id]) || "-";
+
+  // Auto translate gender
+  if (id === "resJK") {
+    if (val === "Laki-laki") val = lang === "ja" ? "男性" : lang === "en" ? "Male" : val;
+    if (val === "Perempuan") val = lang === "ja" ? "女性" : lang === "en" ? "Female" : val;
+  }
+
+  document.getElementById(id).textContent = val;
 }
 
-const qrURL=`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(params.get("id")||"ID")}&margin=10`;
-qrContainer.innerHTML=`<img src="${qrURL}" crossorigin="anonymous">`;
+// =================== GENERATE QR ===================
+const participantID = params.get("id") || "UNKNOWN";
+const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(participantID)}&margin=10`;
 
-async function downloadQR(){
- const name=params.get("nama_lengkap")||"Peserta";
- const a=document.createElement("a");
- a.href=qrURL;
- a.download=`QR_${name}.png`;
- a.click();
+document.getElementById("qrContainer").innerHTML =
+  `<img src="${qrURL}" id="qrImage" crossorigin="anonymous">`;
+
+// =================== DOWNLOAD QR (AUTO, TANPA NOTIF) ===================
+async function downloadQR() {
+  try {
+    const response = await fetch(qrURL);
+    const blob = await response.blob();
+
+    // Nama file aman & otomatis
+    const rawName = params.get("nama_lengkap") || "Peserta";
+    const safeName = rawName
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_]/g, "");
+
+    const fileName = `QR_EID_2026_${safeName}.png`;
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(a.href);
+  } catch (err) {
+    alert("Gagal mengunduh QR Code");
+    console.error(err);
+  }
 }
 </script>
 
