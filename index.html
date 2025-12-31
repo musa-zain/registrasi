@@ -14,7 +14,7 @@ body{
   color:#1f2937;
 }
 main{padding:28px 14px}
-.container{max-width:480px;margin:auto}
+.container{max-width:500px;margin:auto}
 .header{text-align:center;margin-bottom:18px}
 .header h1{margin:0;font-size:22px;color:#065f46}
 .header div{font-size:13px;color:#6b7280}
@@ -27,14 +27,32 @@ main{padding:28px 14px}
 }
 
 .field{margin-bottom:18px}
-label{display:block;margin-bottom:6px;font-weight:500;font-size:14px}
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:500;
+  font-size:14px;
+}
 
 input,select{
   width:100%;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   border:1px solid #d1d5db;
   font-size:14px;
+}
+
+/* Domisili lebih lega */
+input[name="domisili"]{
+  padding:14px;
+  font-size:15px;
+}
+
+/* Hint text */
+.hint{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
 }
 
 .row{
@@ -49,7 +67,7 @@ button{
   background:#047857;
   color:#fff;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   font-weight:600;
   font-size:15px;
   cursor:pointer;
@@ -66,22 +84,23 @@ button:disabled{background:#9ca3af}
   font-size:14px;
 }
 
-/* ===== CHECKBOX ===== */
+/* ===== CHECKBOX THEMED ===== */
 .consent{
   display:flex;
   align-items:flex-start;
   gap:12px;
-  padding:14px;
-  background:#f9fafb;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
+  padding:16px;
+  background:#ecfdf5;
+  border:1px solid #a7f3d0;
+  border-radius:14px;
   font-size:13px;
 }
 .consent input{
   width:20px;
   height:20px;
-  margin-top:2px;
+  accent-color:#047857;
   cursor:pointer;
+  margin-top:2px;
 }
 .consent span{line-height:1.5}
 
@@ -112,22 +131,43 @@ footer{
 
       <div class="field">
         <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
-        <input name="nama_lengkap" required>
+        <input name="nama_lengkap" autocomplete="name" required>
       </div>
 
       <div class="field">
         <label>Email</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email"
+               name="email"
+               id="email"
+               autocomplete="email"
+               placeholder="contoh@email.com"
+               required>
+        <div class="hint"
+             data-id="Email aktif untuk konfirmasi"
+             data-en="Active email for confirmation"
+             data-ja="確認用の有効なメールアドレス"></div>
       </div>
 
       <div class="field">
         <label data-id="Nomor HP" data-en="Phone" data-ja="電話番号"></label>
-        <input type="tel" name="no_hp" id="no_hp" required>
+        <input type="tel"
+               name="no_hp"
+               id="no_hp"
+               inputmode="tel"
+               autocomplete="tel"
+               placeholder="08012345678"
+               required>
+        <div class="hint"
+             data-id="Gunakan nomor aktif (tanpa spasi)"
+             data-en="Use active number (no spaces)"
+             data-ja="有効な電話番号を入力してください（スペースなし）"></div>
       </div>
 
       <div class="field">
         <label data-id="Domisili" data-en="City" data-ja="居住地"></label>
-        <input name="domisili" required>
+        <input name="domisili"
+               placeholder="Contoh: Okayama-shi"
+               required>
       </div>
 
       <div class="row">
@@ -160,7 +200,10 @@ footer{
         </label>
       </div>
 
-      <button id="submitBtn" data-id="Daftar" data-en="Register" data-ja="登録"></button>
+      <button id="submitBtn"
+              data-id="Daftar"
+              data-en="Register"
+              data-ja="登録"></button>
 
     </form>
   </div>
