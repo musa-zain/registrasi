@@ -5,123 +5,239 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pendaftaran Sholat Idul Fitri</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
-*{box-sizing:border-box}
+/* Reset & Base Style */
+*{box-sizing:border-box; transition: all 0.2s ease-in-out;}
 body{
   margin:0;
-  font-family:system-ui,sans-serif;
-  background:#f8fafc;
-  color:#1f2937;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #f0f4f8; /* Warna background lebih lembut */
+  color:#334155;
+  line-height: 1.5;
 }
-main{padding:28px 14px}
-.container{max-width:500px;margin:auto}
-.header{text-align:center;margin-bottom:18px}
-.header h1{margin:0;font-size:22px;color:#065f46}
-.header div{font-size:13px;color:#6b7280}
 
+main{padding: 40px 20px}
+.container{max-width:480px; margin:auto}
+
+/* Header */
+.header{text-align:center; margin-bottom:30px}
+.header h1{
+  margin:0;
+  font-size:26px;
+  color:#064e3b;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.header div{
+  font-size:14px;
+  color:#64748b;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* Card */
 .card{
-  background:#fff;
-  padding:22px;
-  border-radius:18px;
-  border:1px solid #e5e7eb;
+  background:#ffffff;
+  padding:32px;
+  border-radius:24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
-.field{margin-bottom:18px}
+/* Field & Labels */
+.field{margin-bottom:20px}
 label{
   display:block;
-  margin-bottom:6px;
-  font-weight:500;
-  font-size:14px;
+  margin-bottom:8px;
+  font-weight:600;
+  font-size:13px;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-input,select{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #d1d5db;
-  font-size:14px;
+/* Input Container for Icons */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* Domisili lebih lega */
-input[name="domisili"]{
-  padding:14px;
-  font-size:15px;
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  padding: 12px 16px 12px 45px; /* Tambah padding kiri untuk ikon */
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  font-size: 15px;
+  background: #f8fafc;
+  outline: none;
+  -webkit-appearance: none; /* Hilangkan style default di Safari */
+  -moz-appearance: none;    /* Hilangkan style default di Firefox */
+  appearance: none;         /* Hilangkan style default */
 }
 
-/* Hint text */
+.input-wrapper select {
+  padding-right: 16px; /* Agar panah default select tidak tertutup */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23334155' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 0.8em 0.8em;
+}
+
+
+/* Input Focus Styles */
+.input-wrapper input:focus,
+.input-wrapper select:focus{
+  border-color: #10b981;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Icon Styling */
+.input-wrapper .icon {
+  position: absolute;
+  left: 15px;
+  color: #94a3b8;
+  font-size: 16px; /* Ukuran ikon */
+  pointer-events: none; /* Agar tidak menghalangi klik input */
+}
+
+/* KHUSUS: Kolom Domisili lebih tinggi & menonjol */
+input[name="domisili"] {
+  padding: 18px 16px 18px 45px; /* Tinggi lebih besar, padding kiri untuk ikon */
+  font-size: 16px;
+  border-color: #cbd5e1;
+  background: #ffffff;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
 .hint{
   font-size:12px;
-  color:#6b7280;
-  margin-top:4px;
+  color:#94a3b8;
+  margin-top:6px;
 }
 
 .row{
   display:flex;
-  gap:12px;
+  gap:16px;
 }
 .row .field{flex:1}
 
+/* Button */
 button{
   width:100%;
-  padding:14px;
-  background:#047857;
+  padding:16px;
+  background:#059669;
   color:#fff;
   border:none;
-  border-radius:14px;
-  font-weight:600;
-  font-size:15px;
+  border-radius:16px;
+  font-weight:700;
+  font-size:16px;
   cursor:pointer;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.4);
+  margin-top: 10px;
 }
-button:disabled{background:#9ca3af}
 
+button:hover{
+  background:#047857;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+}
+
+button:active{
+  transform: translateY(0);
+}
+
+button:disabled{
+  background:#cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Alert */
 .alert{
   display:none;
-  background:#fee2e2;
-  color:#991b1b;
-  padding:12px;
+  background:#fff1f2;
+  color:#be123c;
+  padding:14px;
   border-radius:12px;
-  margin-bottom:16px;
+  margin-bottom:20px;
   font-size:14px;
+  border: 1px solid #fecdd3;
+  text-align: center;
+  font-weight: 500;
 }
 
-/* ===== CHECKBOX THEMED ===== */
+/* Consent Box */
 .consent{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   gap:12px;
   padding:16px;
-  background:#ecfdf5;
-  border:1px solid #a7f3d0;
-  border-radius:14px;
+  background:#f0fdf4;
+  border:1px solid #dcfce7;
+  border-radius:16px;
   font-size:13px;
+  color: #166534;
+  cursor: pointer;
 }
+
 .consent input{
-  width:20px;
-  height:20px;
-  accent-color:#047857;
-  cursor:pointer;
-  margin-top:2px;
+  width:22px;
+  height:22px;
+  accent-color:#10b981;
+  margin: 0;
 }
-.consent span{line-height:1.5}
 
 footer{
   text-align:center;
-  font-size:12px;
-  color:#6b7280;
-  padding:18px;
+  font-size:13px;
+  color:#94a3b8;
+  padding:30px;
+}
+
+/* Responsive adjustments (optional, karena sudah cukup fleksibel) */
+@media (max-width: 600px) {
+  main {
+    padding: 20px 10px;
+  }
+  .card {
+    padding: 24px;
+  }
+  .header h1 {
+    font-size: 22px;
+  }
+  .input-wrapper input,
+  .input-wrapper select {
+    font-size: 14px;
+    padding: 10px 16px 10px 40px; /* Sedikit sesuaikan padding di mobile */
+  }
+  .input-wrapper .icon {
+    font-size: 14px;
+    left: 12px;
+  }
+  input[name="domisili"] {
+    padding: 14px 16px 14px 40px; /* Sesuaikan juga domisili */
+  }
+  .consent {
+    padding: 12px;
+    font-size: 12px;
+  }
 }
 </style>
 </head>
-
 <body>
 
 <main>
 <div class="container">
-  <div class="alert" id="duplicateAlert">⚠️ Data sudah terdaftar</div>
+  <div class="alert" id="duplicateAlert">⚠️ Data Anda sudah terdaftar sebelumnya.</div>
 
   <div class="header">
-    <h1 data-id="Form Pendaftaran Sholat Idul Fitri"
-        data-en="Registration Form"
+    <h1 data-id="Pendaftaran Sholat Idul Fitri"
+        data-en="Eid Prayer Registration"
         data-ja="参加登録フォーム"></h1>
     <div>Okayama Central Mosque</div>
   </div>
@@ -131,79 +247,76 @@ footer{
 
       <div class="field">
         <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
-        <input name="nama_lengkap" autocomplete="name" required>
+        <div class="input-wrapper">
+          <i class="fas fa-user icon"></i>
+          <input name="nama_lengkap" autocomplete="name" placeholder="Masukkan nama sesuai ID" required>
+        </div>
       </div>
 
       <div class="field">
         <label>Email</label>
-        <input type="email"
-               name="email"
-               id="email"
-               autocomplete="email"
-               placeholder="contoh@email.com"
-               required>
-        <div class="hint"
-             data-id="Email aktif untuk konfirmasi"
-             data-en="Active email for confirmation"
-             data-ja="確認用の有効なメールアドレス"></div>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope icon"></i>
+          <input type="email" name="email" id="email" autocomplete="email" placeholder="contoh@email.com" required>
+        </div>
+        <div class="hint" data-id="Konfirmasi akan dikirim ke email ini" data-en="Confirmation will be sent to this email"></div>
       </div>
 
       <div class="field">
         <label data-id="Nomor HP" data-en="Phone" data-ja="電話番号"></label>
-        <input type="tel"
-               name="no_hp"
-               id="no_hp"
-               inputmode="tel"
-               autocomplete="tel"
-               placeholder="08012345678"
-               required>
-        <div class="hint"
-             data-id="Gunakan nomor aktif (tanpa spasi)"
-             data-en="Use active number (no spaces)"
-             data-ja="有効な電話番号を入力してください（スペースなし）"></div>
+        <div class="input-wrapper">
+          <i class="fas fa-phone icon"></i>
+          <input type="tel" name="no_hp" id="no_hp" inputmode="tel" autocomplete="tel" placeholder="08012345678" required>
+        </div>
       </div>
 
       <div class="field">
-        <label data-id="Domisili" data-en="City" data-ja="居住地"></label>
-        <input name="domisili"
-               placeholder="Contoh: Okayama-shi"
-               required>
+        <label data-id="Domisili (Alamat Singkat)" data-en="City / Residence" data-ja="居住地"></label>
+        <div class="input-wrapper">
+          <i class="fas fa-map-marker-alt icon"></i>
+          <input name="domisili" placeholder="Contoh: Okayama-shi, Kita-ku" required>
+        </div>
       </div>
 
       <div class="row">
         <div class="field">
           <label data-id="Usia" data-en="Age" data-ja="年齢"></label>
-          <input type="number" name="usia" required>
+          <div class="input-wrapper">
+            <i class="fas fa-child icon"></i>
+            <input type="number" name="usia" placeholder="0" required>
+          </div>
         </div>
         <div class="field">
           <label data-id="Jumlah Orang" data-en="People" data-ja="人数"></label>
-          <input type="number" name="jumlah_orang" min="1" value="1" required>
+          <div class="input-wrapper">
+            <i class="fas fa-users icon"></i>
+            <input type="number" name="jumlah_orang" min="1" value="1" required>
+          </div>
         </div>
       </div>
 
       <div class="field">
         <label data-id="Jenis Kelamin" data-en="Gender" data-ja="性別"></label>
-        <select name="jk" required>
-          <option value="" disabled selected>--</option>
-          <option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
-          <option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
-        </select>
+        <div class="input-wrapper">
+          <i class="fas fa-venus-mars icon"></i>
+          <select name="jk" required>
+            <option value="" disabled selected>Pilih Jenis Kelamin</option>
+            <option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
+            <option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
+          </select>
+        </div>
       </div>
 
-      <!-- PERSETUJUAN DATA -->
       <div class="field">
         <label class="consent">
           <input type="checkbox" required>
           <span data-id="Saya menyetujui data digunakan untuk keperluan acara"
                 data-en="I agree that my data will be used for this event"
-                data-ja="本イベントのために個人情報を使用することに同意します"></span>
+                data-ja="個人情報使用に同意します"></span>
         </label>
       </div>
 
-      <button id="submitBtn"
-              data-id="Daftar"
-              data-en="Register"
-              data-ja="登録"></button>
+      <button id="submitBtn" data-id="Daftar Sekarang" data-en="Register Now" data-ja="登録"></button>
 
     </form>
   </div>
@@ -213,11 +326,9 @@ footer{
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
+// Logika JavaScript Anda tetap sama
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
-
-/* ===== LANGUAGE ===== */
-const lang=navigator.language.startsWith("ja")?"ja":
-           navigator.language.startsWith("en")?"en":"id";
+const lang=navigator.language.startsWith("ja")?"ja":navigator.language.startsWith("en")?"en":"id";
 
 document.querySelectorAll("[data-id]").forEach(el=>{
   el.textContent=el.dataset[lang]||el.dataset.id;
@@ -226,40 +337,45 @@ document.querySelectorAll("option[data-id]").forEach(o=>{
   o.textContent=o.dataset[lang]||o.dataset.id;
 });
 
-/* ===== DUPLICATE CHECK ===== */
 let t;
 email.oninput=no_hp.oninput=()=>{
   clearTimeout(t);
   t=setTimeout(async()=>{
-    if(email.value&&no_hp.value){
-      const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
-      const j=await r.json();
-      duplicateAlert.style.display=j.isDuplicate?"block":"none";
-      submitBtn.disabled=j.isDuplicate;
+    if(email.value && no_hp.value){
+      try {
+        const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
+        const j=await r.json();
+        duplicateAlert.style.display=j.isDuplicate?"block":"none";
+        submitBtn.disabled=j.isDuplicate;
+      } catch(e) {}
     }
   },700);
 };
 
-/* ===== SUBMIT ===== */
 registrationForm.onsubmit=async e=>{
   e.preventDefault();
   submitBtn.disabled=true;
+  submitBtn.textContent = "...";
 
   const fd=new FormData(registrationForm);
   fd.append("action","register");
   fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
 
-  const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
-  const j=await r.json();
-
-  if(j.status==="success"){
-    window.location.href="success.html?"+new URLSearchParams(fd).toString();
-  }else{
-    alert(j.message||"Gagal");
+  try {
+    const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
+    const j=await r.json();
+    if(j.status==="success"){
+      window.location.href="success.html?"+new URLSearchParams(fd).toString();
+    }else{
+      alert(j.message||"Gagal");
+      submitBtn.disabled=false;
+      submitBtn.textContent = "Daftar Sekarang";
+    }
+  } catch(e) {
     submitBtn.disabled=false;
+    submitBtn.textContent = "Daftar Sekarang";
   }
 };
 </script>
-
 </body>
 </html>
