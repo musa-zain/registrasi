@@ -6,51 +6,91 @@
 <title>Pendaftaran Sholat Idul Fitri</title>
 
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #f8fafc;
-  color: #1f2937;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#f8fafc;
+  color:#1f2937;
 }
-main { padding: 32px 16px; }
-.container { max-width: 460px; margin: auto; }
-.header { text-align: center; margin-bottom: 16px; }
-.header h1 { margin: 0; font-size: 22px; color: #065f46; }
-.card {
-  background: #fff;
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
+main{padding:28px 14px}
+.container{max-width:480px;margin:auto}
+.header{text-align:center;margin-bottom:18px}
+.header h1{margin:0;font-size:22px;color:#065f46}
+.header div{font-size:13px;color:#6b7280}
+
+.card{
+  background:#fff;
+  padding:22px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
 }
-.field { margin-bottom: 18px; }
-label { display: block; margin-bottom: 6px; font-weight: 500; }
-input, select {
-  width: 100%;
-  padding: 11px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+
+.field{margin-bottom:18px}
+label{display:block;margin-bottom:6px;font-weight:500;font-size:14px}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  font-size:14px;
 }
-button {
-  width: 100%;
-  padding: 13px;
-  background: #047857;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
+
+.row{
+  display:flex;
+  gap:12px;
 }
-button:disabled { background: #9ca3af; }
-.alert {
-  display: none;
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 15px;
+.row .field{flex:1}
+
+button{
+  width:100%;
+  padding:14px;
+  background:#047857;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
 }
-footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
+button:disabled{background:#9ca3af}
+
+.alert{
+  display:none;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:16px;
+  font-size:14px;
+}
+
+/* ===== CHECKBOX ===== */
+.consent{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px;
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  font-size:13px;
+}
+.consent input{
+  width:20px;
+  height:20px;
+  margin-top:2px;
+  cursor:pointer;
+}
+.consent span{line-height:1.5}
+
+footer{
+  text-align:center;
+  font-size:12px;
+  color:#6b7280;
+  padding:18px;
+}
 </style>
 </head>
 
@@ -69,6 +109,7 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
 
   <div class="card">
     <form id="registrationForm">
+
       <div class="field">
         <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
         <input name="nama_lengkap" required>
@@ -89,12 +130,12 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
         <input name="domisili" required>
       </div>
 
-      <div style="display:flex;gap:10px;">
-        <div class="field" style="flex:1;">
+      <div class="row">
+        <div class="field">
           <label data-id="Usia" data-en="Age" data-ja="年齢"></label>
           <input type="number" name="usia" required>
         </div>
-        <div class="field" style="flex:1;">
+        <div class="field">
           <label data-id="Jumlah Orang" data-en="People" data-ja="人数"></label>
           <input type="number" name="jumlah_orang" min="1" value="1" required>
         </div>
@@ -111,15 +152,16 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
 
       <!-- PERSETUJUAN DATA -->
       <div class="field">
-        <label style="display:flex;gap:8px;font-size:13px;">
+        <label class="consent">
           <input type="checkbox" required>
           <span data-id="Saya menyetujui data digunakan untuk keperluan acara"
-                data-en="I agree my data will be used for this event"
+                data-en="I agree that my data will be used for this event"
                 data-ja="本イベントのために個人情報を使用することに同意します"></span>
         </label>
       </div>
 
       <button id="submitBtn" data-id="Daftar" data-en="Register" data-ja="登録"></button>
+
     </form>
   </div>
 </div>
@@ -128,48 +170,47 @@ footer { text-align: center; font-size: 12px; color: #6b7280; padding: 18px; }
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
 
-// Language
-const lang = navigator.language.startsWith("ja") ? "ja"
-           : navigator.language.startsWith("en") ? "en" : "id";
+/* ===== LANGUAGE ===== */
+const lang=navigator.language.startsWith("ja")?"ja":
+           navigator.language.startsWith("en")?"en":"id";
+
 document.querySelectorAll("[data-id]").forEach(el=>{
-  el.textContent = el.dataset[lang] || el.dataset.id;
+  el.textContent=el.dataset[lang]||el.dataset.id;
 });
-
-// Translate option
 document.querySelectorAll("option[data-id]").forEach(o=>{
-  o.textContent = o.dataset[lang] || o.dataset.id;
+  o.textContent=o.dataset[lang]||o.dataset.id;
 });
 
-// Duplicate check
+/* ===== DUPLICATE CHECK ===== */
 let t;
-email.oninput = no_hp.oninput = ()=>{
+email.oninput=no_hp.oninput=()=>{
   clearTimeout(t);
   t=setTimeout(async()=>{
-    if(email.value && no_hp.value){
-      const r = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
-      const j = await r.json();
-      duplicateAlert.style.display = j.isDuplicate ? "block":"none";
-      submitBtn.disabled = j.isDuplicate;
+    if(email.value&&no_hp.value){
+      const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
+      const j=await r.json();
+      duplicateAlert.style.display=j.isDuplicate?"block":"none";
+      submitBtn.disabled=j.isDuplicate;
     }
-  },800);
+  },700);
 };
 
-// Submit
-registrationForm.onsubmit = async e=>{
+/* ===== SUBMIT ===== */
+registrationForm.onsubmit=async e=>{
   e.preventDefault();
-  submitBtn.disabled = true;
+  submitBtn.disabled=true;
 
-  const fd = new FormData(registrationForm);
+  const fd=new FormData(registrationForm);
   fd.append("action","register");
   fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
 
-  const r = await fetch(SCRIPT_URL,{method:"POST",body:fd});
-  const j = await r.json();
+  const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
+  const j=await r.json();
 
   if(j.status==="success"){
-    window.location.href = "success.html?"+new URLSearchParams(fd).toString();
+    window.location.href="success.html?"+new URLSearchParams(fd).toString();
   }else{
     alert(j.message||"Gagal");
     submitBtn.disabled=false;
