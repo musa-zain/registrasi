@@ -3,229 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pendaftaran Sholat Idul Fitri</title>
+<title>Pendaftaran Sholat Idul Fitri - Okayama Central Mosque</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* Reset & Base Style */
+/* Global Reset */
 *{box-sizing:border-box; transition: all 0.2s ease-in-out;}
 body{
   margin:0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #f0f4f8; /* Warna background lebih lembut */
-  color:#334155;
-  line-height: 1.5;
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9;
+  color:#1e293b;
+  line-height: 1.6;
 }
 
-main{padding: 40px 20px}
+main{padding: 40px 16px}
 .container{max-width:480px; margin:auto}
 
-/* Header */
-.header{text-align:center; margin-bottom:30px}
+/* Header Section */
+.header{text-align:center; margin-bottom:32px}
 .header h1{
-  margin:0;
-  font-size:26px;
-  color:#064e3b;
+  margin:0; 
+  font-size:26px; 
+  color:#064e3b; 
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.025em;
 }
 .header div{
-  font-size:14px;
-  color:#64748b;
-  margin-top: 5px;
+  font-size:14px; 
+  color:#64748b; 
+  margin-top: 6px; 
   font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
-/* Card */
+/* Card Styling */
 .card{
   background:#ffffff;
   padding:32px;
   border-radius:24px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
 }
 
-/* Field & Labels */
-.field{margin-bottom:20px}
+/* Form Elements */
+.field{margin-bottom:22px}
 label{
-  display:block;
-  margin-bottom:8px;
-  font-weight:600;
-  font-size:13px;
-  color: #475569;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  display:block; 
+  margin-bottom:8px; 
+  font-weight:600; 
+  font-size:12px;
+  color: #475569; 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em;
 }
 
-/* Input Container for Icons */
+/* Input Wrapper & Icon Styling */
 .input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.input-wrapper input,
-.input-wrapper select {
+.input-wrapper input, .input-wrapper select {
   width: 100%;
-  padding: 12px 16px 12px 45px; /* Tambah padding kiri untuk ikon */
-  border-radius: 12px;
+  padding: 12px 16px 12px 48px;
+  border-radius: 14px;
   border: 2px solid #e2e8f0;
   font-size: 15px;
   background: #f8fafc;
   outline: none;
-  -webkit-appearance: none; /* Hilangkan style default di Safari */
-  -moz-appearance: none;    /* Hilangkan style default di Firefox */
-  appearance: none;         /* Hilangkan style default */
+  appearance: none;
 }
 
-.input-wrapper select {
-  padding-right: 16px; /* Agar panah default select tidak tertutup */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23334155' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 0.8em 0.8em;
+/* KHUSUS: Kolom Domisili (Lebih Tinggi & Menonjol) */
+input[name="domisili"] {
+  padding-top: 18px;
+  padding-bottom: 18px;
+  font-size: 16px;
+  background: #ffffff;
+  border-color: #cbd5e1;
 }
 
+.input-wrapper .icon {
+  position: absolute;
+  left: 18px;
+  color: #94a3b8;
+  font-size: 16px;
+  pointer-events: none;
+}
 
-/* Input Focus Styles */
-.input-wrapper input:focus,
-.input-wrapper select:focus{
+/* Focus State */
+.input-wrapper input:focus, .input-wrapper select:focus{
   border-color: #10b981;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
 }
 
-/* Icon Styling */
-.input-wrapper .icon {
-  position: absolute;
-  left: 15px;
-  color: #94a3b8;
-  font-size: 16px; /* Ukuran ikon */
-  pointer-events: none; /* Agar tidak menghalangi klik input */
-}
+.hint{ font-size:12px; color:#94a3b8; margin-top:6px; font-style: italic; }
 
-/* KHUSUS: Kolom Domisili lebih tinggi & menonjol */
-input[name="domisili"] {
-  padding: 18px 16px 18px 45px; /* Tinggi lebih besar, padding kiri untuk ikon */
-  font-size: 16px;
-  border-color: #cbd5e1;
-  background: #ffffff;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-}
-
-.hint{
-  font-size:12px;
-  color:#94a3b8;
-  margin-top:6px;
-}
-
-.row{
-  display:flex;
-  gap:16px;
-}
+/* Grid for Age & Count */
+.row{ display:flex; gap:16px; }
 .row .field{flex:1}
 
-/* Button */
+/* Custom Select Arrow */
+.input-wrapper select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+/* Button Styling */
 button{
-  width:100%;
-  padding:16px;
-  background:#059669;
-  color:#fff;
-  border:none;
-  border-radius:16px;
-  font-weight:700;
+  width:100%; 
+  padding:16px; 
+  background:#059669; 
+  color:#ffffff;
+  border:none; 
+  border-radius:16px; 
+  font-weight:700; 
   font-size:16px;
   cursor:pointer;
-  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
   margin-top: 10px;
 }
+button:hover{ background:#047857; transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); }
+button:active{ transform: translateY(0); }
+button:disabled{ background:#cbd5e1; cursor: not-allowed; box-shadow:none; }
 
-button:hover{
-  background:#047857;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
-}
-
-button:active{
-  transform: translateY(0);
-}
-
-button:disabled{
-  background:#cbd5e1;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-/* Alert */
-.alert{
-  display:none;
-  background:#fff1f2;
-  color:#be123c;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:20px;
-  font-size:14px;
-  border: 1px solid #fecdd3;
-  text-align: center;
-  font-weight: 500;
-}
-
-/* Consent Box */
+/* Consent Checkbox Box */
 .consent{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:16px;
-  background:#f0fdf4;
-  border:1px solid #dcfce7;
-  border-radius:16px;
-  font-size:13px;
-  color: #166534;
-  cursor: pointer;
+  display:flex; align-items:flex-start; gap:12px; padding:16px;
+  background:#f0fdf4; border:1px solid #dcfce7; border-radius:16px;
+  font-size:13px; color: #166534; cursor: pointer;
+}
+.consent input{ width:20px; height:20px; accent-color:#10b981; margin: 0; margin-top: 2px; }
+
+/* Alerts */
+.alert{
+  display:none; background:#fff1f2; color:#be123c; padding:14px;
+  border-radius:14px; margin-bottom:20px; font-size:14px; border: 1px solid #fecdd3;
+  text-align: center; font-weight: 600;
 }
 
-.consent input{
-  width:22px;
-  height:22px;
-  accent-color:#10b981;
-  margin: 0;
-}
+footer{ text-align:center; font-size:12px; color:#94a3b8; padding:32px; }
 
-footer{
-  text-align:center;
-  font-size:13px;
-  color:#94a3b8;
-  padding:30px;
-}
-
-/* Responsive adjustments (optional, karena sudah cukup fleksibel) */
-@media (max-width: 600px) {
-  main {
-    padding: 20px 10px;
-  }
-  .card {
-    padding: 24px;
-  }
-  .header h1 {
-    font-size: 22px;
-  }
-  .input-wrapper input,
-  .input-wrapper select {
-    font-size: 14px;
-    padding: 10px 16px 10px 40px; /* Sedikit sesuaikan padding di mobile */
-  }
-  .input-wrapper .icon {
-    font-size: 14px;
-    left: 12px;
-  }
-  input[name="domisili"] {
-    padding: 14px 16px 14px 40px; /* Sesuaikan juga domisili */
-  }
-  .consent {
-    padding: 12px;
-    font-size: 12px;
-  }
+/* Responsive Mobile */
+@media (max-width: 480px) {
+  .row { flex-direction: column; gap: 0; }
+  .card { padding: 24px 20px; }
+  .header h1 { font-size: 22px; }
 }
 </style>
 </head>
@@ -233,12 +163,13 @@ footer{
 
 <main>
 <div class="container">
-  <div class="alert" id="duplicateAlert">⚠️ Data Anda sudah terdaftar sebelumnya.</div>
+  <div class="alert" id="duplicateAlert" 
+       data-id="⚠️ Data Anda sudah terdaftar" 
+       data-en="⚠️ You are already registered" 
+       data-ja="⚠️ すでに登録されています"></div>
 
   <div class="header">
-    <h1 data-id="Pendaftaran Sholat Idul Fitri"
-        data-en="Eid Prayer Registration"
-        data-ja="参加登録フォーム"></h1>
+    <h1 data-id="Pendaftaran Sholat Idul Fitri" data-en="Eid Prayer Registration" data-ja="参加登録フォーム"></h1>
     <div>Okayama Central Mosque</div>
   </div>
 
@@ -249,7 +180,10 @@ footer{
         <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
         <div class="input-wrapper">
           <i class="fas fa-user icon"></i>
-          <input name="nama_lengkap" autocomplete="name" placeholder="Masukkan nama sesuai ID" required>
+          <input name="nama_lengkap" required
+                 data-id-ph="Masukkan nama sesuai ID" 
+                 data-en-ph="Enter name as per ID" 
+                 data-ja-ph="身分証通りの氏名を入力">
         </div>
       </div>
 
@@ -257,24 +191,29 @@ footer{
         <label>Email</label>
         <div class="input-wrapper">
           <i class="fas fa-envelope icon"></i>
-          <input type="email" name="email" id="email" autocomplete="email" placeholder="contoh@email.com" required>
+          <input type="email" name="email" id="email" required placeholder="contoh@email.com">
         </div>
-        <div class="hint" data-id="Konfirmasi akan dikirim ke email ini" data-en="Confirmation will be sent to this email"></div>
+        <div class="hint" data-id="Konfirmasi akan dikirim ke email ini" 
+                          data-en="Confirmation will be sent to this email" 
+                          data-ja="確認メールが送信されます"></div>
       </div>
 
       <div class="field">
         <label data-id="Nomor HP" data-en="Phone" data-ja="電話番号"></label>
         <div class="input-wrapper">
           <i class="fas fa-phone icon"></i>
-          <input type="tel" name="no_hp" id="no_hp" inputmode="tel" autocomplete="tel" placeholder="08012345678" required>
+          <input type="tel" name="no_hp" id="no_hp" required placeholder="08012345678">
         </div>
       </div>
 
       <div class="field">
-        <label data-id="Domisili (Alamat Singkat)" data-en="City / Residence" data-ja="居住地"></label>
+        <label data-id="Domisili" data-en="City / Residence" data-ja="居住地"></label>
         <div class="input-wrapper">
           <i class="fas fa-map-marker-alt icon"></i>
-          <input name="domisili" placeholder="Contoh: Okayama-shi, Kita-ku" required>
+          <input name="domisili" required
+                 data-id-ph="Contoh: Okayama-shi, Kita-ku, Kaminakano" 
+                 data-en-ph="Example: Okayama-shi, Kita-ku, Kaminakano" 
+                 data-ja-ph="例：岡山市北区上中野">
         </div>
       </div>
 
@@ -282,7 +221,7 @@ footer{
         <div class="field">
           <label data-id="Usia" data-en="Age" data-ja="年齢"></label>
           <div class="input-wrapper">
-            <i class="fas fa-child icon"></i>
+            <i class="fas fa-id-card icon"></i>
             <input type="number" name="usia" placeholder="0" required>
           </div>
         </div>
@@ -300,7 +239,10 @@ footer{
         <div class="input-wrapper">
           <i class="fas fa-venus-mars icon"></i>
           <select name="jk" required>
-            <option value="" disabled selected>Pilih Jenis Kelamin</option>
+            <option value="" disabled selected 
+                    data-id="Pilih Jenis Kelamin" 
+                    data-en="Select Gender" 
+                    data-ja="性別を選択"></option>
             <option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
             <option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
           </select>
@@ -310,13 +252,13 @@ footer{
       <div class="field">
         <label class="consent">
           <input type="checkbox" required>
-          <span data-id="Saya menyetujui data digunakan untuk keperluan acara"
+          <span data-id="Saya menyetujui data digunakan untuk acara"
                 data-en="I agree that my data will be used for this event"
-                data-ja="個人情報使用に同意します"></span>
+                data-ja="個人情報の取り扱いに同意します"></span>
         </label>
       </div>
 
-      <button id="submitBtn" data-id="Daftar Sekarang" data-en="Register Now" data-ja="登録"></button>
+      <button id="submitBtn" data-id="Daftar Sekarang" data-en="Register Now" data-ja="今すぐ登録する"></button>
 
     </form>
   </div>
@@ -326,56 +268,65 @@ footer{
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-// Logika JavaScript Anda tetap sama
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
-const lang=navigator.language.startsWith("ja")?"ja":navigator.language.startsWith("en")?"en":"id";
+/* KONFIGURASI BAHASA */
+const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
 
-document.querySelectorAll("[data-id]").forEach(el=>{
-  el.textContent=el.dataset[lang]||el.dataset.id;
+// Terjemahkan semua elemen dengan data-id
+document.querySelectorAll("[data-id]").forEach(el => {
+  el.textContent = el.dataset[lang] || el.dataset.id;
 });
-document.querySelectorAll("option[data-id]").forEach(o=>{
-  o.textContent=o.dataset[lang]||o.dataset.id;
+
+// Terjemahkan Placeholder secara otomatis
+document.querySelectorAll("[data-id-ph]").forEach(el => {
+  const phText = el.getAttribute(`data-${lang}-ph`) || el.getAttribute('data-id-ph');
+  if(phText) el.placeholder = phText;
 });
+
+/* LOGIKA FORM (Sesuaikan SCRIPT_URL dengan Apps Script Anda) */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec"; 
 
 let t;
-email.oninput=no_hp.oninput=()=>{
+email.oninput = no_hp.oninput = () => {
   clearTimeout(t);
-  t=setTimeout(async()=>{
-    if(email.value && no_hp.value){
+  t = setTimeout(async () => {
+    if (email.value && no_hp.value) {
       try {
-        const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
-        const j=await r.json();
-        duplicateAlert.style.display=j.isDuplicate?"block":"none";
-        submitBtn.disabled=j.isDuplicate;
-      } catch(e) {}
+        const r = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
+        const j = await r.json();
+        duplicateAlert.style.display = j.isDuplicate ? "block" : "none";
+        submitBtn.disabled = j.isDuplicate;
+      } catch (e) { console.log("Check failed"); }
     }
-  },700);
+  }, 800);
 };
 
-registrationForm.onsubmit=async e=>{
+registrationForm.onsubmit = async e => {
   e.preventDefault();
-  submitBtn.disabled=true;
+  submitBtn.disabled = true;
+  const originalText = submitBtn.textContent;
   submitBtn.textContent = "...";
 
-  const fd=new FormData(registrationForm);
-  fd.append("action","register");
-  fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
+  const fd = new FormData(registrationForm);
+  fd.append("action", "register");
+  fd.append("id", "EID-" + Date.now().toString(36).toUpperCase());
 
   try {
-    const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
-    const j=await r.json();
-    if(j.status==="success"){
-      window.location.href="success.html?"+new URLSearchParams(fd).toString();
-    }else{
-      alert(j.message||"Gagal");
-      submitBtn.disabled=false;
-      submitBtn.textContent = "Daftar Sekarang";
+    const r = await fetch(SCRIPT_URL, { method: "POST", body: fd });
+    const j = await r.json();
+    if (j.status === "success") {
+      window.location.href = "success.html?" + new URLSearchParams(fd).toString();
+    } else {
+      alert(j.message || "Error");
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
     }
-  } catch(e) {
-    submitBtn.disabled=false;
-    submitBtn.textContent = "Daftar Sekarang";
+  } catch (e) {
+    alert("Koneksi bermasalah");
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
   }
 };
 </script>
+
 </body>
 </html>
