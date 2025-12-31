@@ -3,71 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pendaftaran Berhasil</title>
+<title>Registration Successful - Okayama Central Mosque</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:system-ui;background:#fff;color:#1f2937;text-align:center}
-main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.card{max-width:460px;width:100%;border:1px solid #e5e7eb;border-radius:16px;padding:26px}
-.info{background:#f9fafb;padding:16px;border-radius:12px;text-align:left}
-.qr{margin:20px auto;width:200px}
-button,a{padding:12px;border-radius:10px;font-weight:600}
-button{background:#047857;color:#fff;border:none}
-a{text-decoration:none;border:1px solid #a7f3d0;color:#047857}
+/* Reset & Base Style */
+*{box-sizing:border-box; transition: all 0.2s ease-in-out;}
+body{
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9;
+  color:#1e293b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Card Container */
+.card{
+  background:#ffffff;
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 30px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* Checkmark Icon sesuai gambar */
+.success-icon {
+  font-size: 50px;
+  color: #ffffff;
+  background: #8ec641; /* Hijau cerah sesuai referensi */
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 10px rgba(142, 198, 65, 0.3);
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.sub-text {
+  color: #64748b;
+  font-size: 15px;
+  margin: 10px 0 32px;
+}
+
+/* Info Box */
+.info-box {
+  background: #f8fafc;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.info-row:last-child { margin-bottom: 0; }
+
+.label {
+  font-weight: 700;
+  color: #334155;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.value {
+  color: #475569;
+  word-break: break-all;
+}
+
+/* QR Section */
+.qr-container {
+  margin-bottom: 30px;
+}
+.qr-container img {
+  width: 160px;
+  height: 160px;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* Button Group Bersebelahan */
+.btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  outline: none;
+}
+
+.btn-back {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-back:hover { background: #e2e8f0; }
+
+.btn-download {
+  background: #059669; /* Hijau Masjid */
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+.btn-download:hover { background: #047857; transform: translateY(-1px); }
+
+@media (max-width: 450px) {
+  .info-row { flex-direction: column; margin-bottom: 16px; }
+  .label { width: 100%; margin-bottom: 2px; font-size: 12px; text-transform: uppercase; color: #94a3b8; }
+  .btn-group { flex-direction: column-reverse; } /* Download di atas saat mobile jika mau */
+}
 </style>
 </head>
 
 <body>
-<main>
 <div class="card">
-  <h2>✅ Registration Successful</h2>
-
-  <div class="info">
-    <p><b>ID:</b> <span id="id"></span></p>
-    <p><b>Nama:</b> <span id="nama"></span></p>
-    <p><b>Email:</b> <span id="email"></span></p>
-    <p><b>No HP:</b> <span id="hp"></span></p>
-    <p><b>Domisili:</b> <span id="dom"></span></p>
-    <p><b>Usia:</b> <span id="usia"></span></p>
-    <p><b>Jenis Kelamin:</b> <span id="jk"></span></p>
-    <p><b>Jumlah:</b> <span id="jml"></span></p>
+  <div class="success-icon">
+    <i class="fas fa-check"></i>
   </div>
 
-  <div class="qr" id="qrBox"></div>
+  <h1 data-id="Pendaftaran Berhasil" data-en="Registration Successful" data-ja="登録が完了しました"></h1>
+  <div class="sub-text" data-id="Terima kasih atas pendaftaran Anda" data-en="Thank you for your registration" data-ja="ご登録ありがとうございました"></div>
 
-  <button onclick="downloadQR()" id="btn">⬇️ Download QR</button><br><br>
-  <a href="index.html">Kembali</a>
+  <div class="info-box">
+    <div class="info-row">
+      <span class="label" data-id="Nama:" data-en="Name:" data-ja="氏名:"></span>
+      <span class="value" id="val-nama"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="ID Peserta:" data-en="Participant ID:" data-ja="参加者ID:"></span>
+      <span class="value" id="val-id"></span>
+    </div>
+    <div class="info-row">
+      <span class="label">Email:</span>
+      <span class="value" id="val-email"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="Domisili:" data-en="City:" data-ja="居住地:"></span>
+      <span class="value" id="val-dom"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="Nomor HP:" data-en="Phone:" data-ja="電話番号:"></span>
+      <span class="value" id="val-hp"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="Usia:" data-en="Age:" data-ja="年齢:"></span>
+      <span class="value" id="val-usia"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="Jenis Kelamin:" data-en="Gender:" data-ja="性別:"></span>
+      <span class="value" id="val-jk"></span>
+    </div>
+    <div class="info-row">
+      <span class="label" data-id="Jumlah Orang:" data-en="Number of People:" data-ja="人数:"></span>
+      <span class="value" id="val-jml"></span>
+    </div>
+  </div>
+
+  <div class="qr-container" id="qrBox"></div>
+
+  <div class="btn-group">
+    <a href="index.html" class="btn btn-back">
+      <i class="fas fa-chevron-left"></i>
+      <span data-id="Kembali" data-en="Back" data-ja="戻る"></span>
+    </a>
+    <button onclick="downloadQR()" id="btnDL" class="btn btn-download">
+      <i class="fas fa-download"></i>
+      <span data-id="Download QR" data-en="Download QR" data-ja="QRを保存"></span>
+    </button>
+  </div>
 </div>
-</main>
 
 <script>
+// 1. Logika Bahasa
+const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
+document.querySelectorAll("[data-id]").forEach(el => {
+  el.textContent = el.dataset[lang] || el.dataset.id;
+});
+
+// 2. Ambil Data dari URL
 const p = new URLSearchParams(location.search);
-const g = k=>p.get(k)||"-";
+const g = k => p.get(k) || "-";
 
-id.textContent=g("id");
-nama.textContent=g("nama_lengkap");
-email.textContent=g("email");
-hp.textContent=g("no_hp");
-dom.textContent=g("domisili");
-usia.textContent=g("usia");
-jk.textContent=g("jk");
-jml.textContent=g("jumlah_orang");
+document.getElementById('val-nama').textContent = g("nama_lengkap");
+document.getElementById('val-id').textContent = g("id");
+document.getElementById('val-email').textContent = g("email");
+document.getElementById('val-hp').textContent = g("no_hp");
+document.getElementById('val-dom').textContent = g("domisili");
+document.getElementById('val-usia').textContent = g("usia");
+document.getElementById('val-jk').textContent = g("jk");
+document.getElementById('val-jml').textContent = g("jumlah_orang");
 
-const qrURL=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(g("id"))}`;
-qrBox.innerHTML=`<img src="${qrURL}" id="qrImg">`;
+// 3. Generate QR Code
+const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(g("id"))}`;
+document.getElementById('qrBox').innerHTML = `<img src="${qrURL}" id="qrImg">`;
 
-function safe(n){return n.replace(/[^a-z0-9]/gi,"_").toLowerCase();}
-
+// 4. Fungsi Download QR
 async function downloadQR(){
-  btn.textContent="...";
-  const b=await fetch(qrURL).then(r=>r.blob());
-  const u=URL.createObjectURL(b);
-  const a=document.createElement("a");
-  a.href=u;
-  a.download=`QR_${safe(g("nama_lengkap"))}_${g("id")}.png`;
-  a.click();
-  URL.revokeObjectURL(u);
-  btn.textContent="✅ Tersimpan";
+  const btn = document.getElementById('btnDL');
+  const span = btn.querySelector('span');
+  const originalText = span.textContent;
+  
+  span.textContent = "...";
+  try {
+    const b = await fetch(qrURL).then(r => r.blob());
+    const u = URL.createObjectURL(b);
+    const a = document.createElement("a");
+    a.href = u;
+    a.download = `QR_Eid_${g("nama_lengkap").replace(/[^a-z0-9]/gi,"_")}.png`;
+    a.click();
+    URL.revokeObjectURL(u);
+    span.textContent = "✓ Saved";
+    setTimeout(() => { span.textContent = originalText; }, 2000);
+  } catch (e) {
+    alert("Gagal mengunduh QR");
+    span.textContent = originalText;
+  }
 }
 </script>
 </body>
