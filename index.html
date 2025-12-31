@@ -9,307 +9,210 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ... (Gunakan Style Anda yang sudah ada sebelumnya) ... */
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:#f1f5f9;
-  color:#1e293b;
-}
+body{margin:0;font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b}
 main{padding:40px 16px}
 .container{max-width:480px;margin:auto}
-
 .header{text-align:center;margin-bottom:28px}
 .header h1{margin:0;font-size:24px;color:#064e3b;font-weight:700}
 .header div{font-size:13px;color:#64748b;margin-top:4px}
-
-.card{
-  background:#fff;
-  padding:28px;
-  border-radius:22px;
-  border:1px solid #e2e8f0;
-}
-
+.card{background:#fff;padding:28px;border-radius:22px;border:1px solid #e2e8f0}
 .field{margin-bottom:22px}
-label{
-  display:block;
-  margin-bottom:6px;
-  font-weight:600;
-  font-size:12px;
-  color:#475569;
-  letter-spacing:.04em;
-}
+label{display:block;margin-bottom:6px;font-weight:600;font-size:12px;color:#475569;letter-spacing:.04em}
+.input-wrapper{position:relative; display: flex; gap: 8px;}
+.input-wrapper i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#94a3b8}
+input,select{width:100%;padding:12px 14px 12px 44px;border-radius:14px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc}
+input:focus,select:focus{outline:none;border-color:#10b981;background:#fff}
 
-.input-wrapper{position:relative}
-.input-wrapper i{
-  position:absolute;
-  left:16px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#94a3b8;
+/* Style tambahan untuk Tombol OTP */
+.btn-otp {
+    width: auto;
+    padding: 0 16px;
+    background: #064e3b;
+    font-size: 12px;
+    border-radius: 12px;
+    white-space: nowrap;
 }
+.btn-otp:disabled { background: #94a3b8; }
 
-input,select{
-  width:100%;
-  padding:12px 14px 12px 44px;
-  border-radius:14px;
-  border:1.5px solid #e2e8f0;
-  font-size:14px;
-  background:#f8fafc;
-}
-
-input:focus,select:focus{
-  outline:none;
-  border-color:#10b981;
-  background:#fff;
-}
-
-/* Domisili: 2x lebih lega */
-input[name="domisili"]{
-  padding-top:20px;
-  padding-bottom:20px;
-  font-size:14px;
-}
-
-.hint{
-  font-size:12px;
-  color:#94a3b8;
-  margin-top:6px;
+#otpSection {
+    background: #f0fdf4;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px dashed #10b981;
+    margin-top: -10px;
+    margin-bottom: 20px;
 }
 
 .row{display:flex;gap:14px}
 .row .field{flex:1}
-
-button{
-  width:100%;
-  padding:16px;
-  background:#059669;
-  color:#fff;
-  border:none;
-  border-radius:16px;
-  font-weight:600;
-  font-size:15px;
-  cursor:pointer;
-}
+button{width:100%;padding:16px;background:#059669;color:#fff;border:none;border-radius:16px;font-weight:600;font-size:15px;cursor:pointer}
 button:disabled{background:#cbd5e1;cursor:not-allowed}
-
-.consent{
-  display:flex;
-  gap:12px;
-  padding:14px;
-  background:#f0fdf4;
-  border:1px solid #dcfce7;
-  border-radius:14px;
-  font-size:13px;
-}
-.consent input{
-  width:20px;
-  height:20px;
-  accent-color:#10b981;
-}
-
-.alert{
-  display:none;
-  background:#fff1f2;
-  color:#be123c;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:18px;
-  text-align:center;
-  font-size:13px;
-}
-
+.consent{display:flex;gap:12px;padding:14px;background:#f0fdf4;border:1px solid #dcfce7;border-radius:14px;font-size:13px}
+.consent input{width:20px;height:20px;accent-color:#10b981}
+.alert{display:none;background:#fff1f2;color:#be123c;padding:12px;border-radius:12px;margin-bottom:18px;text-align:center;font-size:13px}
 footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
-
-@media(max-width:480px){
-  .row{flex-direction:column}
-}
+@media(max-width:480px){.row{flex-direction:column}}
 </style>
 </head>
 
 <body>
-
 <main>
 <div class="container">
+    <div class="alert" id="duplicateAlert" data-id="Data sudah terdaftar" data-en="Already registered" data-ja="すでに登録されています"></div>
 
-<div class="alert" id="duplicateAlert"
- data-id="Data ini sudah terdaftar"
- data-en="This data is already registered"
- data-ja="すでに登録されています"></div>
+    <div class="header">
+        <h1 data-id="Pendaftaran Sholat Idul Fitri" data-en="Eid Prayer Registration" data-ja="参加登録"></h1>
+        <div>Okayama Central Mosque</div>
+    </div>
 
-<div class="header">
-  <h1 data-id="Pendaftaran Sholat Idul Fitri"
-      data-en="Eid Prayer Registration"
-      data-ja="参加登録"></h1>
-  <div>Okayama Central Mosque</div>
-</div>
+    <div class="card">
+    <form id="registrationForm">
+        <div class="field">
+            <label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input name="nama_lengkap" id="nama" required data-id-ph="Nama sesuai identitas" data-en-ph="Name as shown on ID" data-ja-ph="身分証通りの氏名">
+            </div>
+        </div>
 
-<div class="card">
-<form id="registrationForm">
+        <div class="field">
+            <label>Email</label>
+            <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" id="email" required placeholder="contoh@email.com">
+                <button type="button" id="sendOtpBtn" class="btn-otp" onclick="requestOTP()">
+                    <span data-id="Kirim Kode" data-en="Send Code" data-ja="コード送信"></span>
+                </button>
+            </div>
+        </div>
 
-<div class="field">
-<label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
-<div class="input-wrapper">
-<i class="fas fa-user"></i>
-<input name="nama_lengkap" required
- data-id-ph="Nama sesuai identitas"
- data-en-ph="Name as shown on ID"
- data-ja-ph="身分証通りの氏名">
-</div>
-</div>
+        <div id="otpSection" style="display: none;">
+            <label data-id="Masukkan Kode OTP" data-en="Enter OTP Code" data-ja="OTPコードを入力"></label>
+            <div class="input-wrapper">
+                <i class="fas fa-key"></i>
+                <input type="text" id="otp_input" maxlength="4" placeholder="1234">
+            </div>
+            <div class="hint" data-id="Periksa inbox atau folder spam email Anda" data-en="Check your inbox or spam folder" data-ja="メールの受信トレイまたは迷惑メールを確認してください"></div>
+        </div>
 
-<div class="field">
-<label>Email</label>
-<div class="input-wrapper">
-<i class="fas fa-envelope"></i>
-<input type="email" name="email" id="email" required placeholder="contoh@email.com">
-</div>
-<div class="hint"
- data-id="Email ini digunakan untuk konfirmasi pendaftaran"
- data-en="This email will be used for registration confirmation"
- data-ja="確認のために使用されます"></div>
-</div>
+        <div class="field">
+            <label data-id="Nomor HP" data-en="Phone Number" data-ja="電話番号"></label>
+            <div class="input-wrapper">
+                <i class="fas fa-phone"></i>
+                <input type="tel" name="no_hp" id="no_hp" required placeholder="08012345678">
+            </div>
+        </div>
 
-<div class="field">
-<label data-id="Nomor HP" data-en="Phone Number" data-ja="電話番号"></label>
-<div class="input-wrapper">
-<i class="fas fa-phone"></i>
-<input type="tel" name="no_hp" id="no_hp" required placeholder="08012345678">
-</div>
-<div class="hint"
- data-id="Gunakan nomor yang bisa dihubungi"
- data-en="Use an active phone number"
- data-ja="連絡可能な番号を入力してください"></div>
-</div>
+        <div class="row">
+            <div class="field"><label data-id="Usia" data-en="Age" data-ja="年齢"></label>
+                <div class="input-wrapper"><i class="fas fa-id-card"></i><input type="number" name="usia" required></div>
+            </div>
+            <div class="field"><label data-id="Jumlah Orang" data-en="People" data-ja="人数"></label>
+                <div class="input-wrapper"><i class="fas fa-users"></i><input type="number" name="jumlah_orang" min="1" value="1" required></div>
+            </div>
+        </div>
 
-<div class="field">
-<label data-id="Domisili" data-en="City / Residence" data-ja="居住地"></label>
-<div class="input-wrapper">
-<i class="fas fa-map-marker-alt"></i>
-<input name="domisili" required
- data-id-ph="Contoh: Okayama-shi, Kita-ku"
- data-en-ph="Example: Okayama-shi, Kita-ku"
- data-ja-ph="例：岡山市北区">
-</div>
-</div>
+        <div class="field">
+            <label data-id="Jenis Kelamin" data-en="Gender" data-ja="性別"></label>
+            <div class="input-wrapper">
+                <i class="fas fa-venus-mars"></i>
+                <select name="jk" required>
+                    <option value="" disabled selected data-id="Pilih jenis kelamin" data-en="Select gender" data-ja="性別を選択"></option>
+                    <option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
+                    <option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
+                </select>
+            </div>
+        </div>
 
-<div class="row">
-<div class="field">
-<label data-id="Usia" data-en="Age" data-ja="年齢"></label>
-<div class="input-wrapper">
-<i class="fas fa-id-card"></i>
-<input type="number" name="usia" required>
-</div>
-</div>
+        <div class="field">
+            <label class="consent">
+                <input type="checkbox" required>
+                <span data-id="Saya menyetujui data digunakan untuk keperluan acara ini" data-en="I agree that my data will be used for this event" data-ja="本イベントのために個人情報を使用することに同意します"></span>
+            </label>
+        </div>
 
-<div class="field">
-<label data-id="Jumlah Orang" data-en="Number of People" data-ja="人数"></label>
-<div class="input-wrapper">
-<i class="fas fa-users"></i>
-<input type="number" name="jumlah_orang" min="1" value="1" required>
-</div>
-<div class="hint"
- data-id="Jumlah orang yang hadir, termasuk Anda"
- data-en="Total number of attendees, including you"
- data-ja="ご本人を含む人数"></div>
-</div>
-</div>
-
-<div class="field">
-<label data-id="Jenis Kelamin" data-en="Gender" data-ja="性別"></label>
-<div class="input-wrapper">
-<i class="fas fa-venus-mars"></i>
-<select name="jk" required>
-<option value="" disabled selected
- data-id="Pilih jenis kelamin"
- data-en="Select gender"
- data-ja="性別を選択"></option>
-<option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
-<option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
-</select>
-</div>
-</div>
-
-<div class="field">
-<label class="consent">
-<input type="checkbox" required>
-<span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
-      data-en="I agree that my data will be used for this event"
-      data-ja="本イベントのために個人情報を使用することに同意します"></span>
-</label>
-</div>
-
-<button id="submitBtn"
- data-id="Daftar"
- data-en="Register"
- data-ja="登録"></button>
-
-</form>
-</div>
+        <button type="submit" id="submitBtn" disabled data-id="Verifikasi Dulu" data-en="Verify First" data-ja="先に確認してください"></button>
+    </form>
+    </div>
 </div>
 </main>
-
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
+const lang=navigator.language.startsWith("ja")?"ja":navigator.language.startsWith("en")?"en":"id";
 
-const lang=navigator.language.startsWith("ja")?"ja":
-           navigator.language.startsWith("en")?"en":"id";
+document.querySelectorAll("[data-id]").forEach(el=>{ el.textContent=el.dataset[lang]||el.dataset.id; });
+document.querySelectorAll("[data-id-ph]").forEach(el=>{ el.placeholder=el.dataset[`${lang}Ph`]||el.dataset.idPh; });
 
-document.querySelectorAll("[data-id]").forEach(el=>{
- el.textContent=el.dataset[lang]||el.dataset.id;
-});
-document.querySelectorAll("[data-id-ph]").forEach(el=>{
- el.placeholder=el.dataset[`${lang}Ph`]||el.dataset.idPh;
-});
+let generatedOTP = "";
 
-let t;
-email.oninput=no_hp.oninput=()=>{
- clearTimeout(t);
- t=setTimeout(async()=>{
-  if(email.value&&no_hp.value){
-   const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
-   const j=await r.json();
-   duplicateAlert.style.display=j.isDuplicate?"block":"none";
-   submitBtn.disabled=j.isDuplicate;
-  }
- },800);
-};
+// 1. Fungsi Request OTP
+async function requestOTP() {
+    const emailVal = document.getElementById("email").value;
+    const nameVal = document.getElementById("nama").value;
+    if(!emailVal || !nameVal) {
+        alert(lang === "id" ? "Mohon isi Nama dan Email dulu" : "Please fill Name and Email first");
+        return;
+    }
 
+    const btn = document.getElementById("sendOtpBtn");
+    btn.disabled = true;
+    btn.textContent = "...";
+
+    try {
+        const resp = await fetch(`${SCRIPT_URL}?action=send_otp&email=${encodeURIComponent(emailVal)}&nama=${encodeURIComponent(nameVal)}`);
+        const result = await resp.json();
+        
+        if(result.status === "success") {
+            generatedOTP = result.otp; // Di dunia nyata, validasi baiknya di server. Ini untuk contoh simpel.
+            document.getElementById("otpSection").style.display = "block";
+            alert(lang === "id" ? "Kode OTP telah dikirim ke email Anda" : "OTP Code sent to your email");
+            
+            // Aktifkan pengecekan input OTP
+            document.getElementById("otp_input").oninput = checkOTP;
+        }
+    } catch (e) {
+        alert("Gagal mengirim OTP");
+        btn.disabled = false;
+    }
+}
+
+// 2. Fungsi Cek OTP
+function checkOTP() {
+    const input = document.getElementById("otp_input").value;
+    const submitBtn = document.getElementById("submitBtn");
+    
+    if(input === generatedOTP) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = document.querySelectorAll("[data-id='Daftar'], [data-id='Register'], [data-id='登録']")[0]?.dataset[lang] || "Daftar";
+        document.getElementById("otpSection").style.background = "#dcfce7";
+    } else {
+        submitBtn.disabled = true;
+    }
+}
+
+// 3. Submit Final
 registrationForm.onsubmit=async e=>{
- e.preventDefault();
- submitBtn.disabled=true;
+    e.preventDefault();
+    submitBtn.disabled=true;
+    const fd=new FormData(registrationForm);
+    fd.append("action","register");
+    fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
 
- const processingText={
-  id:"Sedang memproses…",
-  en:"Processing…",
-  ja:"処理中…"
- };
- const original=submitBtn.textContent;
- submitBtn.textContent=processingText[lang];
-
- const fd=new FormData(registrationForm);
- fd.append("action","register");
- fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
-
- try{
-  const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
-  const j=await r.json();
-  if(j.status==="success"){
-   window.location.href="success.html?"+new URLSearchParams(fd).toString();
-  }else{
-   alert(j.message||"Error");
-   submitBtn.textContent=original;
-   submitBtn.disabled=false;
-  }
- }catch{
-  alert("Koneksi bermasalah");
-  submitBtn.textContent=original;
-  submitBtn.disabled=false;
- }
+    try{
+        const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
+        const j=await r.json();
+        if(j.status==="success"){
+            window.location.href="success.html?"+new URLSearchParams(fd).toString();
+        }
+    }catch{
+        alert("Error");
+        submitBtn.disabled=false;
+    }
 };
 </script>
-
 </body>
 </html>
