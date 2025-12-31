@@ -3,179 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registration Successful - Okayama Central Mosque</title>
+<title data-id="Pendaftaran Berhasil" data-ja="登録完了" data-en="Registration Successful"></title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* Global Styling */
-*{box-sizing:border-box; transition: all 0.2s ease-in-out;}
-body{
-  margin:0;
-  font-family: 'Inter', sans-serif;
-  background: #f8fafc;
-  color:#1e293b;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8fafc;
+    color: #1f2937;
 }
 
 main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 16px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
-/* Card Styling */
-.card{
-  background:#ffffff;
-  width: 100%;
-  max-width: 540px;
-  padding: 45px 35px;
-  border-radius: 28px;
-  text-align: center;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05);
+.card {
+    width: 100%;
+    max-width: 440px;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 35px 28px;
+    text-align: center;
+    background: #ffffff;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
-/* Ikon Centang Baru: Lebih Minimalis & Elegan */
 .success-icon-wrapper {
-  margin: 0 auto 24px;
-  width: 64px;
-  height: 64px;
-  background: #ffffff;
-  color: #059669;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  border: 4px solid #f0fdf4; /* Aksen ring halus */
-  outline: 1px solid #d1fae5;
+    margin: 0 auto 16px;
+    width: 56px;
+    height: 56px;
+    background: #ecfdf5;
+    color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 1px solid #d1fae5;
 }
 
 h1 {
-  margin: 0;
-  font-size: 24px;
-  color: #0f172a;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.sub-text {
-  color: #64748b;
-  font-size: 14px;
-  margin: 8px 0 32px;
+.subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 8px 0 24px;
 }
 
-/* Data Box dengan Background Kontras Halus */
-.info-box {
-  background: #f8fafc;
-  border-radius: 20px;
-  padding: 24px;
-  text-align: left;
-  border: 1px solid #f1f5f9;
-  margin-bottom: 24px;
+.info {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: left;
+    font-size: 14px;
+    border: 1px solid #f1f5f9;
 }
 
-.info-item {
-  display: flex;
-  align-items: flex-start;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+.info p {
+    margin: 8px 0;
+    line-height: 1.5;
+    display: flex; /* Membuat label dan value sejajar */
 }
 
-.info-item:last-child { border-bottom: none; }
-
-.label {
-  font-weight: 700;
-  color: #475569;
-  width: 150px; /* Menjaga titik dua sejajar lurus */
-  flex-shrink: 0;
+/* MENGHILANGKAN BOLD PADA LABEL */
+.info span.label {
+    font-weight: 400; /* Menghapus Bold */
+    color: #64748b;
+    width: 140px; /* Lebar tetap agar titik dua sejajar */
+    flex-shrink: 0;
 }
 
-.value {
-  font-weight: 500;
-  color: #1e293b;
-  text-align: left;
-  word-break: break-word;
+.info span.value {
+    font-weight: 500;
+    color: #1e293b;
+    word-break: break-word;
 }
 
-/* QR Section */
 .qr-container {
-  margin: 20px 0;
+    margin: 20px auto;
+    width: 170px;
+    height: 170px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 10px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .qr-container img {
-  width: 160px;
-  height: 160px;
-  padding: 10px;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  background: white;
+    width: 100%;
+    height: 100%;
 }
 
 .qr-instruction {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 28px;
-  line-height: 1.6;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 24px;
+    line-height: 1.5;
 }
 
-/* Button Group */
 .btn-group {
-  display: flex;
-  gap: 12px;
+    display: flex;
+    gap: 12px;
 }
 
 .btn {
-  flex: 1;
-  padding: 16px;
-  border-radius: 14px;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: none;
+    flex: 1;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-download {
+    background: #047857;
+    color: #ffffff;
+    border: none;
 }
 
 .btn-back {
-  background: #ffffff;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
 }
 
-.btn-back:hover { background: #f8fafc; color: #1e293b; }
-
-.btn-download {
-  background: #059669;
-  color: white;
-}
-
-.btn-download:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5, 150, 105, 0.3); }
-
-footer{
-  text-align:center;
-  font-size:12px;
-  color:#94a3b8;
-  padding:24px;
+footer {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    padding: 20px;
 }
 
 @media (max-width: 480px) {
-  .card { padding: 35px 20px; border: none; background: transparent; box-shadow: none; }
-  .label { width: 120px; font-size: 13px; }
-  .value { font-size: 13px; }
-  .btn-group { flex-direction: column-reverse; }
+    .info p { flex-direction: row; }
+    .info span.label { width: 110px; }
 }
 </style>
 </head>
@@ -184,107 +167,120 @@ footer{
 
 <main>
 <div class="card">
-  <div class="icon">✅</div>
+    <div class="success-icon-wrapper">
+        <i class="fas fa-check"></i>
+    </div>
 
-  <h1 data-id="Pendaftaran Berhasil" data-en="Registration Successful" data-ja="登録が完了しました"></h1>
-  <div class="sub-text" data-id="Terima kasih atas pendaftaran Anda" data-en="Thank you for your registration" data-ja="ご登録ありがとうございました"></div>
+    <h1 data-id="Pendaftaran Berhasil"
+        data-ja="登録が完了しました"
+        data-en="Registration Successful"></h1>
 
-  <div class="info-box">
-    <div class="info-item">
-      <span class="label" data-id="Nama :" data-en="Name :" data-ja="氏名 :"></span>
-      <span class="value" id="val-nama"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="ID Peserta :" data-en="Participant ID :" data-ja="参加者ID :"></span>
-      <span class="value" id="val-id"></span>
-    </div>
-    <div class="info-item">
-      <span class="label">Email :</span>
-      <span class="value" id="val-email"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="Domisili :" data-en="City :" data-ja="居住地 :"></span>
-      <span class="value" id="val-dom"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="Nomor HP :" data-en="Phone :" data-ja="電話番号 :"></span>
-      <span class="value" id="val-hp"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="Usia :" data-en="Age :" data-ja="年齢 :"></span>
-      <span class="value" id="val-usia"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="Jenis Kelamin :" data-en="Gender :" data-ja="性別 :"></span>
-      <span class="value" id="val-jk"></span>
-    </div>
-    <div class="info-item">
-      <span class="label" data-id="Jumlah Orang :" data-en="People :" data-ja="人数 :"></span>
-      <span class="value" id="val-jml"></span>
-    </div>
-  </div>
+    <div class="subtitle"
+        data-id="Terima kasih telah melakukan pendaftaran"
+        data-ja="お申し込みありがとうございます"
+        data-en="Thank you for your registration"></div>
 
-  <div class="qr-container" id="qrBox"></div>
+    <div class="info">
+        <p><span class="label"><span data-id="Nama" data-ja="氏名" data-en="Name"></span> :</span> <span class="value" id="resNama">-</span></p>
+        <p><span class="label"><span data-id="ID Peserta" data-ja="参加ID" data-en="Participant ID"></span> :</span> <span class="value" id="resID">-</span></p>
+        <p><span class="label">Email :</span> <span class="value" id="resEmail">-</span></p>
+        <p><span class="label"><span data-id="Domisili" data-ja="居住地" data-en="City"></span> :</span> <span class="value" id="resDomisili">-</span></p>
+        <p><span class="label"><span data-id="Nomor HP" data-ja="電話番号" data-en="Phone"></span> :</span> <span class="value" id="resHP">-</span></p>
+        <p><span class="label"><span data-id="Usia" data-ja="年齢" data-en="Age"></span> :</span> <span class="value" id="resUsia">-</span></p>
+        <p><span class="label"><span data-id="Jenis Kelamin" data-ja="性別" data-en="Gender"></span> :</span> <span class="value" id="resJK">-</span></p>
+        <p><span class="label"><span data-id="Jumlah Orang" data-ja="人数" data-en="People"></span> :</span> <span class="value" id="resJumlah">-</span></p>
+    </div>
+
+    <div class="qr-container" id="qrContainer"></div>
   
-  <div class="qr-instruction" 
-       data-id="Harap simpan kode QR ini untuk check-in acara." 
-       data-en="Please save this QR code for event check-in." 
-       data-ja="チェックイン用にこのQRコードを保存してください。">
-  </div>
+    <div class="qr-instruction" 
+         data-id="Harap simpan kode QR ini untuk check-in acara." 
+         data-en="Please save this QR code for event check-in." 
+         data-ja="チェックイン用にこのQRコードを保存してください。">
+    </div>
 
-  <div class="btn-group">
-    <a href="index.html" class="btn btn-back">
-      <i class="fas fa-arrow-left"></i>
-      <span data-id="Kembali" data-en="Back" data-ja="戻る"></span>
-    </a>
-    <button onclick="downloadQR()" id="btnDL" class="btn btn-download">
-      <i class="fas fa-download"></i>
-      <span data-id="Simpan QR" data-en="Save QR" data-ja="QRを保存"></span>
-    </button>
-  </div>
+    <div class="btn-group">
+        <a href="index.html" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i>
+            <span data-id="Kembali" data-en="Back" data-ja="戻る"></span>
+        </a>
+        <button onclick="downloadQR()" id="downloadBtn" class="btn btn-download">
+            <i class="fas fa-download"></i>
+            <span data-id="Simpan QR" data-en="Save QR" data-ja="QRを保存"></span>
+        </button>
+    </div>
 </div>
 </main>
 
-<footer>© 2026 — Masjid Central Okayama</footer>
+<footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-const lang = navigator.language.startsWith("ja") ? "ja" : navigator.language.startsWith("en") ? "en" : "id";
-document.querySelectorAll("[data-id]").forEach(el => {
-  el.textContent = el.dataset[lang] || el.dataset.id;
+// Logika deteksi bahasa, pengisian data, dan QR tetap sama seperti kode Anda
+const userLang = navigator.language || navigator.userLanguage || "id";
+let currentLang = "id";
+if (userLang.startsWith("ja")) currentLang = "ja";
+else if (userLang.startsWith("en")) currentLang = "en";
+
+const params = new URLSearchParams(window.location.search);
+const fields = {
+    resNama: "nama_lengkap",
+    resID: "id",
+    resEmail: "email",
+    resDomisili: "domisili",
+    resHP: "no_hp",
+    resUsia: "usia",
+    resJK: "jk",
+    resJumlah: "jumlah_orang"
+};
+
+Object.keys(fields).forEach(id => {
+    let value = params.get(fields[id]) || "-";
+    if (id === "resJK") {
+        if (value === "Laki-laki") {
+            if (currentLang === "ja") value = "男性";
+            else if (currentLang === "en") value = "Male";
+        } else if (value === "Perempuan") {
+            if (currentLang === "ja") value = "女性";
+            else if (currentLang === "en") value = "Female";
+        }
+    }
+    document.getElementById(id).innerText = value;
 });
 
-const p = new URLSearchParams(location.search);
-const g = k => p.get(k) || "-";
-
-document.getElementById('val-nama').textContent = g("nama_lengkap");
-document.getElementById('val-id').textContent = g("id");
-document.getElementById('val-email').textContent = g("email");
-document.getElementById('val-hp').textContent = g("no_hp");
-document.getElementById('val-dom').textContent = g("domisili");
-document.getElementById('val-usia').textContent = g("usia");
-document.getElementById('val-jk').textContent = g("jk");
-document.getElementById('val-jml').textContent = g("jumlah_orang");
-
-const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(g("id"))}`;
-document.getElementById('qrBox').innerHTML = `<img src="${qrURL}" id="qrImg">`;
-
-async function downloadQR(){
-  const btn = document.getElementById('btnDL');
-  const span = btn.querySelector('span');
-  const originalText = span.textContent;
-  span.textContent = "...";
-  try {
-    const b = await fetch(qrURL).then(r => r.blob());
-    const u = URL.createObjectURL(b);
-    const a = document.createElement("a");
-    a.href = u;
-    a.download = `QR_Eid_CheckIn_${g("nama_lengkap").replace(/\s+/g, '_')}.png`;
-    a.click();
-    URL.revokeObjectURL(u);
-    span.textContent = "Saved!";
-    setTimeout(() => { span.textContent = originalText; }, 2000);
-  } catch (e) { span.textContent = originalText; }
+function generateQRFromData() {
+    const qrObject = {
+        id: params.get("id"),
+        nama: params.get("nama_lengkap"),
+        event: "Sholat Idul Fitri 2026"
+    };
+    const qrString = btoa(JSON.stringify(qrObject));
+    return `https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=${encodeURIComponent(qrString)}&margin=10&color=047857`;
 }
+
+const qrURL = generateQRFromData();
+document.getElementById("qrContainer").innerHTML = `<img src="${qrURL}" id="qrImage" crossorigin="anonymous">`;
+
+async function downloadQR() {
+    const btn = document.getElementById("downloadBtn");
+    const originalText = btn.innerHTML;
+    try {
+        const response = await fetch(qrURL);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `QR_${params.get("nama_lengkap") || "User"}.png`;
+        a.click();
+        btn.innerHTML = "✅ Terunduh!";
+        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+    } catch (e) { alert("Error downloading QR"); }
+}
+
+(function () {
+    document.querySelectorAll("[data-id]").forEach(el => {
+        el.textContent = el.dataset[currentLang] || el.dataset.id;
+    });
+})();
 </script>
 </body>
 </html>
