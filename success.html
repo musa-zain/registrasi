@@ -36,18 +36,11 @@ main {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
-.success-icon-wrapper {
-    margin: 0 auto 16px;
-    width: 56px;
-    height: 56px;
-    background: #ecfdf5;
-    color: #10b981;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    border: 1px solid #d1fae5;
+/* Menggunakan Emoji ✅ sesuai permintaan */
+.success-emoji {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
 }
 
 h1 {
@@ -75,14 +68,13 @@ h1 {
 .info p {
     margin: 8px 0;
     line-height: 1.5;
-    display: flex; /* Membuat label dan value sejajar */
+    display: flex;
 }
 
-/* MENGHILANGKAN BOLD PADA LABEL */
 .info span.label {
-    font-weight: 400; /* Menghapus Bold */
+    font-weight: 400;
     color: #64748b;
-    width: 140px; /* Lebar tetap agar titik dua sejajar */
+    width: 140px;
     flex-shrink: 0;
 }
 
@@ -94,8 +86,8 @@ h1 {
 
 .qr-container {
     margin: 20px auto;
-    width: 170px;
-    height: 170px;
+    width: 190px;
+    height: 190px;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 10px;
@@ -135,12 +127,12 @@ h1 {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    border: none;
 }
 
 .btn-download {
     background: #047857;
     color: #ffffff;
-    border: none;
 }
 
 .btn-back {
@@ -159,6 +151,7 @@ footer {
 @media (max-width: 480px) {
     .info p { flex-direction: row; }
     .info span.label { width: 110px; }
+    .btn-group { flex-direction: column-reverse; }
 }
 </style>
 </head>
@@ -167,9 +160,7 @@ footer {
 
 <main>
 <div class="card">
-    <div class="success-icon-wrapper">
-        <i class="fas fa-check"></i>
-    </div>
+    <span class="success-emoji">✅</span>
 
     <h1 data-id="Pendaftaran Berhasil"
         data-ja="登録が完了しました"
@@ -206,7 +197,7 @@ footer {
         </a>
         <button onclick="downloadQR()" id="downloadBtn" class="btn btn-download">
             <i class="fas fa-download"></i>
-            <span data-id="Simpan QR" data-en="Save QR" data-ja="QRを保存"></span>
+            <span id="btnText" data-id="Simpan QR" data-en="Save QR" data-ja="QRを保存"></span>
         </button>
     </div>
 </div>
@@ -215,12 +206,20 @@ footer {
 <footer>© 2026 — Yayasan Ibadurrahman Islamic Center</footer>
 
 <script>
-// Logika deteksi bahasa, pengisian data, dan QR tetap sama seperti kode Anda
+// =================== DETEKSI BAHASA ===================
 const userLang = navigator.language || navigator.userLanguage || "id";
 let currentLang = "id";
 if (userLang.startsWith("ja")) currentLang = "ja";
 else if (userLang.startsWith("en")) currentLang = "en";
 
+// =================== TRANSLASI TEKS TERUNDUH ===================
+const translations = {
+    id: { saved: "✅ Terunduh!" },
+    en: { saved: "✅ Saved!" },
+    ja: { saved: "✅ 保存完了!" }
+};
+
+// =================== PENGISIAN DATA URL ===================
 const params = new URLSearchParams(window.location.search);
 const fields = {
     resNama: "nama_lengkap",
@@ -247,35 +246,54 @@ Object.keys(fields).forEach(id => {
     document.getElementById(id).innerText = value;
 });
 
+// =================== GENERATE QR CODE OPTIMIZED ===================
 function generateQRFromData() {
-    const qrObject = {
-        id: params.get("id"),
-        nama: params.get("nama_lengkap"),
-        event: "Sholat Idul Fitri 2026"
-    };
-    const qrString = btoa(JSON.stringify(qrObject));
-    return `https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=${encodeURIComponent(qrString)}&margin=10&color=047857`;
+    // Agar QR mudah dibaca HP:
+    // 1. Gunakan data yang tidak terlalu panjang (ID pendaftaran saja sudah cukup unik)
+    // 2. Gunakan margin yang cukup dan warna kontras (Hitam/Putih paling aman)
+    const idPeserta = params.get("id") || "0000";
+    
+    // Kita gunakan hanya ID untuk isi QR agar pattern-nya renggang dan mudah di-scan
+    // Jika ingin semua data tetap masuk, kita encode, tapi pattern akan lebih rapat
+    const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(idPeserta)}&margin=10&color=000000&bgcolor=ffffff&qzone=1`;
+    
+    return qrURL;
 }
 
 const qrURL = generateQRFromData();
 document.getElementById("qrContainer").innerHTML = `<img src="${qrURL}" id="qrImage" crossorigin="anonymous">`;
 
+// =================== DOWNLOAD QR CODE MULTILINGUAL ===================
 async function downloadQR() {
     const btn = document.getElementById("downloadBtn");
-    const originalText = btn.innerHTML;
+    const spanText = document.getElementById("btnText");
+    const originalText = spanText.textContent;
+    const originalIcon = btn.querySelector('i').className;
+
     try {
         const response = await fetch(qrURL);
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `QR_${params.get("nama_lengkap") || "User"}.png`;
+        a.download = `QR_Eid_2026_${params.get("nama_lengkap") || "User"}.png`;
         a.click();
-        btn.innerHTML = "✅ Terunduh!";
-        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
-    } catch (e) { alert("Error downloading QR"); }
+        
+        // Update teks tombol ke notifikasi multilingual
+        spanText.textContent = translations[currentLang].saved;
+        btn.querySelector('i').className = "fas fa-check";
+        
+        setTimeout(() => { 
+            spanText.textContent = originalText; 
+            btn.querySelector('i').className = originalIcon;
+        }, 2000);
+    } catch (e) { 
+        console.error(e);
+        alert("Gagal mengunduh QR"); 
+    }
 }
 
+// =================== INISIALISASI TRANSLASI HALAMAN ===================
 (function () {
     document.querySelectorAll("[data-id]").forEach(el => {
         el.textContent = el.dataset[currentLang] || el.dataset.id;
