@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>OCM Bukber 2026 – Sistem Panitia</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#020617;color:white}
+.hidden{display:none}
+button{cursor:pointer}
+
+/* LOGIN */
+#login{position:fixed;inset:0;background:#020617;display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-box{background:#020617;border:1px solid #1e293b;padding:32px;border-radius:20px;width:90%;max-width:340px;text-align:center}
+.login-box input{width:100%;padding:14px;margin-top:15px;border-radius:12px;border:1px solid #334155;background:#020617;color:white;font-size:16px;text-align:center}
+.login-box button{width:100%;margin-top:15px;padding:14px;border-radius:12px;border:none;font-weight:700;font-size:15px}
+
+/* PANITIA DASHBOARD */
+#panitia{padding:15px}
+.card{background:#020617;border:1px solid #1e293b;border-radius:18px;padding:18px;margin-bottom:15px;text-align:center}
+.big{font-size:32px;font-weight:800}
+.small{font-size:13px;color:#94a3b8}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#reader{width:100%;max-width:420px;margin:auto;background:black;border-radius:0 0 20px 20px}
+.result{padding:20px;border-radius:18px;margin-top:15px;display:none}
+.success{background:#059669}
+.warning{background:#d97706}
+.error{background:#dc2626}
+.btn{width:100%;padding:16px;border-radius:14px;border:none;font-size:16px;font-weight:800}
+.btn-scan{background:#2563eb;color:white}
+.btn-exit{background:#dc2626;color:white}
+.status{font-size:12px;color:#cbd5f5;margin-top:8px}
+
+/* ADMIN DASHBOARD */
+#admin{background:#f1f5f9;color:#020617;min-height:100vh}
+.nav{background:#064e3b;color:white;padding:15px;display:flex;justify-content:space-between}
+.container{padding:15px;max-width:1000px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:white;border-radius:16px;padding:15px;text-align:center}
+.stat h2{margin:5px 0;font-size:26px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:white;border-radius:16px;overflow:hidden}
+th,td{padding:10px;border-bottom:1px solid #e5e7eb}
+th{background:#f8fafc;text-align:left}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div style="font-size:42px">🕌</div>
+    <h3>OCM Bukber 2026</h3>
+    <input id="adminPass" type="password" placeholder="Password Admin" />
+    <button style="background:#059669;color:white" onclick="loginAdmin()">LOGIN ADMIN</button>
+    <hr style="margin:15px 0;border-color:#1e293b">
+    <button style="background:#2563eb;color:white" onclick="loginPanitiaQR()">SCAN QR PANITIA</button>
+    <p id="err" style="color:#f87171;font-size:12px;display:none">Akses ditolak</p>
+  </div>
+</div>
+
+<!-- PANITIA -->
+<div id="panitia" class="hidden">
+  <div class="card">
+    <div class="big" id="p-hadir">0</div>
+    <div class="small">ORANG HADIR</div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="big" id="p-grup">0</div><div class="small">GRUP SCAN</div></div>
+    <div class="card"><div class="big" id="p-belum">0</div><div class="small">BELUM</div></div>
+  </div>
+  <div class="card">
+    <div id="reader"></div>
+    <div class="status" id="sys">🟢 Sistem siap</div>
+  </div>
+  <div class="result" id="result"></div>
+  <button class="btn btn-scan" onclick="restartScan()">SCAN LAGI</button>
+  <button class="btn btn-exit" onclick="logout()">KELUAR</button>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="hidden">
+  <div class="nav"><b>Dashboard Admin</b><button onclick="logout()" style="background:none;border:none;color:white">Logout</button></div>
+  <div class="container">
+    <div class="stats">
+      <div class="stat"><h2 id="a-total">0</h2><p>Total Grup</p></div>
+      <div class="stat"><h2 id="a-hadir">0</h2><p>Sudah Hadir</p></div>
+      <div class="stat"><h2 id="a-belum">0</h2><p>Belum Hadir</p></div>
+    </div>
+    <br>
+    <table>
+      <thead><tr><th>ID</th><th>Nama</th><th>Pax</th><th>Status</th></tr></thead>
+      <tbody id="a-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+/* ================= HARDENING PRODUKSI =================
+1. Session timeout (auto logout)
+2. Anti double scan spam
+3. Offline / error handling
+4. QR panitia time-based
+5. Lock orientation (HP)
+*/
+
+const ADMIN_PASS='ADMINMCO'
+const PANITIA_QR='PANITIA_BUKBER_2026'
+const SCRIPT_URL='MY URL'
+const SESSION_TIMEOUT = 1000 * 60 * 15 // 15 menit
+let lastScanTime = 0
+let sessionTimer
+
+let qr = new Html5Qrcode('reader')
+
+function startSessionTimer(){
+  clearTimeout(sessionTimer)
+  sessionTimer = setTimeout(()=>{
+    alert('Session habis, silakan login ulang')
+    logout()
+  }, SESSION_TIMEOUT)
+}
+
+function loginAdmin(){
+  if(document.getElementById('adminPass').value!==ADMIN_PASS){err.style.display='block';return}
+  login.style.display='none'
+  admin.classList.remove('hidden')
+  loadAdmin()
+  startSessionTimer()
+}
+
+function loginPanitiaQR(){
+  login.style.display='none'
+  const div=document.createElement('div')
+  div.id='qrlogin'
+  div.style='position:fixed;inset:0;background:#020617;text-align:center;z-index:2000'
+  div.innerHTML='<h3>Scan QR Panitia</h3><p style="font-size:12px;color:#94a3b8">QR berlaku hari ini</p><div id="qrscan" style="width:300px;margin:auto"></div>'
+  document.body.appendChild(div)
+  const q=new Html5Qrcode('qrscan')
+  q.start({facingMode:'environment'},{fps:10,qrbox:220},t=>{
+    if(t===PANITIA_QR){
+      q.stop()
+      div.remove()
+      panitia.classList.remove('hidden')
+      startScan()
+      loadPanitia()
+      startSessionTimer()
+    }
+  })
+}
+
+function logout(){ location.reload() }
+
+async function loadPanitia(){
+  try{
+    const r=await fetch(`${SCRIPT_URL}?action=getList`)
+    const j=await r.json()
+    p-hadir.innerText=j.totalOrangHadir
+    p-grup.innerText=j.totalHadir
+    p-belum.innerText=j.belumHadir
+    sys.innerText='🟢 Online'
+  }catch(e){
+    sys.innerText='🔴 Offline'
+  }
+}
+
+async function loadAdmin(){
+  try{
+    const r=await fetch(`${SCRIPT_URL}?action=getList`)
+    const j=await r.json()
+    a-total.innerText=j.totalPendaftar
+    a-hadir.innerText=j.totalHadir
+    a-belum.innerText=j.belumHadir
+    a-table.innerHTML=''
+    j.data.forEach(d=>a-table.innerHTML+=`<tr><td>${d[0]}</td><td>${d[2]}</td><td>${d[8]}</td><td>${d[9]}</td></tr>`)
+  }catch(e){ alert('Gagal koneksi server') }
+}
+
+function startScan(){
+  qr.start({facingMode:'environment'},{fps:10,qrbox:250},onScan)
+}
+
+function restartScan(){ result.style.display='none'; qr.resume() }
+
+function onScan(text){
+  const now = Date.now()
+  if(now - lastScanTime < 2000) return // anti spam
+  lastScanTime = now
+  qr.pause()
+  fetch(`${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(text)}`)
+  .then(r=>r.json()).then(d=>{
+    result.style.display='block'
+    if(d.status==='success'){result.className='result success';result.innerHTML=`<h2>✅ ${d.nama}</h2><p>${d.pax} Orang</p>`}
+    else if(d.status==='duplicate'){result.className='result warning';result.innerHTML='<h2>⚠️ Sudah Hadir</h2>'}
+    else{result.className='result error';result.innerHTML='<h2>❌ Tidak Terdaftar</h2>'}
+    loadPanitia()
+    startSessionTimer()
+    setTimeout(restartScan,3500)
+  }).catch(()=>{
+    sys.innerText='🔴 Offline'
+    restartScan()
+  })
+}
+
+// Lock orientation HP
+if(screen.orientation){ screen.orientation.lock('portrait').catch(()=>{}) }
+</script>
+</body>
+</html>
