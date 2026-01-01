@@ -408,7 +408,8 @@ const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
 const cantikID = "EID-" + datePart + "-" + randomPart;
 
 fd.append("id", cantikID);
-
+fd.append("lang", lang); // Mengirim kode bahasa (id, en, atau ja) ke Google Script
+  
  try{
   const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
   const j=await r.json();
