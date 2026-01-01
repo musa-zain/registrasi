@@ -1,235 +1,136 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard Panitia - Idul Fitri</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Real-Time - OCM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #f1f5f9; color: #1e293b; }
+        .navbar { background: #064e3b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; text-align: center; }
+        .stat-card i { font-size: 24px; color: #059669; margin-bottom: 10px; }
+        .stat-card h3 { margin: 5px 0; font-size: 28px; color: #0f172a; }
+        .stat-card p { margin: 0; color: #64748b; font-size: 13px; font-weight: 600; }
 
-<style>
-:root{
-  --green:#047857;
-  --green-soft:#d1fae5;
-  --red:#991b1b;
-  --red-soft:#fee2e2;
-  --gray:#6b7280;
-}
+        /* Table */
+        .data-table { background: white; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f8fafc; padding: 15px; text-align: left; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .pill-hadir { background: #dcfce7; color: #15803d; }
+        .pill-belum { background: #fef2f2; color: #b91c1c; }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,sans-serif;
-  background:#f8fafc;
-  color:#1f2937;
-  padding:24px;
-}
-.container{
-  max-width:1200px;
-  margin:auto;
-  background:#fff;
-  padding:24px;
-  border-radius:18px;
-  border:1px solid #e5e7eb;
-  box-shadow:0 10px 20px rgba(0,0,0,.05);
-}
-
-h1{
-  margin:0 0 20px;
-  color:var(--green);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-/* ===== STATS ===== */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:16px;
-  margin-bottom:25px;
-}
-.stat{
-  background:#f9fafb;
-  padding:18px;
-  border-radius:14px;
-  border:1px solid #e5e7eb;
-  text-align:center;
-}
-.stat span{
-  font-size:32px;
-  font-weight:800;
-  color:var(--green);
-}
-.stat label{
-  display:block;
-  margin-top:4px;
-  font-size:12px;
-  color:var(--gray);
-  letter-spacing:.5px;
-  text-transform:uppercase;
-}
-
-/* ===== BUTTON ===== */
-.actions{
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
-}
-button{
-  padding:10px 16px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-}
-.btn-refresh{background:var(--green);color:#fff}
-.btn-export{background:#111827;color:#fff}
-
-/* ===== TABLE ===== */
-.table-wrap{
-  overflow:auto;
-  border-radius:14px;
-  border:1px solid #e5e7eb;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-th,td{
-  padding:12px;
-  border-bottom:1px solid #f3f4f6;
-  white-space:nowrap;
-}
-th{
-  background:#f9fafb;
-  text-transform:uppercase;
-  font-size:11px;
-  letter-spacing:.5px;
-}
-tr:hover{background:#f8fafc}
-
-/* ===== BADGE ===== */
-.badge{
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:700;
-}
-.hadir{background:var(--green-soft);color:var(--green)}
-.belum{background:var(--red-soft);color:var(--red)}
-
-.loading{
-  padding:40px;
-  text-align:center;
-  color:var(--gray);
-}
-</style>
+        /* Login */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #064e3b; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 300px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; text-align: center; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #059669; color: white; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
+<div id="login-overlay">
+    <div class="login-box">
+        <h3>Admin Dashboard</h3>
+        <input type="password" id="pass" placeholder="Password Admin">
+        <button onclick="login()">Buka Dashboard</button>
+    </div>
+</div>
+
+<div class="navbar">
+    <span style="font-weight: 800; font-size: 18px;">🕌 OCM EID 2026</span>
+    <button onclick="loadData()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:5px 12px; border-radius:5px; cursor:pointer;">
+        <i class="fas fa-sync-alt"></i> Refresh
+    </button>
+</div>
+
 <div class="container">
-  <h1>📊 Dashboard Panitia</h1>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h3 id="stat-total-pendaftar">0</h3>
+            <p>TOTAL GRUP/KELUARGA</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-user-check"></i>
+            <h3 id="stat-total-hadir">0</h3>
+            <p>GRUP SUDAH SCAN</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-mosque"></i>
+            <h3 id="stat-total-orang">0</h3>
+            <p>ESTIMASI TOTAL JEMAAH</p>
+        </div>
+    </div>
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stat"><span id="totalReg">0</span><label>Total Registrasi</label></div>
-    <div class="stat"><span id="totalPax">0</span><label>Total Jamaah</label></div>
-    <div class="stat"><span id="totalHadir">0</span><label>Sudah Check-in</label></div>
-    <div class="stat"><span id="totalBelum">0</span><label>Belum Check-in</label></div>
-  </div>
-
-  <!-- ACTION -->
-  <div class="actions">
-    <button class="btn-refresh" onclick="loadData()">🔄 Refresh</button>
-    <button class="btn-export" onclick="exportCSV()">⬇️ Export CSV</button>
-  </div>
-
-  <div id="loading" class="loading">Memuat data peserta…</div>
-
-  <!-- TABLE -->
-  <div class="table-wrap">
-    <table id="table" style="display:none">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nama</th>
-          <th>Email</th>
-          <th>No HP</th>
-          <th>Domisili</th>
-          <th>JK</th>
-          <th>Pax</th>
-          <th>Status</th>
-          <th>Waktu</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+    <h4 style="margin-bottom: 15px;">Aktivitas Kehadiran Terbaru</h4>
+    <div class="data-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Lengkap</th>
+                    <th>Pax</th>
+                    <th>Status</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
-let allData=[];
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2tPVIy4tWlboGYzAm4Rs_k0gVhVy6ud9yMstBwwlnmNuTA4xIeXX7FQqCK-IxBsj1/exec"; 
+    const PASS_ADMIN = "mco";
 
-async function loadData(){
-  loading.style.display="block";
-  table.style.display="none";
+    function login() {
+        if(document.getElementById("pass").value === PASS_ADMIN) {
+            document.getElementById("login-overlay").style.display = "none";
+            loadData();
+            setInterval(loadData, 30000); // Auto refresh setiap 30 detik
+        } else {
+            alert("Password Salah");
+        }
+    }
 
-  const r=await fetch(`${SCRIPT_URL}?action=getList`);
-  const j=await r.json();
-  allData=j.data||[];
-  render(allData);
+    async function loadData() {
+        try {
+            const res = await fetch(`${SCRIPT_URL}?action=getList`);
+            const json = await res.json();
+            
+            // Update Stats
+            document.getElementById("stat-total-pendaftar").innerText = json.totalPendaftar;
+            document.getElementById("stat-total-hadir").innerText = json.totalHadir;
+            document.getElementById("stat-total-orang").innerText = json.totalOrangHadir + " / " + json.totalOrangPendaftar;
 
-  loading.style.display="none";
-  table.style.display="table";
-}
-
-function render(data){
-  tbody.innerHTML="";
-  let pax=0, hadir=0;
-
-  data.forEach(d=>{
-    const isHadir=d[9]==="Sudah Hadir";
-    if(isHadir) hadir++;
-    pax+=Number(d[8]||1);
-
-    tbody.innerHTML+=`
-      <tr>
-        <td><b>${d[0]}</b></td>
-        <td>${d[2]}</td>
-        <td>${d[3]}</td>
-        <td>${d[5]}</td>
-        <td>${d[4]}</td>
-        <td>${d[7]}</td>
-        <td>${d[8]}</td>
-        <td><span class="badge ${isHadir?'hadir':'belum'}">${d[9]}</span></td>
-        <td>${d[10]||'-'}</td>
-      </tr>`;
-  });
-
-  totalReg.textContent=data.length;
-  totalPax.textContent=pax;
-  totalHadir.textContent=hadir;
-  totalBelum.textContent=data.length-hadir;
-}
-
-function exportCSV(){
-  if(!allData.length) return alert("Data kosong");
-
-  let csv="ID,Nama,Email,HP,Domisili,JK,Pax,Status,Waktu\n";
-  allData.forEach(d=>{
-    csv+=`"${d[0]}","${d[2]}","${d[3]}","${d[5]}","${d[4]}","${d[7]}","${d[8]}","${d[9]}","${d[10]}"\n`;
-  });
-
-  const b=new Blob([csv],{type:"text/csv"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(b);
-  a.download=`Dashboard_IdulFitri_${Date.now()}.csv`;
-  a.click();
-}
-
-loadData();
+            // Update Table
+            const tbody = document.getElementById("table-body");
+            tbody.innerHTML = "";
+            
+            json.data.forEach(row => {
+                const tr = document.createElement("tr");
+                const statusClass = row[9] === "Sudah Hadir" ? "pill-hadir" : "pill-belum";
+                tr.innerHTML = `
+                    <td><small>${row[0]}</small></td>
+                    <td><b>${row[2]}</b></td>
+                    <td>${row[8]}</td>
+                    <td><span class="status-pill ${statusClass}">${row[9]}</span></td>
+                    <td><small>${row[10] || '-'}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (e) {
+            console.log("Gagal memuat data");
+        }
+    }
 </script>
 
 </body>
