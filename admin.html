@@ -1,142 +1,412 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Real-Time - OCM</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; margin: 0; background: #f1f5f9; color: #1e293b; }
-        .navbar { background: #064e3b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-        
-        /* Stats Cards */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; text-align: center; }
-        .stat-card i { font-size: 24px; color: #059669; margin-bottom: 10px; }
-        .stat-card h3 { margin: 5px 0; font-size: 28px; color: #0f172a; }
-        .stat-card p { margin: 0; color: #64748b; font-size: 13px; font-weight: 600; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendaftaran Sholat Idul Fitri - Okayama Central Mosque</title>
 
-        /* Table */
-        .data-table { background: white; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th { background: #f8fafc; padding: 15px; text-align: left; color: #64748b; border-bottom: 1px solid #e2e8f0; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
-        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        .pill-hadir { background: #dcfce7; color: #15803d; }
-        .pill-belum { background: #fef2f2; color: #b91c1c; }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        /* Login */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #064e3b; z-index: 999; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 300px; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; text-align: center; }
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #059669; color: white; font-weight: bold; cursor: pointer; }
-    </style>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:#f1f5f9;
+  color:#1e293b;
+}
+main{padding:40px 16px}
+.container{max-width:480px;margin:auto}
+
+.header{text-align:center;margin-bottom:28px}
+.header h1{margin:0;font-size:24px;color:#064e3b;font-weight:700}
+.header div{font-size:13px;color:#64748b;margin-top:4px}
+
+.card{
+  background:#fff;
+  padding:28px;
+  border-radius:22px;
+  border:1px solid #e2e8f0;
+}
+
+.field{margin-bottom:22px}
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+  font-size:12px;
+  color:#475569;
+  letter-spacing:.04em;
+}
+
+.input-wrapper{position:relative}
+.input-wrapper i{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#94a3b8;
+}
+
+input,select{
+  width:100%;
+  padding:12px 14px 12px 44px;
+  border-radius:14px;
+  border:1.5px solid #e2e8f0;
+  font-size:14px;
+  background:#f8fafc;
+}
+
+input:focus,select:focus{
+  outline:none;
+  border-color:#10b981;
+  background:#fff;
+}
+
+/* Style OTP Layout */
+.otp-container { display: flex; gap: 8px; }
+.btn-otp {
+  width: auto;
+  white-space: nowrap;
+  padding: 0 16px;
+  font-size: 12px;
+  border-radius: 12px;
+  background: #064e3b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.btn-otp:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+/* PERBAIKAN DOMISILI: Menghapus padding-top/bottom 20px agar sama dengan yang lain */
+input[name="domisili"]{
+  font-size:14px;
+}
+
+.hint{
+  font-size:12px;
+  color:#94a3b8;
+  margin-top:6px;
+}
+
+.row{display:flex;gap:14px}
+.row .field{flex:1}
+
+button{
+  width:100%;
+  padding:16px;
+  background:#059669;
+  color:#fff;
+  border:none;
+  border-radius:16px;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+}
+button:disabled{background:#cbd5e1;cursor:not-allowed}
+
+.consent{
+  display:flex;
+  gap:12px;
+  padding:14px;
+  background:#f0fdf4;
+  border:1px solid #dcfce7;
+  border-radius:14px;
+  font-size:13px;
+}
+.consent input{
+  width:20px;
+  height:20px;
+  accent-color:#10b981;
+}
+
+.alert{
+  display:none;
+  background:#fff1f2;
+  color:#be123c;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:18px;
+  text-align:center;
+  font-size:13px;
+}
+
+footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
+
+@media(max-width:480px){
+  .row{flex-direction:column}
+}
+</style>
 </head>
+
 <body>
 
-<div id="login-overlay">
-    <div class="login-box">
-        <h3>Admin Dashboard</h3>
-        <input type="password" id="pass" placeholder="Password Admin">
-        <button onclick="login()">Buka Dashboard</button>
-    </div>
-</div>
-
-<div class="navbar">
-    <span style="font-weight: 800; font-size: 18px;">🕌 Pantau Peserta Bukber 2026</span>
-    <button onclick="loadData()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:5px 12px; border-radius:5px; cursor:pointer;">
-        <i class="fas fa-sync-alt"></i> Refresh
-    </button>
-</div>
-
+<main>
 <div class="container">
-    <div class="stats-grid">
-        <div class="stat-card">
-            <i class="fas fa-users"></i>
-            <h3 id="stat-total-pendaftar">0</h3>
-            <p>TOTAL GRUP/KELUARGA</p>
-        </div>
-        <div class="stat-card">
-            <i class="fas fa-user-check"></i>
-            <h3 id="stat-total-hadir">0</h3>
-            <p>GRUP SUDAH SCAN</p>
-        </div>
-        <div class="stat-card" style="border-bottom: 4px solid #dc2626;">
-            <i class="fas fa-user-clock" style="color: #dc2626;"></i>
-            <h3 id="stat-belum-hadir" style="color: #dc2626;">0</h3>
-            <p>JEMAAH BELUM SCAN</p>
-        </div>
-        <div class="stat-card">
-            <i class="fas fa-mosque"></i>
-            <h3 id="stat-total-orang">0</h3>
-            <p>HADIR / TOTAL (ORANG)</p>
-        </div>
-    </div>
 
-    <h4 style="margin-bottom: 15px;">Aktivitas Kehadiran Terbaru</h4>
-    <div class="data-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama Lengkap</th>
-                    <th>Pax</th>
-                    <th>Status</th>
-                    <th>Waktu</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-            </tbody>
-        </table>
-    </div>
+<div class="alert" id="duplicateAlert"
+ data-id="Data ini sudah terdaftar"
+ data-en="This data is already registered"
+ data-ja="すでに登録されています"></div>
+
+<div class="header">
+  <h1 data-id="Pendaftaran Sholat Idul Fitri"
+      data-en="Eid Prayer Registration"
+      data-ja="参加登録"></h1>
+  <div>Okayama Central Mosque</div>
 </div>
+
+<div class="card">
+<form id="registrationForm">
+
+<div class="field">
+<label data-id="Nama Lengkap" data-en="Full Name" data-ja="氏名"></label>
+<div class="input-wrapper">
+<i class="fas fa-user"></i>
+<input name="nama_lengkap" id="nama_lengkap" required
+ data-id-ph="Nama sesuai identitas"
+ data-en-ph="Name as shown on ID"
+ data-ja-ph="身分証通りの氏名">
+</div>
+</div>
+
+<div class="field">
+<label>Email</label>
+<div class="otp-container">
+  <div class="input-wrapper" style="flex:1">
+    <i class="fas fa-envelope"></i>
+    <input type="email" name="email" id="email" required placeholder="contoh@email.com">
+  </div>
+  <button type="button" class="btn-otp" id="sendOtpBtn" onclick="sendOTP()">
+    <span data-id="Kirim Kode" data-en="Send Code" data-ja="コード送信"></span>
+  </button>
+</div>
+<div class="hint"
+ data-id="Email ini digunakan untuk konfirmasi pendaftaran"
+ data-en="This email will be used for registration confirmation"
+ data-ja="確認のために使用されます"></div>
+</div>
+
+<div class="field" id="otpField" style="display:none; background:#f0fdf4; padding:15px; border-radius:14px; border:1px dashed #10b981">
+<label data-id="Masukkan Kode OTP" data-en="Enter OTP Code" data-ja="OTPコードを入力"></label>
+<div class="input-wrapper">
+<i class="fas fa-key"></i>
+<input type="text" id="otp_input" maxlength="4" placeholder="1234">
+</div>
+</div>
+
+<div class="field">
+<label data-id="Nomor HP" data-en="Phone Number" data-ja="電話番号"></label>
+<div class="input-wrapper">
+<i class="fas fa-phone"></i>
+<input type="tel" name="no_hp" id="no_hp" required placeholder="08012345678">
+</div>
+<div class="hint"
+ data-id="Gunakan nomor yang bisa dihubungi"
+ data-en="Use an active phone number"
+ data-ja="連絡可能な番号を入力してください"></div>
+</div>
+
+<div class="field">
+<label data-id="Domisili" data-en="City / Residence" data-ja="居住地"></label>
+<div class="input-wrapper">
+<i class="fas fa-map-marker-alt"></i>
+<input name="domisili" list="neighborhoods" required
+ data-id-ph="Cari kelurahan (Contoh: Kaminakano)"
+ data-en-ph="Search neighborhood (Ex: Kaminakano)"
+ data-ja-ph="町名を検索 (例：上中野)">
+<datalist id="neighborhoods">
+  <option value="Okayama-shi, Kita-ku, Kaminakano">
+  <option value="Okayama-shi, Kita-ku, Ima">
+  <option value="Okayama-shi, Kita-ku, Omoto">
+  <option value="Okayama-shi, Kita-ku, Tsushima">
+  <option value="Okayama-shi, Kita-ku, Hokan-cho">
+  <option value="Okayama-shi, Naka-ku, Nishigawara">
+  <option value="Okayama-shi, Minami-ku, Toyonari">
+  <option value="Kurashiki-shi, Achi">
+  <option value="Kurashiki-shi, Nakasho">
+  <option value="Kurashiki-shi, Chaya-machi">
+  <option value="Kurashiki-shi, Mizushima">
+  <option value="Kurashiki-shi, Kojima">
+  <option value="Kurashiki-shi, Tamashima">
+</datalist>
+</div>
+</div>
+
+<div class="row">
+<div class="field">
+<label data-id="Usia" data-en="Age" data-ja="年齢"></label>
+<div class="input-wrapper">
+<i class="fas fa-id-card"></i>
+<input type="number" name="usia" required>
+</div>
+</div>
+
+<div class="field">
+<label data-id="Jenis Kelamin" data-en="Gender" data-ja="性別"></label>
+<div class="input-wrapper">
+<i class="fas fa-venus-mars"></i>
+<select name="jk" required>
+<option value="" disabled selected
+ data-id="Pilih jenis kelamin"
+ data-en="Select gender"
+ data-ja="性別を選択"></option>
+<option value="Laki-laki" data-id="Laki-laki" data-en="Male" data-ja="男性"></option>
+<option value="Perempuan" data-id="Perempuan" data-en="Female" data-ja="女性"></option>
+</select>
+</div>
+</div>
+
+<div class="field">
+<label data-id="Jumlah Orang" data-en="Number of People" data-ja="人数"></label>
+<div class="input-wrapper">
+<i class="fas fa-users"></i>
+<input type="number" name="jumlah_orang" min="1" value="1" required>
+</div>
+</div>
+</div>
+
+<div class="field">
+<label class="consent">
+<input type="checkbox" required>
+<span data-id="Saya menyetujui data digunakan untuk keperluan acara ini"
+      data-en="I agree that my data will be used for this event"
+      data-ja="本イベントのために個人情報を使用することに同意します"></span>
+</label>
+</div>
+
+<button id="submitBtn"
+ data-id="Daftar"
+ data-en="Register"
+ data-ja="登録"></button>
+
+</form>
+</div>
+</div>
+</main>
+
+<footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPkR_q_IqtrgdFJdyTLrBYvb2AAvjAHR5rZdGv1ptzWElUo27PttQKYD1q1ceL9FLI/exec"; 
-    const PASS_ADMIN = "mco2026";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwvLVMIbhBThHJ8l3d4Rppo1GvDbgeVjELq8_zOtzD7WHaWIaEHhVqHqyVJpgiaiDzp/exec";
 
-    function login() {
-        if(document.getElementById("pass").value === PASS_ADMIN) {
-            document.getElementById("login-overlay").style.display = "none";
-            loadData();
-            setInterval(loadData, 30000); // Auto refresh setiap 30 detik
-        } else {
-            alert("Password Salah");
+const lang=navigator.language.startsWith("ja")?"ja":
+           navigator.language.startsWith("en")?"en":"id";
+
+document.querySelectorAll("[data-id]").forEach(el=>{
+ el.textContent=el.dataset[lang]||el.dataset.id;
+});
+document.querySelectorAll("[data-id-ph]").forEach(el=>{
+ el.placeholder=el.dataset[`${lang}Ph`]||el.dataset.idPh;
+});
+
+let serverOTP = "";
+let isVerified = false;
+
+const messages = {
+  fillEmail: {
+    id: "Mohon isi Nama dan Email dulu",
+    en: "Please fill in Name and Email first",
+    ja: "先に名前とメールアドレスを入力してください"
+  },
+  verifyOtp: {
+    id: "Mohon verifikasi kode OTP dulu",
+    en: "Please verify the OTP code first",
+    ja: "先にOTPコードを確認してください"
+  },
+  otpSent: {
+    id: "OTP terkirim ke email!",
+    en: "OTP sent to your email!",
+    ja: "OTPがメールに送信されました！"
+  }
+};
+
+async function sendOTP() {
+  const emailVal = email.value;
+  const namaVal = document.getElementById("nama_lengkap").value;
+  
+  if(!emailVal || !namaVal) {
+    alert(messages.fillEmail[lang]);
+    return;
+  }
+
+  sendOtpBtn.disabled = true;
+  sendOtpBtn.textContent = "...";
+
+  try {
+    const r = await fetch(`${SCRIPT_URL}?action=send_otp&email=${encodeURIComponent(emailVal)}&nama=${encodeURIComponent(namaVal)}`);
+    const j = await r.json();
+    if(j.status === "success") {
+      serverOTP = j.otp;
+      document.getElementById("otpField").style.display = "block";
+      alert(messages.otpSent[lang]);
+      
+      document.getElementById("otp_input").oninput = function() {
+        if(this.value === serverOTP) {
+          isVerified = true;
+          this.disabled = true;
+          document.getElementById("otpField").style.background = "#dcfce7";
         }
+      };
     }
+  } catch(e) {
+    alert("Error");
+    sendOtpBtn.disabled = false;
+  }
+}
 
-    async function loadData() {
-        try {
-            const res = await fetch(`${SCRIPT_URL}?action=getList`);
-            const json = await res.json();
-            
-            // Update Stats
-            document.getElementById("stat-total-pendaftar").innerText = json.totalPendaftar;
-            document.getElementById("stat-total-hadir").innerText = json.totalHadir;
-            document.getElementById("stat-belum-hadir").innerText = json.belumHadir; // Data grup belum hadir
-            document.getElementById("stat-total-orang").innerText = json.totalOrangHadir + " / " + json.totalOrangPendaftar;
+let t;
+email.oninput=no_hp.oninput=()=>{
+ clearTimeout(t);
+ t=setTimeout(async()=>{
+  if(email.value&&no_hp.value){
+   const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
+   const j=await r.json();
+   duplicateAlert.style.display=j.isDuplicate?"block":"none";
+   submitBtn.disabled=j.isDuplicate;
+  }
+ }, 800);
+};
 
-            // Update Table
-            const tbody = document.getElementById("table-body");
-            tbody.innerHTML = "";
-            
-            json.data.forEach(row => {
-                const tr = document.createElement("tr");
-                const statusClass = row[9] === "Sudah Hadir" ? "pill-hadir" : "pill-belum";
-                tr.innerHTML = `
-                    <td><small>${row[0]}</small></td>
-                    <td><b>${row[2]}</b></td>
-                    <td>${row[8]}</td>
-                    <td><span class="status-pill ${statusClass}">${row[9]}</span></td>
-                    <td><small>${row[10] || '-'}</small></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        } catch (e) {
-            console.log("Gagal memuat data");
-        }
-    }
+registrationForm.onsubmit=async e=>{
+ e.preventDefault();
+ if(!isVerified) {
+   alert(messages.verifyOtp[lang]);
+   return;
+ }
+ submitBtn.disabled=true;
+ const processingText={id:"Sedang memproses…",en:"Processing…",ja:"処理中…"};
+ const original=submitBtn.textContent;
+ submitBtn.textContent=processingText[lang];
+
+ const fd = new FormData(registrationForm);
+fd.append("action", "register");
+
+const now = new Date();
+const datePart = ("0" + now.getDate()).slice(-2) + ("0" + (now.getMonth() + 1)).slice(-2);
+const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
+const cantikID = "EID-" + datePart + "-" + randomPart;
+
+fd.append("id", cantikID);
+fd.append("lang", lang);
+  
+ try{
+  const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
+  const j=await r.json();
+  if(j.status==="success"){
+   window.location.href="success.html?"+new URLSearchParams(fd).toString();
+  }else{
+   alert(j.message||"Error");
+   submitBtn.textContent=original;
+   submitBtn.disabled=false;
+  }
+ }catch{
+  alert("Koneksi bermasalah");
+  submitBtn.textContent=original;
+  submitBtn.disabled=false;
+ }
+};
 </script>
 
 </body>
