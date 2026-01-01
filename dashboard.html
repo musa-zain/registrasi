@@ -90,7 +90,7 @@ th{background:#f8fafc;text-align:left}
     </div>
     <br>
     <table>
-      <thead><tr><th>ID</th><th>Nama</th><th>Pax</th><th>Status</th></tr></thead>
+      <thead><tr><th>ID</th><th>Nama</th><th>Pax</th><th>Status</th><th>Waktu Check-in</th></tr></thead>
       <tbody id="a_table"></tbody>
     </table>
   </div>
@@ -98,251 +98,398 @@ th{background:#f8fafc;text-align:left}
 
 <script>
 /* ================= KONFIGURASI ================= */
-const ADMIN_PASS = 'ADMINMCO'
-const PANITIA_QR = 'PANITIA_BUKBER_2026'
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby28D8Lyi2E8B9Id5APGYYaUs-yRk_XuMyjvMRVNdDfJQTBE1SepcklrXdp9iyEj-3U/exec' // GANTI DENGAN URL ANDA
-const SESSION_TIMEOUT = 1000 * 60 * 15 // 15 menit
+// GANTI URL INI DENGAN URL WEB APP ANDA
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbZ4GEC-88-LkxGpf2-L7Xjeb_GavD9qq3Uu1qLSSeTTDs3nQQkEmzdGQ-0vNQhfsK/exec';
+const ADMIN_PASS = 'ADMINMCO';
+const PANITIA_QR = 'PANITIA_BUKBER_2026';
+const SESSION_TIMEOUT = 1000 * 60 * 15; // 15 menit
 
 /* ================= VARIABEL GLOBAL ================= */
-let lastScanTime = 0
-let sessionTimer
-let html5QrCode = null
-let isScanning = false
+let lastScanTime = 0;
+let sessionTimer;
+let html5QrCode = null;
+let isScanning = false;
 
 /* ================= FUNGSI UTILITAS ================= */
 function startSessionTimer() {
-  clearTimeout(sessionTimer)
+  clearTimeout(sessionTimer);
   sessionTimer = setTimeout(() => {
-    alert('Session habis, silakan login ulang')
-    logout()
-  }, SESSION_TIMEOUT)
+    alert('Session habis, silakan login ulang');
+    logout();
+  }, SESSION_TIMEOUT);
 }
 
 function resetAll() {
   if (html5QrCode && isScanning) {
-    html5QrCode.stop().catch(() => {})
-    isScanning = false
+    html5QrCode.stop().catch(() => {});
+    isScanning = false;
   }
-  clearTimeout(sessionTimer)
+  clearTimeout(sessionTimer);
+}
+
+function showError(message) {
+  const sys = document.getElementById('sys');
+  sys.innerText = `🔴 ${message}`;
+  sys.style.color = '#f87171';
+}
+
+function showSuccess(message) {
+  const sys = document.getElementById('sys');
+  sys.innerText = `🟢 ${message}`;
+  sys.style.color = '#4ade80';
 }
 
 /* ================= LOGIN FUNCTIONS ================= */
 function loginAdmin() {
-  const password = document.getElementById('adminPass').value
-  const err = document.getElementById('err')
+  const password = document.getElementById('adminPass').value;
+  const err = document.getElementById('err');
   
   if (password !== ADMIN_PASS) {
-    err.style.display = 'block'
-    setTimeout(() => { err.style.display = 'none' }, 3000)
-    return
+    err.style.display = 'block';
+    setTimeout(() => { err.style.display = 'none'; }, 3000);
+    return;
   }
   
-  document.getElementById('login').style.display = 'none'
-  document.getElementById('admin').classList.remove('hidden')
-  loadAdmin()
-  startSessionTimer()
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('admin').classList.remove('hidden');
+  loadAdmin();
+  startSessionTimer();
 }
 
 async function loginPanitiaQR() {
   try {
-    document.getElementById('login').style.display = 'none'
+    document.getElementById('login').style.display = 'none';
     
     // Create QR scanner for login
-    const div = document.createElement('div')
-    div.id = 'qrlogin'
-    div.style.cssText = 'position:fixed;inset:0;background:#020617;text-align:center;z-index:2000;padding-top:50px'
+    const div = document.createElement('div');
+    div.id = 'qrlogin';
+    div.style.cssText = 'position:fixed;inset:0;background:#020617;text-align:center;z-index:2000;padding-top:50px';
     div.innerHTML = `
       <h3>Scan QR Panitia</h3>
       <p style="font-size:12px;color:#94a3b8;margin-bottom:20px">QR berlaku hari ini</p>
       <div id="qrscan" style="width:300px;height:300px;margin:auto"></div>
       <button onclick="cancelQrLogin()" style="margin-top:20px;background:#dc2626;color:white;border:none;padding:10px 20px;border-radius:10px">Batal</button>
-    `
-    document.body.appendChild(div)
+    `;
+    document.body.appendChild(div);
     
-    const qrLoginScanner = new Html5Qrcode("qrscan")
+    const qrLoginScanner = new Html5Qrcode("qrscan");
     
     await qrLoginScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
       (decodedText) => {
+        console.log('QR Login scanned:', decodedText);
         if (decodedText === PANITIA_QR) {
           qrLoginScanner.stop().then(() => {
-            div.remove()
-            document.getElementById('panitia').classList.remove('hidden')
-            startScan()
-            loadPanitia()
-            startSessionTimer()
-          }).catch(() => {})
+            div.remove();
+            document.getElementById('panitia').classList.remove('hidden');
+            startScan();
+            loadPanitia();
+            startSessionTimer();
+          }).catch(() => {});
+        } else {
+          alert('QR Code tidak valid untuk panitia');
         }
       },
-      (errorMessage) => {}
-    )
+      (errorMessage) => {
+        console.log('QR Scanner error:', errorMessage);
+      }
+    );
     
   } catch (error) {
-    console.error("QR Login error:", error)
-    alert("Gagal memulai scanner QR")
-    document.getElementById('login').style.display = 'flex'
+    console.error("QR Login error:", error);
+    alert("Gagal memulai scanner QR");
+    document.getElementById('login').style.display = 'flex';
   }
 }
 
 function cancelQrLogin() {
-  const div = document.getElementById('qrlogin')
-  if (div) div.remove()
-  document.getElementById('login').style.display = 'flex'
+  const div = document.getElementById('qrlogin');
+  if (div) div.remove();
+  document.getElementById('login').style.display = 'flex';
 }
 
 function logout() {
-  resetAll()
-  location.reload()
+  resetAll();
+  location.reload();
 }
 
 /* ================= PANITIA FUNCTIONS ================= */
 async function loadPanitia() {
   try {
-    const response = await fetch(`${SCRIPT_URL}?action=getList&t=${Date.now()}`)
-    if (!response.ok) throw new Error('Network response was not ok')
+    console.log('Loading panitia data from:', SCRIPT_URL);
     
-    const data = await response.json()
-    document.getElementById('p_hadir').innerText = data.totalOrangHadir || 0
-    document.getElementById('p_grup').innerText = data.totalHadir || 0
-    document.getElementById('p_belum').innerText = data.belumHadir || 0
-    document.getElementById('sys').innerText = '🟢 Online'
+    // Tambahkan timestamp untuk menghindari cache
+    const response = await fetch(`${SCRIPT_URL}?action=getList&t=${Date.now()}`, {
+      method: 'GET',
+      mode: 'no-cors' // Mode no-cors untuk Google Apps Script
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('Panitia data received:', data);
+    
+    if (data.status === 'success') {
+      // Perhatikan: field harus sesuai dengan yang dikembalikan backend
+      document.getElementById('p_hadir').innerText = data.totalOrangHadir || 0;
+      document.getElementById('p_grup').innerText = data.totalHadir || 0;
+      document.getElementById('p_belum').innerText = data.belumHadir || 0;
+      showSuccess('Online');
+    } else {
+      showError(`Error: ${data.message || 'Unknown error'}`);
+    }
   } catch (error) {
-    console.error('Load panitia error:', error)
-    document.getElementById('sys').innerText = '🔴 Offline'
+    console.error('Load panitia error:', error);
+    showError('Offline - Gagal mengambil data');
+    
+    // Fallback untuk development
+    document.getElementById('p_hadir').innerText = '0';
+    document.getElementById('p_grup').innerText = '0';
+    document.getElementById('p_belum').innerText = '0';
   }
 }
 
 async function startScan() {
   try {
     if (!html5QrCode) {
-      html5QrCode = new Html5Qrcode("reader")
+      html5QrCode = new Html5Qrcode("reader");
     }
     
-    if (isScanning) return
+    if (isScanning) return;
     
     await html5QrCode.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
       onScanSuccess,
-      () => {} // Error callback kosong karena sudah ditangani oleh promise
-    )
+      (errorMessage) => {
+        console.log('Scanner error:', errorMessage);
+      }
+    );
     
-    isScanning = true
-    document.getElementById('sys').innerText = '🟢 Scanning...'
+    isScanning = true;
+    showSuccess('Scanning...');
     
   } catch (error) {
-    console.error("Start scan error:", error)
-    document.getElementById('sys').innerText = '🔴 Gagal memulai kamera'
-    setTimeout(startScan, 2000)
+    console.error("Start scan error:", error);
+    showError("Gagal memulai kamera");
+    setTimeout(startScan, 2000);
   }
 }
 
 function onScanSuccess(decodedText) {
-  const now = Date.now()
-  if (now - lastScanTime < 2000) return // anti spam
-  lastScanTime = now
+  const now = Date.now();
+  if (now - lastScanTime < 2000) return; // anti spam
+  lastScanTime = now;
   
   if (html5QrCode && isScanning) {
-    html5QrCode.pause()
+    html5QrCode.pause();
   }
   
+  console.log('QR Scanned:', decodedText);
+  
+  // Gunakan fetch dengan mode 'no-cors' untuk Google Apps Script
   fetch(`${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(decodedText)}&t=${Date.now()}`)
     .then(response => {
-      if (!response.ok) throw new Error('Network error')
-      return response.json()
+      if (!response.ok) throw new Error('Network error');
+      return response.json();
     })
     .then(data => {
-      const resultDiv = document.getElementById('result')
-      resultDiv.style.display = 'block'
+      console.log('Verify QR response:', data);
+      
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
       
       if (data.status === 'success') {
-        resultDiv.className = 'result success'
-        resultDiv.innerHTML = `<h2>✅ ${data.nama || 'Berhasil'}</h2><p>${data.pax || '0'} Orang</p>`
+        resultDiv.className = 'result success';
+        resultDiv.innerHTML = `<h2>✅ ${data.nama || 'Berhasil'}</h2><p>${data.pax || '0'} Orang</p><small>ID: ${data.id || ''}</small>`;
       } else if (data.status === 'duplicate') {
-        resultDiv.className = 'result warning'
-        resultDiv.innerHTML = '<h2>⚠️ Sudah Hadir</h2>'
+        resultDiv.className = 'result warning';
+        resultDiv.innerHTML = `<h2>⚠️ Sudah Hadir</h2><p>${data.nama || ''}</p>`;
       } else {
-        resultDiv.className = 'result error'
-        resultDiv.innerHTML = '<h2>❌ Tidak Terdaftar</h2>'
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = '<h2>❌ Tidak Terdaftar</h2>';
       }
       
-      loadPanitia()
-      startSessionTimer()
+      // Refresh data setelah scan berhasil
+      loadPanitia();
+      startSessionTimer();
       
+      // Auto resume scanning setelah 3 detik
       setTimeout(() => {
-        resultDiv.style.display = 'none'
-        if (html5QrCode) {
-          html5QrCode.resume()
+        resultDiv.style.display = 'none';
+        if (html5QrCode && isScanning) {
+          html5QrCode.resume();
         }
-      }, 3500)
+      }, 3500);
       
     })
     .catch(error => {
-      console.error('Scan verification error:', error)
-      document.getElementById('sys').innerText = '🔴 Offline'
+      console.error('Scan verification error:', error);
+      showError('Offline - Coba lagi');
+      
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'result error';
+      resultDiv.innerHTML = '<h2>⚠️ Koneksi Error</h2><p>Coba scan lagi</p>';
+      
       setTimeout(() => {
-        if (html5QrCode) {
-          html5QrCode.resume()
+        resultDiv.style.display = 'none';
+        if (html5QrCode && isScanning) {
+          html5QrCode.resume();
         }
-      }, 2000)
-    })
+      }, 2000);
+    });
 }
 
 function restartScan() {
-  const resultDiv = document.getElementById('result')
-  resultDiv.style.display = 'none'
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display = 'none';
   
   if (html5QrCode && isScanning) {
-    html5QrCode.resume()
+    html5QrCode.resume();
   }
 }
 
 /* ================= ADMIN FUNCTIONS ================= */
 async function loadAdmin() {
   try {
-    const response = await fetch(`${SCRIPT_URL}?action=getList&t=${Date.now()}`)
-    if (!response.ok) throw new Error('Network error')
+    console.log('Loading admin data from:', SCRIPT_URL);
     
-    const data = await response.json()
-    document.getElementById('a_total').innerText = data.totalPendaftar || 0
-    document.getElementById('a_hadir').innerText = data.totalHadir || 0
-    document.getElementById('a_belum').innerText = data.belumHadir || 0
+    const response = await fetch(`${SCRIPT_URL}?action=getList&t=${Date.now()}`);
     
-    const tableBody = document.getElementById('a_table')
-    tableBody.innerHTML = ''
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     
-    if (data.data && Array.isArray(data.data)) {
-      data.data.forEach(row => {
-        const tr = document.createElement('tr')
-        tr.innerHTML = `
-          <td>${row[0] || ''}</td>
-          <td>${row[2] || ''}</td>
-          <td>${row[8] || ''}</td>
-          <td>${row[9] || ''}</td>
-        `
-        tableBody.appendChild(tr)
-      })
+    const data = await response.json();
+    console.log('Admin data received:', data);
+    
+    if (data.status === 'success') {
+      // Update statistics
+      document.getElementById('a_total').innerText = data.totalPendaftar || 0;
+      document.getElementById('a_hadir').innerText = data.totalHadir || 0;
+      document.getElementById('a_belum').innerText = data.belumHadir || 0;
+      
+      // Update table
+      const tableBody = document.getElementById('a_table');
+      tableBody.innerHTML = '';
+      
+      if (data.data && Array.isArray(data.data)) {
+        data.data.forEach(row => {
+          const tr = document.createElement('tr');
+          
+          // Format waktu check-in
+          let checkinTime = row[10] || '';
+          if (checkinTime && checkinTime.includes(' ')) {
+            checkinTime = checkinTime.split(' ')[1]; // Ambil hanya jam:menit
+          }
+          
+          tr.innerHTML = `
+            <td>${row[0] || ''}</td>
+            <td>${row[2] || ''}</td>
+            <td>${row[8] || '1'}</td>
+            <td>
+              <span style="padding: 4px 8px; border-radius: 6px; font-size: 12px; 
+                background-color: ${row[9] === 'Sudah Hadir' ? '#dcfce7' : '#fef3c7'}; 
+                color: ${row[9] === 'Sudah Hadir' ? '#166534' : '#92400e'};">
+                ${row[9] || 'Belum Hadir'}
+              </span>
+            </td>
+            <td>${checkinTime || '-'}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+        
+        // Jika tidak ada data, tampilkan pesan
+        if (data.data.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+                Belum ada data pendaftaran
+              </td>
+            </tr>
+          `;
+        }
+      } else {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+              Format data tidak valid
+            </td>
+          </tr>
+        `;
+      }
+    } else {
+      alert(`Gagal mengambil data: ${data.message || 'Unknown error'}`);
     }
   } catch (error) {
-    console.error('Load admin error:', error)
-    alert('Gagal koneksi ke server')
+    console.error('Load admin error:', error);
+    alert('Gagal koneksi ke server. Periksa koneksi internet dan URL script.');
+    
+    // Fallback untuk development
+    document.getElementById('a_total').innerText = '0';
+    document.getElementById('a_hadir').innerText = '0';
+    document.getElementById('a_belum').innerText = '0';
+    
+    const tableBody = document.getElementById('a_table');
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+          Error: ${error.message}
+        </td>
+      </tr>
+    `;
   }
+}
+
+/* ================= DEBUGGING HELPERS ================= */
+function testConnection() {
+  console.log('Testing connection to:', SCRIPT_URL);
+  
+  fetch(`${SCRIPT_URL}?action=getList&t=${Date.now()}`)
+    .then(response => {
+      console.log('Response status:', response.status, response.statusText);
+      return response.text();
+    })
+    .then(text => {
+      console.log('Raw response:', text);
+      try {
+        const json = JSON.parse(text);
+        console.log('Parsed JSON:', json);
+      } catch (e) {
+        console.error('Failed to parse JSON:', e);
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
 }
 
 /* ================= INITIALIZATION ================= */
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('OCM Bukber System Loaded');
+  console.log('Script URL:', SCRIPT_URL);
+  
+  // Test connection saat load
+  // testConnection();
+  
   // Coba lock orientation untuk mobile
   if (screen.orientation && screen.orientation.lock) {
-    screen.orientation.lock('portrait').catch(() => {})
+    screen.orientation.lock('portrait').catch(() => {});
   }
   
   // Reset state saat page load
-  resetAll()
-})
+  resetAll();
+});
 
 // Cleanup saat page unload
-window.addEventListener('beforeunload', resetAll)
+window.addEventListener('beforeunload', resetAll);
+
+// Export fungsi untuk debugging
+window.testConnection = testConnection;
 </script>
 </body>
 </html>
