@@ -64,7 +64,7 @@ input:focus,select:focus{
   background:#fff;
 }
 
-/* Style Tambahan untuk OTP Layout */
+/* Style OTP Layout */
 .otp-container { display: flex; gap: 8px; }
 .btn-otp {
   width: auto;
@@ -225,9 +225,25 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
   <option value="Okayama-shi, Kita-ku, Hokan-cho">
   <option value="Okayama-shi, Naka-ku, Nishigawara">
   <option value="Okayama-shi, Minami-ku, Toyonari">
+  
+  <option value="Kurashiki-shi, Achi">
   <option value="Kurashiki-shi, Nakasho">
+  <option value="Kurashiki-shi, Chaya-machi">
+  <option value="Kurashiki-shi, Mizushima">
+  <option value="Kurashiki-shi, Kojima">
+  <option value="Kurashiki-shi, Tamashima">
+
+  <option value="Tamano-shi, Chikko">
   <option value="Tamano-shi, Uno">
+  <option value="Tamano-shi, Hibibi">
+  <option value="Tamano-shi, Shibukawa">
+
   <option value="Soja-shi, Chuo">
+  <option value="Soja-shi, Kiyone">
+  <option value="Soja-shi, Yamate">
+
+  <option value="Akaiwa-shi, Sanyo">
+  <option value="Setouchi-shi, Oku-cho">
 </datalist>
 </div>
 </div>
@@ -306,7 +322,6 @@ document.querySelectorAll("[data-id-ph]").forEach(el=>{
 let serverOTP = "";
 let isVerified = false;
 
-// TEXT MULTILINGUAL UNTUK ALERT
 const messages = {
   fillEmail: {
     id: "Mohon isi Nama dan Email dulu",
@@ -325,7 +340,6 @@ const messages = {
   }
 };
 
-// FUNGSI SEND OTP
 async function sendOTP() {
   const emailVal = email.value;
   const namaVal = document.getElementById("nama_lengkap").value;
@@ -375,12 +389,10 @@ email.oninput=no_hp.oninput=()=>{
 
 registrationForm.onsubmit=async e=>{
  e.preventDefault();
-
  if(!isVerified) {
    alert(messages.verifyOtp[lang]);
    return;
  }
-
  submitBtn.disabled=true;
  const processingText={id:"Sedang memproses…",en:"Processing…",ja:"処理中…"};
  const original=submitBtn.textContent;
