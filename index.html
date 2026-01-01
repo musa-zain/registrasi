@@ -64,7 +64,7 @@ input:focus,select:focus{
   background:#fff;
 }
 
-/* Style tambahan minimalis untuk tombol OTP di dalam input email */
+/* Style Tambahan untuk OTP Layout */
 .otp-container { display: flex; gap: 8px; }
 .btn-otp {
   width: auto;
@@ -73,9 +73,12 @@ input:focus,select:focus{
   font-size: 12px;
   border-radius: 12px;
   background: #064e3b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
+.btn-otp:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-/* Domisili: 2x lebih lega */
 input[name="domisili"]{
   padding-top:20px;
   padding-bottom:20px;
@@ -210,43 +213,22 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <label data-id="Domisili" data-en="City / Residence" data-ja="居住地"></label>
 <div class="input-wrapper">
 <i class="fas fa-map-marker-alt"></i>
-<select name="domisili" required>
-  <option value="" disabled selected data-id="Pilih Wilayah" data-en="Select Area" data-ja="地域を選択"></option>
-  
-  <optgroup label="Okayama City">
-    <option value="Okayama-shi, Kita-ku, Kaminakano">Okayama-shi, Kita-ku, Kaminakano</option>
-    <option value="Okayama-shi, Kita-ku (Lainnya)">Okayama-shi, Kita-ku (Other)</option>
-    <option value="Okayama-shi, Naka-ku">Okayama-shi, Naka-ku</option>
-    <option value="Okayama-shi, Higashi-ku">Okayama-shi, Higashi-ku</option>
-    <option value="Okayama-shi, Minami-ku">Okayama-shi, Minami-ku</option>
-  </optgroup>
-
-  <optgroup label="Other Cities">
-    <option value="Kurashiki-shi">Kurashiki-shi</option>
-    <option value="Tsuyama-shi">Tsuyama-shi</option>
-    <option value="Tamano-shi">Tamano-shi</option>
-    <option value="Kasaoka-shi">Kasaoka-shi</option>
-    <option value="Ibara-shi">Ibara-shi</option>
-    <option value="Soja-shi">Soja-shi</option>
-    <option value="Takahashi-shi">Takahashi-shi</option>
-    <option value="Niimi-shi">Niimi-shi</option>
-    <option value="Bizen-shi">Bizen-shi</option>
-    <option value="Setouchi-shi">Setouchi-shi</option>
-    <option value="Akaiwa-shi">Akaiwa-shi</option>
-    <option value="Maniwa-shi">Maniwa-shi</option>
-    <option value="Mimasaka-shi">Mimasaka-shi</option>
-    <option value="Asakuchi-shi">Asakuchi-shi</option>
-  </optgroup>
-
-  <optgroup label="Districts">
-    <option value="Wake-cho">Wake-cho</option>
-    <option value="Hayashima-cho">Hayashima-cho</option>
-    <option value="Satosho-cho">Satosho-cho</option>
-    <option value="Yage-cho">Yakage-cho</option>
-    <option value="Kibichuo-cho">Kibichuo-cho</option>
-    <option value="Luar Okayama">Luar Okayama / Outside Okayama</option>
-  </optgroup>
-</select>
+<input name="domisili" list="neighborhoods" required
+ data-id-ph="Cari kelurahan (Contoh: Kaminakano)"
+ data-en-ph="Search neighborhood (Ex: Kaminakano)"
+ data-ja-ph="町名を検索 (例：上中野)">
+<datalist id="neighborhoods">
+  <option value="Okayama-shi, Kita-ku, Kaminakano">
+  <option value="Okayama-shi, Kita-ku, Ima">
+  <option value="Okayama-shi, Kita-ku, Omoto">
+  <option value="Okayama-shi, Kita-ku, Tsushima">
+  <option value="Okayama-shi, Kita-ku, Hokan-cho">
+  <option value="Okayama-shi, Naka-ku, Nishigawara">
+  <option value="Okayama-shi, Minami-ku, Toyonari">
+  <option value="Kurashiki-shi, Nakasho">
+  <option value="Tamano-shi, Uno">
+  <option value="Soja-shi, Chuo">
+</datalist>
 </div>
 </div>
 
@@ -309,7 +291,7 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwkmGaHISHLF4yWm2jKM_PjVp5ocCyjXReDNS1a1DV-ipj6wDBbz6FnM5bJT0T1NB2dzQ/exec";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzX0vnt3HDczvfrUEenS2mxhsa9GhRFR2I_JBnN7xgsPORswYIlPTEh9zny0D-P5k0x/exec";
 
 const lang=navigator.language.startsWith("ja")?"ja":
            navigator.language.startsWith("en")?"en":"id";
@@ -321,9 +303,27 @@ document.querySelectorAll("[data-id-ph]").forEach(el=>{
  el.placeholder=el.dataset[`${lang}Ph`]||el.dataset.idPh;
 });
 
-// VARIABEL OTP
 let serverOTP = "";
 let isVerified = false;
+
+// TEXT MULTILINGUAL UNTUK ALERT
+const messages = {
+  fillEmail: {
+    id: "Mohon isi Nama dan Email dulu",
+    en: "Please fill in Name and Email first",
+    ja: "先に名前とメールアドレスを入力してください"
+  },
+  verifyOtp: {
+    id: "Mohon verifikasi kode OTP dulu",
+    en: "Please verify the OTP code first",
+    ja: "先にOTPコードを確認してください"
+  },
+  otpSent: {
+    id: "OTP terkirim ke email!",
+    en: "OTP sent to your email!",
+    ja: "OTPがメールに送信されました！"
+  }
+};
 
 // FUNGSI SEND OTP
 async function sendOTP() {
@@ -331,7 +331,7 @@ async function sendOTP() {
   const namaVal = document.getElementById("nama_lengkap").value;
   
   if(!emailVal || !namaVal) {
-    alert(lang === "ja" ? "名前とメールアドレスを入力してください" : "Mohon isi Nama dan Email dulu");
+    alert(messages.fillEmail[lang]);
     return;
   }
 
@@ -344,20 +344,18 @@ async function sendOTP() {
     if(j.status === "success") {
       serverOTP = j.otp;
       document.getElementById("otpField").style.display = "block";
-      alert("OTP Sent!");
+      alert(messages.otpSent[lang]);
       
-      // Listener Verifikasi saat mengetik
       document.getElementById("otp_input").oninput = function() {
         if(this.value === serverOTP) {
           isVerified = true;
           this.disabled = true;
-          this.style.borderColor = "#10b981";
           document.getElementById("otpField").style.background = "#dcfce7";
         }
       };
     }
   } catch(e) {
-    alert("Error sending OTP");
+    alert("Error");
     sendOtpBtn.disabled = false;
   }
 }
@@ -372,25 +370,19 @@ email.oninput=no_hp.oninput=()=>{
    duplicateAlert.style.display=j.isDuplicate?"block":"none";
    submitBtn.disabled=j.isDuplicate;
   }
- },800);
+ }, 800);
 };
 
 registrationForm.onsubmit=async e=>{
  e.preventDefault();
 
- // Proteksi jika belum verifikasi OTP
  if(!isVerified) {
-   alert(lang === "id" ? "Mohon verifikasi kode OTP dulu" : "Please verify OTP code first");
+   alert(messages.verifyOtp[lang]);
    return;
  }
 
  submitBtn.disabled=true;
-
- const processingText={
-  id:"Sedang memproses…",
-  en:"Processing…",
-  ja:"処理中…"
- };
+ const processingText={id:"Sedang memproses…",en:"Processing…",ja:"処理中…"};
  const original=submitBtn.textContent;
  submitBtn.textContent=processingText[lang];
 
@@ -408,7 +400,7 @@ registrationForm.onsubmit=async e=>{
    submitBtn.textContent=original;
    submitBtn.disabled=false;
   }
- } catch {
+ }catch{
   alert("Koneksi bermasalah");
   submitBtn.textContent=original;
   submitBtn.disabled=false;
