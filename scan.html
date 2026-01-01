@@ -1,277 +1,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registration Successful - Okayama Central Mosque</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Panitia - OCM</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body { font-family: sans-serif; margin: 0; text-align: center; background: #111; color: white; min-height: 100vh; }
+        #reader { width: 100%; max-width: 500px; margin: auto; background: #000; border-radius: 0 0 20px 20px; overflow: hidden; }
+        .result-box { padding: 25px; margin: 20px; border-radius: 16px; display: none; animation: slideUp 0.3s ease; }
+        
+        /* Status Colors */
+        .success { background: #059669; color: white; border: 2px solid #10b981; }
+        .warning { background: #d97706; color: white; border: 2px solid #fbbf24; }
+        .error { background: #dc2626; color: white; border: 2px solid #f87171; }
+        
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .btn-scan { background: #3b82f6; color: white; padding: 15px 30px; border: none; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
+        #status-text { margin: 15px 0; font-size: 14px; color: #94a3b8; }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-* {
-  box-sizing: border-box;
-  transition: all .2s ease;
-}
-
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  padding: 24px 16px;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* ===== MOBILE FIRST ===== */
-
-.card {
-  width: 100%;
-  max-width: 520px;
-  padding: 24px 16px;
-  border-radius: 20px;
-  text-align: center;
-}
-
-.success-icon-wrapper {
-  width: 52px;
-  height: 52px;
-  margin: 0 auto 16px;
-  background: #ecfdf5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #10b981;
-  font-size: 22px;
-  border: 1px solid #d1fae5;
-}
-
-h1 {
-  font-size: 20px;
-  margin: 0;
-  font-weight: 800;
-}
-
-.sub-text {
-  font-size: 13px;
-  color: #64748b;
-  margin: 8px 0 20px;
-}
-
-/* Info list stacked */
-.info-list {
-  margin-bottom: 20px;
-}
-
-.info-item {
-  padding: 10px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.label {
-  font-size: 12px;
-  color: #94a3b8;
-}
-
-.value {
-  font-size: 14px;
-  font-weight: 600;
-  word-break: break-word;
-}
-
-/* QR */
-.qr-container img {
-  width: 128px;
-  height: 128px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 8px;
-}
-
-.qr-instruction {
-  font-size: 12px;
-  color: #475569;
-  margin: 12px 0 20px;
-}
-
-/* Buttons */
-.btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.btn {
-  min-height: 48px;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 12px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.btn-back {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
-}
-
-.btn-download {
-  background: #047857;
-  color: #fff;
-  border: none;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-footer {
-  font-size: 12px;
-  color: #6b7280;
-  text-align: center;
-  padding: 18px;
-}
-
-/* ===== DESKTOP ===== */
-@media (min-width: 640px) {
-  main {
-    align-items: center;
-  }
-
-  .card {
-    background: #fff;
-    padding: 40px 32px;
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,.05);
-    border: 1px solid #e2e8f0;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  .sub-text {
-    font-size: 14px;
-  }
-
-  .info-item {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .value {
-    text-align: right;
-    max-width: 60%;
-  }
-
-  .qr-container img {
-    width: 160px;
-    height: 160px;
-  }
-
-  .btn-group {
-    flex-direction: row;
-  }
-}
-</style>
+        /* Login Overlay */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .login-card { background: #1e293b; padding: 40px 30px; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); width: 85%; max-width: 350px; }
+        .login-card input { width: 100%; padding: 15px; margin-top: 20px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 18px; box-sizing: border-box; }
+        .login-card button { width: 100%; margin-top: 20px; padding: 15px; border-radius: 12px; border: none; background: #059669; color: white; font-weight: 800; cursor: pointer; font-size: 16px; }
+        #login-err { color: #f87171; font-size: 13px; margin-top: 15px; display: none; }
+    </style>
 </head>
-
 <body>
 
-<main>
-<div class="card">
+    <div id="login-overlay">
+        <div class="login-card">
+            <div style="font-size: 50px; margin-bottom: 10px;">🕌</div>
+            <h2 style="margin: 0; color: #f8fafc;">Panitia OCM</h2>
+            <p style="color: #94a3b8; font-size: 14px;">Masukkan password scanner</p>
+            <input type="password" id="pass-input" placeholder="••••••••">
+            <button onclick="checkLogin()">MASUK SYSTEM</button>
+            <p id="login-err">⚠️ Password Salah!</p>
+        </div>
+    </div>
 
-  <div class="success-icon-wrapper">
-    <i class="fas fa-check" aria-hidden="true"></i>
-  </div>
+    <div id="main-content">
+        <div id="reader"></div>
+        <div id="status-text">Menunggu Login...</div>
 
-  <h1 data-id="Pendaftaran Berhasil" data-en="Registration Successful" data-ja="登録が完了しました"></h1>
-  <div class="sub-text" data-id="Terima kasih atas pendaftaran Anda" data-en="Thank you for your registration" data-ja="ご登録ありがとうございました"></div>
+        <div id="result" class="result-box">
+            <h2 id="res-title" style="margin: 0 0 10px 0;"></h2>
+            <p id="res-msg" style="margin: 0; font-size: 18px; font-weight: bold;"></p>
+            <p id="res-pax" style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;"></p>
+        </div>
 
-  <div class="info-list">
-    <div class="info-item"><span class="label">Nama</span><span class="value" id="val-nama"></span></div>
-    <div class="info-item"><span class="label">ID Peserta</span><span class="value" id="val-id"></span></div>
-    <div class="info-item"><span class="label">Email</span><span class="value" id="val-email"></span></div>
-    <div class="info-item"><span class="label">Domisili</span><span class="value" id="val-dom"></span></div>
-    <div class="info-item"><span class="label">Nomor HP</span><span class="value" id="val-hp"></span></div>
-    <div class="info-item"><span class="label">Usia</span><span class="value" id="val-usia"></span></div>
-    <div class="info-item"><span class="label">Jenis Kelamin</span><span class="value" id="val-jk"></span></div>
-    <div class="info-item"><span class="label">Jumlah Orang</span><span class="value" id="val-jml"></span></div>
-  </div>
+        <button class="btn-scan" onclick="restartScanner()">Mulai Scan Lagi</button>
+    </div>
 
-  <div class="qr-container" id="qrBox"></div>
+    <audio id="snd-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+    <audio id="snd-warning" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+    <audio id="snd-error" src="https://assets.mixkit.co/active_storage/sfx/2012/2012-preview.mp3"></audio>
 
-  <div class="qr-instruction">
-    Harap simpan kode QR ini untuk check-in acara.
-  </div>
+    <script>
+        // ==========================================
+        // KONFIGURASI PANITIA
+        // ==========================================
+        const ADMIN_PASSWORD = "masjidcentral"; // Ganti password di sini
+        const SCRIPT_URL = "URL_WEB_APP_ANDA_DI_SINI"; // Ganti dengan URL Google Script Anda
+        
+        const html5QrCode = new Html5Qrcode("reader");
+        const resultDiv = document.getElementById("result");
+        const statusText = document.getElementById("status-text");
 
-  <div class="btn-group">
-    <a href="index.html" class="btn btn-back">
-      <i class="fas fa-arrow-left"></i> Kembali
-    </a>
-    <button class="btn btn-download" id="btnDL" onclick="downloadQR()">
-      <i class="fas fa-download"></i> Simpan QR
-    </button>
-  </div>
+        // FUNGSI LOGIN
+        function checkLogin() {
+            const input = document.getElementById("pass-input").value;
+            const err = document.getElementById("login-err");
+            
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById("login-overlay").style.display = "none";
+                startScanner();
+            } else {
+                err.style.display = "block";
+                playSound("error");
+            }
+        }
 
-</div>
-</main>
+        // FUNGSI SUARA
+        function playSound(type) {
+            const snd = document.getElementById("snd-" + type);
+            snd.currentTime = 0;
+            snd.play();
+        }
 
-<footer>© <span id="year"></span> — Masjid Central Okayama</footer>
+        // FUNGSI SCAN BERHASIL
+        const onScanSuccess = (decodedText) => {
+            html5QrCode.pause(true);
+            statusText.innerText = "🔍 Mengecek database: " + decodedText;
+            
+            fetch(`${SCRIPT_URL}?action=verifyQR&qrData=${encodeURIComponent(decodedText)}`)
+            .then(res => res.json())
+            .then(data => {
+                resultDiv.style.display = "block";
+                
+                if(data.status === "success") {
+                    playSound("success");
+                    resultDiv.className = "result-box success";
+                    document.getElementById("res-title").innerText = "✅ BERHASIL";
+                    document.getElementById("res-msg").innerText = data.nama;
+                    document.getElementById("res-pax").innerText = "Total Jemaah: " + data.pax + " Orang";
+                } 
+                else if(data.status === "duplicate") {
+                    playSound("warning");
+                    resultDiv.className = "result-box warning";
+                    document.getElementById("res-title").innerText = "⚠️ SUDAH HADIR";
+                    document.getElementById("res-msg").innerText = data.data.nama;
+                    document.getElementById("res-pax").innerText = "ID ini sudah masuk sebelumnya.";
+                } 
+                else {
+                    playSound("error");
+                    resultDiv.className = "result-box error";
+                    document.getElementById("res-title").innerText = "❌ TIDAK ADA";
+                    document.getElementById("res-msg").innerText = "ID Tidak Terdaftar";
+                    document.getElementById("res-pax").innerText = "QR Code Random atau Salah.";
+                }
 
-<script>
-document.getElementById("year").textContent = new Date().getFullYear();
+                // Otomatis scan lagi setelah 4 detik
+                setTimeout(() => {
+                    restartScanner();
+                }, 4000);
+            })
+            .catch(err => {
+                alert("Kesalahan Koneksi Internet!");
+                restartScanner();
+            });
+        };
 
-const p = new URLSearchParams(location.search);
-const g = k => (p.get(k) || "-").replace(/[<>]/g,"");
+        function startScanner() {
+            statusText.innerText = "Kamera Aktif. Siap Scan...";
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                onScanSuccess
+            ).catch(err => {
+                statusText.innerText = "Gagal akses kamera. Pastikan izin diberikan.";
+            });
+        }
 
-["nama","id","email","dom","hp","usia","jk","jml"].forEach(k => {
-  const map = {
-    nama:"nama_lengkap", id:"id", email:"email",
-    dom:"domisili", hp:"no_hp", usia:"usia",
-    jk:"jk", jml:"jumlah_orang"
-  };
-  document.getElementById("val-"+k).textContent = g(map[k]);
-});
-
-const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(g("id"))}`;
-document.getElementById("qrBox").innerHTML =
-  `<img src="${qrURL}" alt="QR Code Check-in">`;
-
-async function downloadQR(){
-  const btn = document.getElementById("btnDL");
-  btn.setAttribute("aria-busy","true");
-  try {
-    const blob = await fetch(qrURL).then(r=>r.blob());
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "QR_CheckIn.png";
-    a.click();
-    URL.revokeObjectURL(url);
-  } finally {
-    btn.removeAttribute("aria-busy");
-  }
-}
-</script>
-
+        function restartScanner() {
+            resultDiv.style.display = "none";
+            html5QrCode.resume();
+            statusText.innerText = "Siap scan jemaah berikutnya...";
+        }
+    </script>
 </body>
 </html>
