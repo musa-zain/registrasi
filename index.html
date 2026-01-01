@@ -372,122 +372,121 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-// 1. PASTIKAN URL SAMA DENGAN SISTEM ADMIN
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySG0uy5r4VC5ubkB6YzVjnEa1Ky7OiqvezdZUm8EymJVaKoUT2knSAWxpMaWAN2O70/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySG0uy5r4VC5ubkB6YzVjnEa1Ky7OiqvezdZUm8EymJVaKoUT2knSAWxpMaWAN2O70/exec"; // Ganti dengan URL GAS Anda
 
 const lang = navigator.language.startsWith("ja") ? "ja" :
              navigator.language.startsWith("en") ? "en" : "id";
 
+// Kamus Pesan
+const msg = {
+  fill: { id: "Isi Nama dan Email dulu!", en: "Fill Name and Email first!", ja: "名前とメールアドレスを入力してください" },
+  sent: { id: "OTP terkirim! Cek Email Anda", en: "OTP Sent! Check your email", ja: "OTPが送信されました" },
+  wrong: { id: "Kode OTP Salah!", en: "Wrong OTP Code!", ja: "OTPコードが正しくありません" },
+  valid: { id: "Verifikasi Berhasil! ✅", en: "Verified! ✅", ja: "認証されました ✅" }
+};
+
 document.querySelectorAll("[data-id]").forEach(el => {
   el.textContent = el.dataset[lang] || el.dataset.id;
-});
-document.querySelectorAll("[data-id-ph]").forEach(el => {
-  el.placeholder = el.dataset[`${lang}Ph`] || el.dataset.idPh;
 });
 
 let serverOTP = "";
 let isVerified = false;
 
-// Fungsi Kirim OTP
+// 1. FUNGSI KIRIM OTP
 async function sendOTP() {
   const emailVal = document.getElementById("email").value;
   const namaVal = document.getElementById("nama_lengkap").value;
-  
-  if(!emailVal || !namaVal) {
-    alert(lang === "id" ? "Isi Nama dan Email" : "Fill Name and Email");
+  const btn = document.getElementById("sendOtpBtn");
+
+  if (!emailVal || !namaVal) {
+    alert(msg.fill[lang]);
     return;
   }
 
-  const btn = document.getElementById("sendOtpBtn");
   btn.disabled = true;
-  btn.textContent = "...";
+  btn.innerText = "...";
 
   try {
     const r = await fetch(`${SCRIPT_URL}?action=send_otp&email=${encodeURIComponent(emailVal)}&nama=${encodeURIComponent(namaVal)}`);
     const j = await r.json();
-    if(j.status === "success") {
+
+    if (j.status === "success") {
       serverOTP = j.otp;
-      document.getElementById("otpField").style.display = "block";
-      alert(lang === "id" ? "OTP Terkirim!" : "OTP Sent!");
+      alert(msg.sent[lang]);
       
-      document.getElementById("otp_input").oninput = function() {
-        if(this.value === serverOTP) {
-          isVerified = true;
-          this.disabled = true;
-          document.getElementById("otpField").style.background = "#dcfce7";
-          document.getElementById("otpField").style.borderColor = "#10b981";
-        }
-      };
+      // Munculkan field OTP dengan animasi
+      const otpField = document.getElementById("otpField");
+      otpField.style.display = "block";
+      otpField.scrollIntoView({ behavior: 'smooth' });
+      
+      // Fokus ke input OTP
+      document.getElementById("otp_input").focus();
+    } else {
+      alert("Error: " + j.message);
+      btn.disabled = false;
+      btn.innerText = "Kirim Ulang";
     }
-  } catch(e) {
-    alert("Error sending OTP");
+  } catch (e) {
+    alert("Koneksi Error");
     btn.disabled = false;
   }
 }
 
-// Cek Duplikat
-let t;
-document.getElementById("email").oninput = document.getElementById("no_hp").oninput = () => {
-  clearTimeout(t);
-  t = setTimeout(async () => {
-    const email = document.getElementById("email").value;
-    const no_hp = document.getElementById("no_hp").value;
-    if(email && no_hp) {
-      const r = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email}&no_hp=${no_hp}`);
-      const j = await r.json();
-      document.getElementById("duplicateAlert").style.display = j.isDuplicate ? "block" : "none";
-      document.getElementById("submitBtn").disabled = j.isDuplicate;
+// 2. FUNGSI CEK OTP SAAT DIKETIK
+document.getElementById("otp_input").oninput = function() {
+  const val = this.value;
+  const field = document.getElementById("otpField");
+  
+  if (val.length === 4) {
+    if (val === serverOTP) {
+      isVerified = true;
+      this.disabled = true;
+      this.style.color = "#059669";
+      this.style.fontWeight = "bold";
+      field.style.background = "#dcfce7"; // Hijau muda
+      field.style.borderColor = "#10b981";
+      alert(msg.valid[lang]);
+    } else {
+      this.style.color = "red";
+      // Getar atau tandai salah
     }
-  }, 800);
+  }
 };
 
-// SUBMIT FORM KE SISTEM BARU
-document.getElementById("registrationForm").onsubmit = async e => {
+// 3. SUBMIT FORM
+document.getElementById("registrationForm").onsubmit = async (e) => {
   e.preventDefault();
   
-  if(!isVerified) {
-    alert(lang === "id" ? "Verifikasi OTP dulu" : "Verify OTP first");
+  if (!isVerified) {
+    alert(lang === 'id' ? "Mohon verifikasi OTP terlebih dahulu" : "Please verify OTP first");
     return;
   }
 
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-  const originalText = btn.textContent;
-  btn.textContent = "...";
+  const submitBtn = document.getElementById("submitBtn");
+  submitBtn.disabled = true;
+  submitBtn.innerText = "...";
 
-  // Ambil data form
-  const form = document.getElementById("registrationForm");
-  const formData = new FormData(form);
-  
-  // Konversi FormData ke Objek biasa agar mudah dibaca GAS
-  const data = {};
-  formData.forEach((value, key) => { data[key] = value; });
-
-  // Tambahkan info tambahan sesuai kebutuhan GAS
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
   data.action = "register";
-  data.lang = lang;
 
   try {
-    // Kirim menggunakan metode POST sesuai fungsi doPost(e) di GAS
     const response = await fetch(SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify(data)
     });
-    
-    const result = await response.json();
-    
-    if(result.status === "success") {
-      // Redirect ke halaman sukses (bawa ID untuk ditampilkan di QR)
-      window.location.href = `success.html?id=${result.id}&nama=${encodeURIComponent(data.nama_lengkap)}`;
+    const res = await response.json();
+
+    if (res.status === "success") {
+      // Pindah ke halaman sukses
+      window.location.href = `success.html?id=${res.id}&nama=${encodeURIComponent(data.nama_lengkap)}`;
     } else {
-      alert("Error: " + result.message);
-      btn.disabled = false;
-      btn.textContent = originalText;
+      alert(res.message);
+      submitBtn.disabled = false;
     }
-  } catch(e) {
-    alert("Terjadi kesalahan koneksi");
-    btn.disabled = false;
-    btn.textContent = originalText;
+  } catch (err) {
+    alert("Gagal mendaftar, coba lagi");
+    submitBtn.disabled = false;
   }
 };
 </script>
