@@ -307,7 +307,7 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwonbJicQVHGSoLmvavFr0FJhBacPiuF1YW0qAX2LxyboEC_wwwDIvJoR3HWfjV71jx/exec";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwsDoRAIPf1VSysqiWHRzaL_ksCM9lD47yrJhk_lKa7x3Mno0NEPnu5z5w-d6CyrDR_/exec";
 
 const lang=navigator.language.startsWith("ja")?"ja":
            navigator.language.startsWith("en")?"en":"id";
@@ -398,9 +398,16 @@ registrationForm.onsubmit=async e=>{
  const original=submitBtn.textContent;
  submitBtn.textContent=processingText[lang];
 
- const fd=new FormData(registrationForm);
- fd.append("action","register");
- fd.append("id","EID-"+Date.now().toString(36).toUpperCase());
+ const fd = new FormData(registrationForm);
+fd.append("action", "register");
+
+// Membuat ID Cantik: EID-2703-X8A (TanggalBulan-Acak)
+const now = new Date();
+const datePart = ("0" + now.getDate()).slice(-2) + ("0" + (now.getMonth() + 1)).slice(-2);
+const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
+const cantikID = "EID-" + datePart + "-" + randomPart;
+
+fd.append("id", cantikID);
 
  try{
   const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
