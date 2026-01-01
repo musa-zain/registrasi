@@ -44,7 +44,7 @@
 </div>
 
 <div class="navbar">
-    <span style="font-weight: 800; font-size: 18px;">🕌 OCM EID 2026</span>
+    <span style="font-weight: 800; font-size: 18px;">🕌 Pantau Peserta Bukber 2026</span>
     <button onclick="loadData()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:5px 12px; border-radius:5px; cursor:pointer;">
         <i class="fas fa-sync-alt"></i> Refresh
     </button>
@@ -62,10 +62,15 @@
             <h3 id="stat-total-hadir">0</h3>
             <p>GRUP SUDAH SCAN</p>
         </div>
+        <div class="stat-card" style="border-bottom: 4px solid #dc2626;">
+            <i class="fas fa-user-clock" style="color: #dc2626;"></i>
+            <h3 id="stat-belum-hadir" style="color: #dc2626;">0</h3>
+            <p>JEMAAH BELUM SCAN</p>
+        </div>
         <div class="stat-card">
             <i class="fas fa-mosque"></i>
             <h3 id="stat-total-orang">0</h3>
-            <p>ESTIMASI TOTAL JEMAAH</p>
+            <p>HADIR / TOTAL (ORANG)</p>
         </div>
     </div>
 
@@ -82,13 +87,13 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                </tbody>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvLVMIbhBThHJ8l3d4Rppo1GvDbgeVjELq8_zOtzD7WHaWIaEHhVqHqyVJpgiaiDzp/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPkR_q_IqtrgdFJdyTLrBYvb2AAvjAHR5rZdGv1ptzWElUo27PttQKYD1q1ceL9FLI/exec"; 
     const PASS_ADMIN = "mco2026";
 
     function login() {
@@ -109,6 +114,7 @@
             // Update Stats
             document.getElementById("stat-total-pendaftar").innerText = json.totalPendaftar;
             document.getElementById("stat-total-hadir").innerText = json.totalHadir;
+            document.getElementById("stat-belum-hadir").innerText = json.belumHadir; // Data grup belum hadir
             document.getElementById("stat-total-orang").innerText = json.totalOrangHadir + " / " + json.totalOrangPendaftar;
 
             // Update Table
