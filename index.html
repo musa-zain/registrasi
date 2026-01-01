@@ -372,50 +372,35 @@ footer{text-align:center;font-size:12px;color:#94a3b8;padding:28px}
 <footer>© 2026 — Masjid Central Okayama</footer>
 
 <script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyJpXnfNup1G_LfUFQn9wfnKckDhBoehVvFy4N_9aoy3gOHGViS4UVTmbuQ-CHVGuIp/exec";
+// 1. PASTIKAN URL SAMA DENGAN SISTEM ADMIN
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJpXnfNup1G_LfUFQn9wfnKckDhBoehVvFy4N_9aoy3gOHGViS4UVTmbuQ-CHVGuIp/exec"; 
 
-const lang=navigator.language.startsWith("ja")?"ja":
-           navigator.language.startsWith("en")?"en":"id";
+const lang = navigator.language.startsWith("ja") ? "ja" :
+             navigator.language.startsWith("en") ? "en" : "id";
 
-document.querySelectorAll("[data-id]").forEach(el=>{
- el.textContent=el.dataset[lang]||el.dataset.id;
+document.querySelectorAll("[data-id]").forEach(el => {
+  el.textContent = el.dataset[lang] || el.dataset.id;
 });
-document.querySelectorAll("[data-id-ph]").forEach(el=>{
- el.placeholder=el.dataset[`${lang}Ph`]||el.dataset.idPh;
+document.querySelectorAll("[data-id-ph]").forEach(el => {
+  el.placeholder = el.dataset[`${lang}Ph`] || el.dataset.idPh;
 });
 
 let serverOTP = "";
 let isVerified = false;
 
-const messages = {
-  fillEmail: {
-    id: "Mohon isi Nama dan Email dulu",
-    en: "Please fill in Name and Email first",
-    ja: "先に名前とメールアドレスを入力してください"
-  },
-  verifyOtp: {
-    id: "Mohon verifikasi kode OTP dulu",
-    en: "Please verify the OTP code first",
-    ja: "先にOTPコードを確認してください"
-  },
-  otpSent: {
-    id: "OTP terkirim ke email!",
-    en: "OTP sent to your email!",
-    ja: "OTPがメールに送信されました！"
-  }
-};
-
+// Fungsi Kirim OTP
 async function sendOTP() {
-  const emailVal = email.value;
+  const emailVal = document.getElementById("email").value;
   const namaVal = document.getElementById("nama_lengkap").value;
   
   if(!emailVal || !namaVal) {
-    alert(messages.fillEmail[lang]);
+    alert(lang === "id" ? "Isi Nama dan Email" : "Fill Name and Email");
     return;
   }
 
-  sendOtpBtn.disabled = true;
-  sendOtpBtn.textContent = "...";
+  const btn = document.getElementById("sendOtpBtn");
+  btn.disabled = true;
+  btn.textContent = "...";
 
   try {
     const r = await fetch(`${SCRIPT_URL}?action=send_otp&email=${encodeURIComponent(emailVal)}&nama=${encodeURIComponent(namaVal)}`);
@@ -423,73 +408,87 @@ async function sendOTP() {
     if(j.status === "success") {
       serverOTP = j.otp;
       document.getElementById("otpField").style.display = "block";
-      alert(messages.otpSent[lang]);
+      alert(lang === "id" ? "OTP Terkirim!" : "OTP Sent!");
       
       document.getElementById("otp_input").oninput = function() {
         if(this.value === serverOTP) {
           isVerified = true;
           this.disabled = true;
           document.getElementById("otpField").style.background = "#dcfce7";
+          document.getElementById("otpField").style.borderColor = "#10b981";
         }
       };
     }
   } catch(e) {
-    alert("Error");
-    sendOtpBtn.disabled = false;
+    alert("Error sending OTP");
+    btn.disabled = false;
   }
 }
 
+// Cek Duplikat
 let t;
-email.oninput=no_hp.oninput=()=>{
- clearTimeout(t);
- t=setTimeout(async()=>{
-  if(email.value&&no_hp.value){
-   const r=await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email.value}&no_hp=${no_hp.value}`);
-   const j=await r.json();
-   duplicateAlert.style.display=j.isDuplicate?"block":"none";
-   submitBtn.disabled=j.isDuplicate;
-  }
- }, 800);
+document.getElementById("email").oninput = document.getElementById("no_hp").oninput = () => {
+  clearTimeout(t);
+  t = setTimeout(async () => {
+    const email = document.getElementById("email").value;
+    const no_hp = document.getElementById("no_hp").value;
+    if(email && no_hp) {
+      const r = await fetch(`${SCRIPT_URL}?action=check_duplicate&email=${email}&no_hp=${no_hp}`);
+      const j = await r.json();
+      document.getElementById("duplicateAlert").style.display = j.isDuplicate ? "block" : "none";
+      document.getElementById("submitBtn").disabled = j.isDuplicate;
+    }
+  }, 800);
 };
 
-registrationForm.onsubmit=async e=>{
- e.preventDefault();
- if(!isVerified) {
-   alert(messages.verifyOtp[lang]);
-   return;
- }
- submitBtn.disabled=true;
- const processingText={id:"Sedang memproses…",en:"Processing…",ja:"処理中…"};
- const original=submitBtn.textContent;
- submitBtn.textContent=processingText[lang];
-
- const fd = new FormData(registrationForm);
-fd.append("action", "register");
-
-// Membuat ID Cantik: EID-2703-X8A (TanggalBulan-Acak)
-const now = new Date();
-const datePart = ("0" + now.getDate()).slice(-2) + ("0" + (now.getMonth() + 1)).slice(-2);
-const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase();
-const cantikID = "EID-" + datePart + "-" + randomPart;
-
-fd.append("id", cantikID);
-fd.append("lang", lang); // Mengirim kode bahasa (id, en, atau ja) ke Google Script
+// SUBMIT FORM KE SISTEM BARU
+document.getElementById("registrationForm").onsubmit = async e => {
+  e.preventDefault();
   
- try{
-  const r=await fetch(SCRIPT_URL,{method:"POST",body:fd});
-  const j=await r.json();
-  if(j.status==="success"){
-   window.location.href="success.html?"+new URLSearchParams(fd).toString();
-  }else{
-   alert(j.message||"Error");
-   submitBtn.textContent=original;
-   submitBtn.disabled=false;
+  if(!isVerified) {
+    alert(lang === "id" ? "Verifikasi OTP dulu" : "Verify OTP first");
+    return;
   }
- }catch{
-  alert("Koneksi bermasalah");
-  submitBtn.textContent=original;
-  submitBtn.disabled=false;
- }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = "...";
+
+  // Ambil data form
+  const form = document.getElementById("registrationForm");
+  const formData = new FormData(form);
+  
+  // Konversi FormData ke Objek biasa agar mudah dibaca GAS
+  const data = {};
+  formData.forEach((value, key) => { data[key] = value; });
+
+  // Tambahkan info tambahan sesuai kebutuhan GAS
+  data.action = "register";
+  data.lang = lang;
+
+  try {
+    // Kirim menggunakan metode POST sesuai fungsi doPost(e) di GAS
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+    
+    const result = await response.json();
+    
+    if(result.status === "success") {
+      // Redirect ke halaman sukses (bawa ID untuk ditampilkan di QR)
+      window.location.href = `success.html?id=${result.id}&nama=${encodeURIComponent(data.nama_lengkap)}`;
+    } else {
+      alert("Error: " + result.message);
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  } catch(e) {
+    alert("Terjadi kesalahan koneksi");
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 };
 </script>
 
